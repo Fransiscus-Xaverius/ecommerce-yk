@@ -60,7 +60,7 @@ const ProductCarousel = ({
         <div className="relative overflow-hidden">
           <div
             ref={carouselRef}
-            className="flex gap-4 pb-4 overflow-x-auto scrollbar-hide"
+            className="flex gap-6 pb-4 overflow-x-auto scrollbar-hide"
             style={{
               scrollBehavior: "smooth",
               WebkitOverflowScrolling: "touch",
@@ -68,11 +68,11 @@ const ProductCarousel = ({
               userSelect: "none",
             }}
             onMouseDown={(e) => handleMouseDown(e, carouselRef)}
-            onMouseLeave={handleMouseLeave}
-            onMouseUp={handleMouseUp}
+            onMouseLeave={() => handleMouseLeave(carouselRef)}
+            onMouseUp={() => handleMouseUp(carouselRef)}
             onMouseMove={(e) => handleMouseMove(e, carouselRef)}
             onTouchStart={(e) => handleTouchStart(e, carouselRef)}
-            onTouchEnd={handleMouseUp}
+            onTouchEnd={() => handleMouseUp(carouselRef)}
             onTouchMove={(e) => handleTouchMove(e, carouselRef)}
           >
             {section.products.map((product) => (

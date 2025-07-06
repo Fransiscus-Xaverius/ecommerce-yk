@@ -105,7 +105,9 @@ const ProductDetail = ({ onAddToCart }) => {
             size={20}
             className="group-hover:-translate-x-1 transition-transform"
           />
-          <span className="font-medium text-sm md:text-base">Kembali ke Beranda</span>
+          <span className="font-medium text-sm md:text-base">
+            Kembali ke Beranda
+          </span>
         </button>
 
         <div className="bg-white rounded-xl md:rounded-2xl shadow-sm overflow-hidden">
@@ -364,9 +366,6 @@ const ProductDetail = ({ onAddToCart }) => {
                     +
                   </button>
                 </div>
-                <p className="text-xs text-gray-500 mt-2">
-                  Maksimal 10 item per pesanan
-                </p>
               </div>
 
               {/* Action Buttons */}

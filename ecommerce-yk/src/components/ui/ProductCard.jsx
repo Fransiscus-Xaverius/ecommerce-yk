@@ -23,9 +23,9 @@ const ProductCard = ({
   };
 
   return (
-    <div className="flex-shrink-0 w-full max-w-xs min-w-[250px]">
+    <div className="flex-shrink-0 w-[280px]">
       <div 
-        className="bg-white rounded-lg shadow-sm overflow-hidden cursor-pointer relative h-full transition-transform hover:scale-[1.02]" 
+        className="bg-white rounded-lg shadow-sm overflow-hidden cursor-pointer relative h-full transition-transform hover:scale-[1.02] flex flex-col" 
         onClick={handleCardClick}
       >
         {/* Badges */}
@@ -60,9 +60,9 @@ const ProductCard = ({
         </button>
 
         {/* Product Image */}
-        <div className="h-64 bg-gray-50 flex items-center justify-center relative overflow-hidden">
+        <div className="h-56 bg-gray-50 flex items-center justify-center relative overflow-hidden">
           <img 
-            src={`https://via.placeholder.com/250x250/e3e3e3/666?text=${encodeURIComponent(product.name)}`}
+            src={`https://via.placeholder.com/280x224/e3e3e3/666?text=${encodeURIComponent(product.name)}`}
             alt={product.name}
             className="w-full h-full object-cover"
             onError={(e) => {
@@ -75,9 +75,9 @@ const ProductCard = ({
           </div>
         </div>
 
-        {/* Product Info */}
-        <div className="p-4">
-          <h5 className="font-bold text-gray-900 mb-2 line-clamp-2">{product.name}</h5>
+        {/* Product Info - flex-1 to fill remaining space */}
+        <div className="p-4 flex flex-col flex-1">
+          <h5 className="font-bold text-gray-900 mb-3 line-clamp-2 min-h-[3rem]">{product.name}</h5>
 
           {/* Rating - Horizontal */}
           <div className="flex items-center gap-2 mb-3">
@@ -98,8 +98,8 @@ const ProductCard = ({
           </div>
 
           {/* Price */}
-          <div className="mb-4">
-            <h5 className="text-lg font-bold text-blue-600 mb-0">
+          <div className="mb-4 flex-1 flex flex-col justify-end">
+            <h5 className="text-lg font-bold text-blue-600 mb-1">
               {formatPrice(product.price)}
             </h5>
             {product.originalPrice && (
@@ -115,7 +115,7 @@ const ProductCard = ({
               e.stopPropagation();
               onAddToCart(product);
             }}
-            className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-full transition-colors"
+            className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-full transition-colors mt-auto"
           >
             Add to Cart
           </button>
