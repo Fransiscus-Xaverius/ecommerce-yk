@@ -95,30 +95,30 @@ const ProductDetail = ({ onAddToCart }) => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto py-6 px-4 lg:px-6">
+      <div className="max-w-7xl mx-auto py-4 md:py-6 px-3 md:px-4 lg:px-6">
         {/* Back Button */}
         <button
           onClick={() => navigate("/")}
-          className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-6 group transition-colors"
+          className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 md:mb-6 group transition-colors"
         >
           <ArrowLeft
             size={20}
             className="group-hover:-translate-x-1 transition-transform"
           />
-          <span className="font-medium">Kembali ke Beranda</span>
+          <span className="font-medium text-sm md:text-base">Kembali ke Beranda</span>
         </button>
 
-        <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
+        <div className="bg-white rounded-xl md:rounded-2xl shadow-sm overflow-hidden">
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-0">
             {/* Left Side - Product Images */}
-            <div className="p-6 lg:p-8">
-              <div className="flex gap-4">
-                {/* Image Thumbnails */}
-                <div className="flex flex-col gap-3">
+            <div className="p-3 md:p-6 lg:p-8">
+              <div className="flex flex-col md:flex-row gap-3 md:gap-4">
+                {/* Image Thumbnails - horizontal on mobile, vertical on desktop */}
+                <div className="flex md:flex-col gap-2 md:gap-3 order-2 md:order-1 overflow-x-auto md:overflow-visible">
                   {productImages.slice(0, 5).map((img, index) => (
                     <button
                       key={index}
-                      className={`w-16 h-16 border-2 rounded-lg overflow-hidden transition-all ${
+                      className={`flex-shrink-0 w-12 h-12 md:w-16 md:h-16 border-2 rounded-lg overflow-hidden transition-all ${
                         selectedImage === index
                           ? "border-gray-900 shadow-md"
                           : "border-gray-200 hover:border-gray-400"
@@ -135,8 +135,8 @@ const ProductDetail = ({ onAddToCart }) => {
                 </div>
 
                 {/* Main Image */}
-                <div className="flex-1">
-                  <div className="bg-gray-50 rounded-xl overflow-hidden h-96 lg:h-[500px]">
+                <div className="flex-1 order-1 md:order-2">
+                  <div className="bg-gray-50 rounded-xl overflow-hidden h-64 sm:h-80 md:h-96 lg:h-[500px]">
                     <img
                       src={productImages[selectedImage]}
                       alt={product.name}
@@ -148,10 +148,10 @@ const ProductDetail = ({ onAddToCart }) => {
             </div>
 
             {/* Right Side - Product Details */}
-            <div className="p-6 lg:p-8 bg-white">
+            <div className="p-4 md:p-6 lg:p-8 bg-white">
               {/* Breadcrumb */}
-              <nav className="text-sm mb-4">
-                <ol className="flex items-center space-x-2 text-gray-500">
+              <nav className="text-xs md:text-sm mb-3 md:mb-4">
+                <ol className="flex items-center space-x-1 md:space-x-2 text-gray-500">
                   <li>
                     <button className="hover:text-gray-700 transition-colors">
                       Beranda
@@ -169,7 +169,7 @@ const ProductDetail = ({ onAddToCart }) => {
               </nav>
 
               {/* Product Title */}
-              <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">
+              <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 mb-2">
                 {product.name}
               </h1>
 
@@ -203,17 +203,17 @@ const ProductDetail = ({ onAddToCart }) => {
               </div>
 
               {/* Available on Platforms */}
-              <div className="mb-6">
-                <div className="flex items-center gap-3">
+              <div className="mb-4 md:mb-6">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
                   <span className="text-xs text-gray-500 font-medium">
                     Available on:
                   </span>
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2 md:gap-3">
                     <button
                       onClick={handleTokopediaClick}
-                      className="flex items-center gap-2 px-2 py-1 border-2 border-green-600 rounded-lg hover:bg-green-50 transition-all duration-200"
+                      className="flex items-center gap-1 md:gap-2 px-2 py-1 border-2 border-green-600 rounded-lg hover:bg-green-50 transition-all duration-200"
                     >
-                      <div className="w-5 h-5 bg-green-600 rounded-sm flex items-center justify-center">
+                      <div className="w-4 h-4 md:w-5 md:h-5 bg-green-600 rounded-sm flex items-center justify-center">
                         <span className="text-white text-xs font-bold">T</span>
                       </div>
                       <span className="text-xs text-green-600 font-medium">
@@ -222,9 +222,9 @@ const ProductDetail = ({ onAddToCart }) => {
                     </button>
                     <button
                       onClick={handleShopeeClick}
-                      className="flex items-center gap-2 px-2 py-1 border-2 border-orange-500 rounded-lg hover:bg-orange-50 transition-all duration-200"
+                      className="flex items-center gap-1 md:gap-2 px-2 py-1 border-2 border-orange-500 rounded-lg hover:bg-orange-50 transition-all duration-200"
                     >
-                      <div className="w-5 h-5 bg-orange-500 rounded-full flex items-center justify-center">
+                      <div className="w-4 h-4 md:w-5 md:h-5 bg-orange-500 rounded-full flex items-center justify-center">
                         <span className="text-white text-xs font-bold">S</span>
                       </div>
                       <span className="text-xs text-orange-500 font-medium">
@@ -236,37 +236,37 @@ const ProductDetail = ({ onAddToCart }) => {
               </div>
 
               {/* Price */}
-              <div className="mb-8">
-                <div className="flex items-baseline gap-3 mb-1">
-                  <h2 className="text-3xl font-bold text-gray-900">
+              <div className="mb-6 md:mb-8">
+                <div className="flex items-baseline gap-2 md:gap-3 mb-1">
+                  <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
                     {formatPrice(product.price)}
                   </h2>
                   {product.originalPrice && (
-                    <span className="text-lg text-gray-500 line-through">
+                    <span className="text-base md:text-lg text-gray-500 line-through">
                       {formatPrice(product.originalPrice)}
                     </span>
                   )}
                 </div>
-                <p className="text-sm text-gray-500">
+                <p className="text-xs md:text-sm text-gray-500">
                   Harga sudah termasuk PPN
                 </p>
               </div>
 
               {/* Color Selection */}
-              <div className="mb-8">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-bold text-gray-900 text-sm uppercase tracking-wider">
+              <div className="mb-6 md:mb-8">
+                <div className="flex items-center justify-between mb-3 md:mb-4">
+                  <h3 className="font-bold text-gray-900 text-xs md:text-sm uppercase tracking-wider">
                     Warna:{" "}
                     {colors.find((c) => c.name === selectedColor)?.label ||
                       selectedColor}
                   </h3>
                 </div>
-                <div className="flex gap-3">
+                <div className="flex gap-2 md:gap-3">
                   {colors.map((color) => (
                     <button
                       key={color.name}
                       onClick={() => setSelectedColor(color.name)}
-                      className={`relative w-12 h-12 rounded-full transition-all ${
+                      className={`relative w-10 h-10 md:w-12 md:h-12 rounded-full transition-all ${
                         selectedColor === color.name
                           ? "ring-4 ring-gray-300 ring-offset-2"
                           : "hover:ring-2 hover:ring-gray-200 hover:ring-offset-1"
@@ -306,16 +306,16 @@ const ProductDetail = ({ onAddToCart }) => {
               </div>
 
               {/* Size Selection */}
-              <div className="mb-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-bold text-gray-900 text-sm uppercase tracking-wider">
+              <div className="mb-4 md:mb-6">
+                <div className="flex items-center justify-between mb-3 md:mb-4">
+                  <h3 className="font-bold text-gray-900 text-xs md:text-sm uppercase tracking-wider">
                     Ukuran: {selectedSize}
                   </h3>
-                  <button className="text-sm text-blue-600 hover:text-blue-700 font-medium">
+                  <button className="text-xs md:text-sm text-blue-600 hover:text-blue-700 font-medium">
                     Panduan Ukuran
                   </button>
                 </div>
-                <div className="grid grid-cols-4 gap-3">
+                <div className="grid grid-cols-4 gap-2 md:gap-3">
                   {sizes.map((sizeObj) => (
                     <button
                       key={sizeObj.size}
@@ -323,7 +323,7 @@ const ProductDetail = ({ onAddToCart }) => {
                         sizeObj.available && setSelectedSize(sizeObj.size)
                       }
                       disabled={!sizeObj.available}
-                      className={`relative h-12 text-sm font-semibold border-2 rounded-lg transition-all ${
+                      className={`relative h-10 md:h-12 text-xs md:text-sm font-semibold border-2 rounded-lg transition-all ${
                         selectedSize === sizeObj.size && sizeObj.available
                           ? "bg-gray-900 text-white border-gray-900 shadow-md"
                           : sizeObj.available
@@ -334,7 +334,7 @@ const ProductDetail = ({ onAddToCart }) => {
                       {sizeObj.size}
                       {!sizeObj.available && (
                         <div className="absolute inset-0 flex items-center justify-center">
-                          <div className="w-8 h-px bg-gray-400 transform rotate-45"></div>
+                          <div className="w-6 md:w-8 h-px bg-gray-400 transform rotate-45"></div>
                         </div>
                       )}
                     </button>
@@ -343,23 +343,23 @@ const ProductDetail = ({ onAddToCart }) => {
               </div>
 
               {/* Quantity Selection */}
-              <div className="mb-8">
-                <h3 className="font-bold text-gray-900 text-sm uppercase tracking-wider mb-4">
+              <div className="mb-6 md:mb-8">
+                <h3 className="font-bold text-gray-900 text-xs md:text-sm uppercase tracking-wider mb-3 md:mb-4">
                   Jumlah: {quantity}
                 </h3>
-                <div className="flex items-center gap-0 max-w-32">
+                <div className="flex items-center gap-0 max-w-28 md:max-w-32">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="w-12 h-12 border-2 border-gray-300 border-r-0 text-gray-600 hover:bg-gray-50 font-bold text-lg rounded-l-lg transition-colors"
+                    className="w-10 h-10 md:w-12 md:h-12 border-2 border-gray-300 border-r-0 text-gray-600 hover:bg-gray-50 font-bold text-base md:text-lg rounded-l-lg transition-colors"
                   >
                     −
                   </button>
-                  <div className="w-16 h-12 border-2 border-gray-300 flex items-center justify-center bg-white font-semibold text-gray-900">
+                  <div className="w-12 h-10 md:w-16 md:h-12 border-2 border-gray-300 flex items-center justify-center bg-white font-semibold text-gray-900 text-sm md:text-base">
                     {quantity}
                   </div>
                   <button
                     onClick={() => setQuantity(Math.min(10, quantity + 1))}
-                    className="w-12 h-12 border-2 border-gray-300 border-l-0 text-gray-600 hover:bg-gray-50 font-bold text-lg rounded-r-lg transition-colors"
+                    className="w-10 h-10 md:w-12 md:h-12 border-2 border-gray-300 border-l-0 text-gray-600 hover:bg-gray-50 font-bold text-base md:text-lg rounded-r-lg transition-colors"
                   >
                     +
                   </button>
@@ -370,20 +370,22 @@ const ProductDetail = ({ onAddToCart }) => {
               </div>
 
               {/* Action Buttons */}
-              <div className="space-y-3 mb-8">
+              <div className="space-y-3 mb-6 md:mb-8">
                 <button
                   onClick={handleAddToCart}
-                  className="w-full py-4 border-2 border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white font-bold text-sm tracking-wide rounded-xl transition-all duration-200"
+                  className="w-full py-3 md:py-4 border-2 border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white font-bold text-xs md:text-sm tracking-wide rounded-xl transition-all duration-200"
                 >
                   <span className="flex items-center justify-center gap-2">
-                    <Package size={20} />
+                    <Package size={18} className="md:hidden" />
+                    <Package size={20} className="hidden md:block" />
                     TAMBAHKAN KE KERANJANG
                   </span>
                 </button>
 
-                <button className="w-full py-4 bg-gray-900 hover:bg-gray-800 text-white font-bold text-sm tracking-wide rounded-xl transition-all duration-200">
+                <button className="w-full py-3 md:py-4 bg-gray-900 hover:bg-gray-800 text-white font-bold text-xs md:text-sm tracking-wide rounded-xl transition-all duration-200">
                   <span className="flex items-center justify-center gap-2">
-                    <Truck size={20} />
+                    <Truck size={18} className="md:hidden" />
+                    <Truck size={20} className="hidden md:block" />
                     BELI SEKARANG
                   </span>
                 </button>
