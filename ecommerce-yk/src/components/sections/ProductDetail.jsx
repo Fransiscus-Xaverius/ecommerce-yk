@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Star, ChevronDown, ArrowLeft, Package, Truck } from "lucide-react";
 import { formatPrice } from "../../utils/helpers";
@@ -10,6 +10,11 @@ import { productSections } from "../../data/products";
 const ProductDetail = ({ onAddToCart }) => {
   const { id } = useParams();
   const navigate = useNavigate();
+
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [id]);
 
   // Find product from all sections
   const product = productSections
