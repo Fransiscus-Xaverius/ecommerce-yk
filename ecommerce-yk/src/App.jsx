@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 // Layout Components
 import AnnouncementBar from "./components/layout/AnnouncementBar";
@@ -9,10 +10,10 @@ import Footer from "./components/layout/Footer";
 import HeroSection from "./components/sections/HeroSection";
 import FeaturesSection from "./components/sections/FeaturesSection";
 import Newsletter from "./components/sections/Newsletter";
+import ProductDetail from "./components/sections/ProductDetail";
 
 // UI Components
 import ProductCarousel from "./components/ui/ProductCarousel";
-import GlobalStyles from "./components/ui/GlobalStyles";
 
 // Data
 import { heroSlides } from "./data/heroSlides";
@@ -23,8 +24,45 @@ import { useHeroSlider } from "./hooks/useHeroSlider";
 import { useWishlist } from "./hooks/useWishlist";
 import { useCart } from "./hooks/useCart";
 
-// Utils
-import { loadBootstrapCSS } from "./utils/helpers";
+/**
+ * HomePage Component - Contains all main page sections
+ */
+const HomePage = ({ 
+  heroSlides, 
+  currentSlide, 
+  setCurrentSlide, 
+  productSections, 
+  addToCart, 
+  toggleWishlist, 
+  wishlist 
+}) => (
+  <>
+    {/* Hero Section */}
+    <HeroSection
+      slides={heroSlides}
+      currentSlide={currentSlide}
+      setCurrentSlide={setCurrentSlide}
+    />
+
+    {/* Features Section */}
+    <FeaturesSection />
+
+    {/* Product Sections */}
+    {productSections.map((section, sectionIndex) => (
+      <ProductCarousel
+        key={sectionIndex}
+        section={section}
+        sectionIndex={sectionIndex}
+        onAddToCart={addToCart}
+        onToggleWishlist={toggleWishlist}
+        wishlist={wishlist}
+      />
+    ))}
+
+    {/* Newsletter Section */}
+    <Newsletter />
+  </>
+);
 
 /**
  * Main Application Component - Yongki Komaladi E-commerce Website
@@ -37,58 +75,50 @@ const YongkiKomaladiWebsite = () => {
   const { wishlist, toggleWishlist } = useWishlist();
   const { cartItems, addToCart } = useCart();
 
-  // Load Bootstrap CSS
-  useEffect(() => {
-    const cleanup = loadBootstrapCSS();
-    return cleanup;
-  }, []);
-
   return (
-    <div
-      className="min-h-screen bg-light"
-      style={{ maxWidth: "100vw", overflowX: "hidden" }}
-    >
-      <GlobalStyles />
+    <Router>
+      <div className="min-h-screen bg-gray-50 overflow-x-hidden">
+        {/* Top Announcement Bar */}
+        <AnnouncementBar />
 
-      {/* Top Announcement Bar */}
-      <AnnouncementBar />
-
-      {/* Header */}
-      <Header
-        isMenuOpen={isMenuOpen}
-        setIsMenuOpen={setIsMenuOpen}
-        cartItems={cartItems}
-        wishlist={wishlist}
-      />
-
-      {/* Hero Section */}
-      <HeroSection
-        slides={heroSlides}
-        currentSlide={currentSlide}
-        setCurrentSlide={setCurrentSlide}
-      />
-
-      {/* Features Section */}
-      <FeaturesSection />
-
-      {/* Product Sections */}
-      {productSections.map((section, sectionIndex) => (
-        <ProductCarousel
-          key={sectionIndex}
-          section={section}
-          sectionIndex={sectionIndex}
-          onAddToCart={addToCart}
-          onToggleWishlist={toggleWishlist}
+        {/* Header */}
+        <Header
+          isMenuOpen={isMenuOpen}
+          setIsMenuOpen={setIsMenuOpen}
+          cartItems={cartItems}
           wishlist={wishlist}
         />
-      ))}
 
-      {/* Newsletter Section */}
-      <Newsletter />
+        {/* Main Content */}
+        <Routes>
+          <Route 
+            path="/" 
+            element={
+              <HomePage
+                heroSlides={heroSlides}
+                currentSlide={currentSlide}
+                setCurrentSlide={setCurrentSlide}
+                productSections={productSections}
+                addToCart={addToCart}
+                toggleWishlist={toggleWishlist}
+                wishlist={wishlist}
+              />
+            } 
+          />
+          <Route 
+            path="/product/:id" 
+            element={
+              <ProductDetail
+                onAddToCart={addToCart}
+              />
+            } 
+          />
+        </Routes>
 
-      {/* Footer */}
-      <Footer />
-    </div>
+        {/* Footer */}
+        <Footer />
+      </div>
+    </Router>
   );
 };
 
