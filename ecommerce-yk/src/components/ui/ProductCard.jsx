@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { Heart, Star } from "lucide-react";
 import { formatPrice } from "../../utils/helpers";
 
@@ -15,28 +16,32 @@ const ProductCard = ({
   onToggleWishlist,
   isInWishlist,
 }) => {
+  const navigate = useNavigate();
+
+  const handleCardClick = () => {
+    // Scroll to top before navigating
+    window.scrollTo(0, 0);
+    navigate(`/product/${product.id}`);
+  };
+
   return (
-    <div
-      className="flex-shrink-0"
-      style={{
-        width: "clamp(250px, 30vw, 300px)",
-        maxWidth: "300px",
-        minWidth: "250px",
-      }}
-    >
-      <div className="card h-100 shadow-sm product-card position-relative overflow-hidden">
+    <div className="flex-shrink-0 w-[280px]">
+      <div 
+        className="bg-white rounded-lg shadow-sm overflow-hidden cursor-pointer relative h-full transition-transform hover:scale-[1.02] flex flex-col" 
+        onClick={handleCardClick}
+      >
         {/* Badges */}
-        <div className="position-absolute top-0 start-0 p-3 z-3">
+        <div className="absolute top-3 left-3 z-10 flex flex-col gap-1">
           {product.isNew && (
-            <span className="badge bg-success mb-2 d-block">NEW</span>
+            <span className="px-2 py-1 bg-green-500 text-white text-xs font-semibold rounded">NEW</span>
           )}
           {product.discount && (
-            <span className="badge bg-danger d-block">
+            <span className="px-2 py-1 bg-red-500 text-white text-xs font-semibold rounded">
               {product.discount}% OFF
             </span>
           )}
           {product.soldCount && (
-            <span className="badge bg-dark d-block">
+            <span className="px-2 py-1 bg-gray-900 text-white text-xs font-semibold rounded">
               {product.soldCount} sold
             </span>
           )}
@@ -44,61 +49,75 @@ const ProductCard = ({
 
         {/* Wishlist Button */}
         <button
-          onClick={() => onToggleWishlist(product.id)}
-          className="btn btn-light btn-sm rounded-circle position-absolute top-0 end-0 m-3 z-3"
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggleWishlist(product.id);
+          }}
+          className="absolute top-3 right-3 z-10 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-shadow"
         >
           <Heart
             size={18}
-            className={isInWishlist ? "text-danger fill-danger" : ""}
+            className={isInWishlist ? "text-red-500 fill-red-500" : "text-gray-600"}
           />
         </button>
 
         {/* Product Image */}
-        <div
-          className="bg-gradient-to-br from-gray-100 to-gray-300 d-flex align-items-center justify-content-center product-image"
-          style={{ height: "250px" }}
-        >
-          <div className="text-center">
-            <div className="display-1 shoe-icon">👟</div>
+        <div className="h-56 bg-gray-50 flex items-center justify-center relative overflow-hidden">
+          <img 
+            src={`https://via.placeholder.com/280x224/e3e3e3/666?text=${encodeURIComponent(product.name)}`}
+            alt={product.name}
+            className="w-full h-full object-cover"
+            onError={(e) => {
+              e.target.style.display = 'none';
+              e.target.nextSibling.style.display = 'block';
+            }}
+          />
+          <div className="text-center hidden">
+            <div className="text-6xl">👟</div>
           </div>
         </div>
 
-        {/* Product Info */}
-        <div className="card-body">
-          <h5 className="card-title fw-bold">{product.name}</h5>
+        {/* Product Info - flex-1 to fill remaining space */}
+        <div className="p-4 flex flex-col flex-1">
+          <h5 className="font-bold text-gray-900 mb-3 line-clamp-2 min-h-[3rem]">{product.name}</h5>
 
-          {/* Rating */}
-          <div className="d-flex align-items-center mb-3">
-            <div className="text-warning me-2">
-              {[...Array(5)].map((_, i) => (
+          {/* Rating - Horizontal */}
+          <div className="flex items-center gap-2 mb-3">
+            <div className="flex items-center gap-1">
+              {[1, 2, 3, 4, 5].map((star) => (
                 <Star
-                  key={i}
+                  key={star}
                   size={16}
                   className={
-                    i < Math.floor(product.rating) ? "fill-warning" : ""
+                    star <= Math.floor(product.rating) 
+                      ? "text-yellow-400 fill-yellow-400" 
+                      : "text-gray-300"
                   }
                 />
               ))}
             </div>
-            <small className="text-muted">{product.rating}</small>
+            <span className="text-sm text-gray-500">({product.rating})</span>
           </div>
 
           {/* Price */}
-          <div className="mb-3">
-            <h5 className="text-primary fw-bold mb-0">
+          <div className="mb-4 flex-1 flex flex-col justify-end">
+            <h5 className="text-lg font-bold text-blue-600 mb-1">
               {formatPrice(product.price)}
             </h5>
             {product.originalPrice && (
-              <small className="text-muted text-decoration-line-through">
+              <span className="text-sm text-gray-500 line-through">
                 {formatPrice(product.originalPrice)}
-              </small>
+              </span>
             )}
           </div>
 
           {/* Add to Cart Button */}
           <button
-            onClick={() => onAddToCart(product)}
-            className="btn btn-primary w-100 rounded-pill fw-bold add-to-cart-btn"
+            onClick={(e) => {
+              e.stopPropagation();
+              onAddToCart(product);
+            }}
+            className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-full transition-colors mt-auto"
           >
             Add to Cart
           </button>
