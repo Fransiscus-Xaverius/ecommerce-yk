@@ -15,7 +15,6 @@ import ProductCarousel from "./components/ui/ProductCarousel";
 import GlobalStyles from "./components/ui/GlobalStyles";
 
 // Data
-import { heroSlides } from "./data/heroSlides";
 import { productSections } from "./data/products";
 
 // Hooks
@@ -30,66 +29,111 @@ import { loadBootstrapCSS } from "./utils/helpers";
  * Main Application Component - Yongki Komaladi E-commerce Website
  */
 const YongkiKomaladiWebsite = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+	const [isMenuOpen, setIsMenuOpen] = useState(false);
+	const [heroSlides, setHeroSlides] = useState([]);
+	const [loadingBanners, setLoadingBanners] = useState(true);
+	const [errorBanners, setErrorBanners] = useState(null);
 
-  // Initialize custom hooks
-  const { currentSlide, setCurrentSlide } = useHeroSlider(heroSlides);
-  const { wishlist, toggleWishlist } = useWishlist();
-  const { cartItems, addToCart } = useCart();
+	// Initialize custom hooks
+	const { currentSlide, setCurrentSlide } = useHeroSlider(heroSlides);
+	const { wishlist, toggleWishlist } = useWishlist();
+	const { cartItems, addToCart } = useCart();
 
-  // Load Bootstrap CSS
-  useEffect(() => {
-    const cleanup = loadBootstrapCSS();
-    return cleanup;
-  }, []);
+	// Fetch banners from backend
+	useEffect(() => {
+		const fetchBanners = async () => {
+			try {
+				const response = await fetch(
+					"http://localhost:8080/api/banners/active"
+				);
+				if (!response.ok) {
+					throw new Error(`HTTP error! status: ${response.status}`);
+				}
+				const responseData = await response.json();
+				console.log(responseData);
+				// Map backend banner data to existing hero slide structure
+				const mappedSlides = responseData.data.banners.map((banner) => ({
+					id: banner.id,
+					title: banner.title,
+					subtitle: banner.subtitle,
+					description: banner.description,
+					cta: banner.cta_text,
+					image: `url('http://localhost:8080${banner.image_url}')`, // Prepend backend URL
+				}));
+				console.log(mappedSlides);
+				setHeroSlides(mappedSlides);
+			} catch (error) {
+				console.error("Error fetching banners:", error);
+				setErrorBanners(error);
+			} finally {
+				setLoadingBanners(false);
+			}
+		};
 
-  return (
-    <div
-      className="min-h-screen bg-light"
-      style={{ maxWidth: "100vw", overflowX: "hidden" }}
-    >
-      <GlobalStyles />
+		fetchBanners();
+	}, []);
 
-      {/* Top Announcement Bar */}
-      <AnnouncementBar />
+	// Load Bootstrap CSS
+	useEffect(() => {
+		const cleanup = loadBootstrapCSS();
+		return cleanup;
+	}, []);
 
-      {/* Header */}
-      <Header
-        isMenuOpen={isMenuOpen}
-        setIsMenuOpen={setIsMenuOpen}
-        cartItems={cartItems}
-        wishlist={wishlist}
-      />
+	if (loadingBanners) {
+		return <div>Loading banners...</div>; // Or a more sophisticated loading spinner
+	}
 
-      {/* Hero Section */}
-      <HeroSection
-        slides={heroSlides}
-        currentSlide={currentSlide}
-        setCurrentSlide={setCurrentSlide}
-      />
+	if (errorBanners) {
+		return <div>Error loading banners: {errorBanners.message}</div>;
+	}
 
-      {/* Features Section */}
-      <FeaturesSection />
+	return (
+		<div
+			className='min-h-screen bg-light'
+			style={{ maxWidth: "100vw", overflowX: "hidden" }}
+		>
+			<GlobalStyles />
 
-      {/* Product Sections */}
-      {productSections.map((section, sectionIndex) => (
-        <ProductCarousel
-          key={sectionIndex}
-          section={section}
-          sectionIndex={sectionIndex}
-          onAddToCart={addToCart}
-          onToggleWishlist={toggleWishlist}
-          wishlist={wishlist}
-        />
-      ))}
+			{/* Top Announcement Bar */}
+			<AnnouncementBar />
 
-      {/* Newsletter Section */}
-      <Newsletter />
+			{/* Header */}
+			<Header
+				isMenuOpen={isMenuOpen}
+				setIsMenuOpen={setIsMenuOpen}
+				cartItems={cartItems}
+				wishlist={wishlist}
+			/>
 
-      {/* Footer */}
-      <Footer />
-    </div>
-  );
+			{/* Hero Section */}
+			<HeroSection
+				slides={heroSlides}
+				currentSlide={currentSlide}
+				setCurrentSlide={setCurrentSlide}
+			/>
+
+			{/* Features Section */}
+			<FeaturesSection />
+
+			{/* Product Sections */}
+			{productSections.map((section, sectionIndex) => (
+				<ProductCarousel
+					key={sectionIndex}
+					section={section}
+					sectionIndex={sectionIndex}
+					onAddToCart={addToCart}
+					onToggleWishlist={toggleWishlist}
+					wishlist={wishlist}
+				/>
+			))}
+
+			{/* Newsletter Section */}
+			<Newsletter />
+
+			{/* Footer */}
+			<Footer />
+		</div>
+	);
 };
 
 export default YongkiKomaladiWebsite;
