@@ -32,23 +32,23 @@ const ProductCarousel = ({
 
   return (
     <section
-      className={`py-5 ${sectionIndex % 2 === 0 ? "bg-light" : "bg-white"}`}
+      className={`py-12 ${sectionIndex % 2 === 0 ? "bg-gray-50" : "bg-white"}`}
     >
-      <div className="container-fluid px-3 px-md-4">
-        <div className="d-flex justify-content-between align-items-center mb-4">
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="flex justify-between items-center mb-8">
           <div>
-            <h2 className="h1 fw-bold mb-2">{section.title}</h2>
-            <p className="text-muted mb-0">{section.subtitle}</p>
+            <h2 className="text-3xl font-bold text-gray-900 mb-2">{section.title}</h2>
+            <p className="text-gray-600">{section.subtitle}</p>
           </div>
-          <div className="d-flex gap-2 d-none d-md-flex">
+          <div className="hidden md:flex gap-2">
             <button
-              className="btn btn-outline-secondary rounded-circle p-2"
+              className="border border-gray-300 hover:border-gray-400 rounded-full p-2 hover:bg-gray-50 transition-all duration-300"
               onClick={() => scrollCarousel(carouselRef, "left")}
             >
               <ChevronLeft size={20} />
             </button>
             <button
-              className="btn btn-outline-secondary rounded-circle p-2"
+              className="border border-gray-300 hover:border-gray-400 rounded-full p-2 hover:bg-gray-50 transition-all duration-300"
               onClick={() => scrollCarousel(carouselRef, "right")}
             >
               <ChevronRight size={20} />
@@ -57,28 +57,22 @@ const ProductCarousel = ({
         </div>
 
         {/* Draggable Product Carousel */}
-        <div
-          className="position-relative"
-          style={{ maxWidth: "100vw", overflow: "hidden" }}
-        >
+        <div className="relative overflow-hidden">
           <div
             ref={carouselRef}
-            className="d-flex gap-3 gap-md-4 pb-3 scrollbar-hide draggable-carousel"
+            className="flex gap-6 pb-4 overflow-x-auto scrollbar-hide"
             style={{
-              overflowX: "auto",
               scrollBehavior: "smooth",
               WebkitOverflowScrolling: "touch",
               cursor: isDragging ? "grabbing" : "grab",
               userSelect: "none",
-              maxWidth: "100%",
-              width: "100%",
             }}
             onMouseDown={(e) => handleMouseDown(e, carouselRef)}
-            onMouseLeave={handleMouseLeave}
-            onMouseUp={handleMouseUp}
+            onMouseLeave={() => handleMouseLeave(carouselRef)}
+            onMouseUp={() => handleMouseUp(carouselRef)}
             onMouseMove={(e) => handleMouseMove(e, carouselRef)}
             onTouchStart={(e) => handleTouchStart(e, carouselRef)}
-            onTouchEnd={handleMouseUp}
+            onTouchEnd={() => handleMouseUp(carouselRef)}
             onTouchMove={(e) => handleTouchMove(e, carouselRef)}
           >
             {section.products.map((product) => (

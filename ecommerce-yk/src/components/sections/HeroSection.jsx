@@ -1,5 +1,5 @@
 import React from "react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 
 const HeroSection = ({ slides, currentSlide, setCurrentSlide }) => {
 	return (
