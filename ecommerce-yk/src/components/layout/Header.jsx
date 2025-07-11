@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { ShoppingCart, Menu, X, Search, User, Heart } from "lucide-react";
 
-const Header = ({ cartItems, wishlist }) => {
+const Header = ({ cartItems, wishlist, onSearch, onSearchSubmit }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const wishlistCount = wishlist ? wishlist.length : 0;
 
   const navigationItems = [
@@ -53,9 +55,32 @@ const Header = ({ cartItems, wishlist }) => {
 
           {/* Action buttons */}
           <div className="flex items-center space-x-2">
-            <button className="hidden md:block p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200">
-              <Search size={20} />
-            </button>
+            {/* Search Button / Input */}
+            <div className="relative hidden md:block">
+              <button
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+                onClick={() => setIsSearchOpen(!isSearchOpen)}
+              >
+                <Search size={20} />
+              </button>
+              {isSearchOpen && (
+                <div className="absolute right-0 mt-2 w-64">
+                  <input
+                    type="text"
+                    placeholder="Search products..."
+                    className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        onSearchSubmit(searchQuery);
+                        setIsSearchOpen(false); // Close search after submit
+                      }
+                    }}
+                  />
+                </div>
+              )}
+            </div>
             <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200">
               <User size={20} />
             </button>

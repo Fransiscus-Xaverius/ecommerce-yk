@@ -10,25 +10,14 @@ import { formatPrice } from "../../utils/helpers";
  * @param {Function} onToggleWishlist - Wishlist toggle handler
  * @param {boolean} isInWishlist - Whether product is in wishlist
  */
-const ProductCard = ({
-  product,
-  onAddToCart,
-  onToggleWishlist,
-  isInWishlist,
-}) => {
-  const navigate = useNavigate();
-
-  const handleCardClick = () => {
-    // Scroll to top before navigating
-    window.scrollTo(0, 0);
-    navigate(`/product/${product.id}`);
-  };
+const ProductCard = ({ product, onAddToCart, onToggleWishlist, isInWishlist, onProductClick }) => {
+  
 
   return (
     <div className="flex-shrink-0 w-[280px]">
       <div 
         className="bg-white rounded-lg shadow-sm overflow-hidden cursor-pointer relative h-full transition-transform hover:scale-[1.02] flex flex-col" 
-        onClick={handleCardClick}
+        onClick={() => onProductClick(product.artikel)}
       >
         {/* Badges */}
         <div className="absolute top-3 left-3 z-10 flex flex-col gap-1">
@@ -64,8 +53,8 @@ const ProductCard = ({
         {/* Product Image */}
         <div className="h-56 bg-gray-50 flex items-center justify-center relative overflow-hidden">
           <img 
-            src={`https://via.placeholder.com/280x224/e3e3e3/666?text=${encodeURIComponent(product.name)}`}
-            alt={product.name}
+            src={`https://via.placeholder.com/280x224/e3e3e3/666?text=${encodeURIComponent(product.nama)}`}
+            alt={product.nama}
             className="w-full h-full object-cover"
             onError={(e) => {
               e.target.style.display = 'none';
@@ -79,7 +68,7 @@ const ProductCard = ({
 
         {/* Product Info - flex-1 to fill remaining space */}
         <div className="p-4 flex flex-col flex-1">
-          <h5 className="font-bold text-gray-900 mb-3 line-clamp-2 min-h-[3rem]">{product.name}</h5>
+          <h5 className="font-bold text-gray-900 mb-3 line-clamp-2 min-h-[3rem]">{product.nama}</h5>
 
           {/* Rating - Horizontal */}
           <div className="flex items-center gap-2 mb-3">
@@ -102,7 +91,7 @@ const ProductCard = ({
           {/* Price */}
           <div className="mb-4 flex-1 flex flex-col justify-end">
             <h5 className="text-lg font-bold text-blue-600 mb-1">
-              {formatPrice(product.price)}
+              {formatPrice(product.harga)}
             </h5>
             {product.originalPrice && (
               <span className="text-sm text-gray-500 line-through">

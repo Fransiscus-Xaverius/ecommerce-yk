@@ -1,33 +1,64 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Star, ChevronDown, ArrowLeft, Package, Truck } from "lucide-react";
 import { formatPrice } from "../../utils/helpers";
-import { productSections } from "../../data/products";
 
 /**
  * Product Detail Page Component
  */
 const ProductDetail = ({ onAddToCart }) => {
-  const { id } = useParams();
+  const { id: productArticle } = useParams();
   const navigate = useNavigate();
 
   // Scroll to top when component mounts
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [id]);
+  }, [productArticle]);
 
-  // Find product from all sections
-  const product = productSections
-    .flatMap((section) => section.products)
-    .find((p) => p.id === parseInt(id));
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const [selectedColor, setSelectedColor] = useState("BLACK");
-  const [selectedSize, setSelectedSize] = useState("37");
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:8080/api/products/${productArticle}`
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const responseData = await response.json();
+        setProduct(responseData.data);
+      } catch (error) {
+        setError(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [productArticle]);
+
+  const [selectedColor, setSelectedColor] = useState("");
+  const [selectedSize, setSelectedSize] = useState("");
   const [selectedImage, setSelectedImage] = useState(0);
   const [showDescription, setShowDescription] = useState(false);
   const [quantity, setQuantity] = useState(1);
 
-  if (!product) {
+  if (loading) {
+    return (
+      <div className="max-w-7xl mx-auto py-8 px-4">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            Loading product...
+          </h2>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
     return (
       <div className="max-w-7xl mx-auto py-8 px-4">
         <div className="text-center">
@@ -55,23 +86,36 @@ const ProductDetail = ({ onAddToCart }) => {
     "https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=600&h=600&fit=crop&crop=center",
   ];
 
-  const colors = [
-    { name: "BLACK", color: "#1f2937", label: "Hitam" },
-    { name: "WHITE", color: "#f8fafc", label: "Putih", border: true },
-    { name: "BLUE", color: "#1e40af", label: "Biru" },
-    { name: "RED", color: "#dc2626", label: "Merah" },
-  ];
+  // const colors = [
+  //   { name: "BLACK", color: "#1f2937", label: "Hitam" },
+  //   { name: "WHITE", color: "#f8fafc", label: "Putih", border: true },
+  //   { name: "BLUE", color: "#1e40af", label: "Biru" },
+  //   { name: "RED", color: "#dc2626", label: "Merah" },
+  // ];
 
-  const sizes = [
-    { size: "36", available: true },
-    { size: "37", available: true },
-    { size: "38", available: false },
-    { size: "39", available: true },
-    { size: "40", available: true },
-    { size: "41", available: false },
-    { size: "42", available: true },
-    { size: "43", available: true },
-  ];
+  const colors = product.colors.map((color) => ({
+    id: color.id,
+    color: color.hex,
+    label: color.name,
+  }));
+
+  // const sizes = [
+  //   { size: "36", available: true },
+  //   { size: "37", available: true },
+  //   { size: "38", available: false },
+  //   { size: "39", available: true },
+  //   { size: "40", available: true },
+  //   { size: "41", available: false },
+  //   { size: "42", available: true },
+  //   { size: "43", available: true },
+  // ];
+
+  const sizes = product.size.split(",").map((size) => {
+    return {
+      size,
+      available: true,
+    };
+  });
 
   const handleAddToCart = () => {
     onAddToCart({
@@ -85,7 +129,7 @@ const ProductDetail = ({ onAddToCart }) => {
   const handleTokopediaClick = () => {
     window.open(
       `https://tokopedia.com/search?st=product&q=${encodeURIComponent(
-        product.name
+        product.model
       )}`,
       "_blank"
     );
@@ -93,7 +137,9 @@ const ProductDetail = ({ onAddToCart }) => {
 
   const handleShopeeClick = () => {
     window.open(
-      `https://shopee.co.id/search?keyword=${encodeURIComponent(product.name)}`,
+      `https://shopee.co.id/search?keyword=${encodeURIComponent(
+        product.model
+      )}`,
       "_blank"
     );
   };
@@ -134,7 +180,7 @@ const ProductDetail = ({ onAddToCart }) => {
                     >
                       <img
                         src={img}
-                        alt={`${product.name} ${index + 1}`}
+                        alt={`${product.model} ${index + 1}`}
                         className="w-full h-full object-cover"
                       />
                     </button>
@@ -146,7 +192,7 @@ const ProductDetail = ({ onAddToCart }) => {
                   <div className="bg-gray-50 rounded-xl overflow-hidden h-64 sm:h-80 md:h-96 lg:h-[500px]">
                     <img
                       src={productImages[selectedImage]}
-                      alt={product.name}
+                      alt={product.model}
                       className="w-full h-full object-cover"
                     />
                   </div>
@@ -177,12 +223,12 @@ const ProductDetail = ({ onAddToCart }) => {
 
               {/* Product Title */}
               <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 mb-2">
-                {product.name}
+                {product.nama}
               </h1>
 
               {/* Product Code */}
               <p className="text-sm text-gray-500 mb-4">
-                Kode Produk: SNK-{product.id.toString().padStart(4, "0")}
+                Kode Produk: {product.artikel}
               </p>
 
               {/* Star Rating */}
@@ -246,8 +292,10 @@ const ProductDetail = ({ onAddToCart }) => {
               <div className="mb-6 md:mb-8">
                 <div className="flex items-baseline gap-2 md:gap-3 mb-1">
                   <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
-                    {formatPrice(product.price)}
+                    {formatPrice(product.harga)}
                   </h2>
+
+                  {/* Display discounted price if available */}
                   {product.originalPrice && (
                     <span className="text-base md:text-lg text-gray-500 line-through">
                       {formatPrice(product.originalPrice)}
@@ -264,17 +312,17 @@ const ProductDetail = ({ onAddToCart }) => {
                 <div className="flex items-center justify-between mb-3 md:mb-4">
                   <h3 className="font-bold text-gray-900 text-xs md:text-sm uppercase tracking-wider">
                     Warna:{" "}
-                    {colors.find((c) => c.name === selectedColor)?.label ||
+                    {colors.find((c) => c.id === selectedColor)?.label ||
                       selectedColor}
                   </h3>
                 </div>
                 <div className="flex gap-2 md:gap-3">
                   {colors.map((color) => (
                     <button
-                      key={color.name}
-                      onClick={() => setSelectedColor(color.name)}
+                      key={color.id}
+                      onClick={() => setSelectedColor(color.id)}
                       className={`relative w-10 h-10 md:w-12 md:h-12 rounded-full transition-all ${
-                        selectedColor === color.name
+                        selectedColor === color.id
                           ? "ring-4 ring-gray-300 ring-offset-2"
                           : "hover:ring-2 hover:ring-gray-200 hover:ring-offset-1"
                       } ${color.border ? "border-2 border-gray-300" : ""}`}
@@ -283,7 +331,7 @@ const ProductDetail = ({ onAddToCart }) => {
                       }}
                       title={color.label}
                     >
-                      {selectedColor === color.name && (
+                      {selectedColor === color.id && (
                         <div className="absolute inset-0 flex items-center justify-center">
                           <svg
                             width="18"
@@ -294,9 +342,9 @@ const ProductDetail = ({ onAddToCart }) => {
                             <path
                               d="M20 6L9 17l-5-5"
                               stroke={
-                                color.name === "BLACK"
+                                color.id === ""
                                   ? "white"
-                                  : color.name === "WHITE"
+                                  : color.id === "WHITE"
                                   ? "#374151"
                                   : "white"
                               }
@@ -413,7 +461,7 @@ const ProductDetail = ({ onAddToCart }) => {
                 {showDescription && (
                   <div className="mt-4 space-y-3">
                     <p className="text-gray-600 leading-relaxed">
-                      {product.description ||
+                      {product.deskripsi ||
                         "Sepatu sneakers premium dengan desain modern dan kualitas terbaik. Terbuat dari bahan berkualitas tinggi yang memberikan kenyamanan maksimal untuk aktivitas sehari-hari."}
                     </p>
                     <div className="text-sm text-gray-500">

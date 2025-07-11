@@ -1,4 +1,5 @@
 import React, { useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import ProductCard from "../ui/ProductCard";
 import { scrollCarousel } from "../../utils/helpers";
@@ -19,6 +20,11 @@ const ProductCarousel = ({
   wishlist,
   sectionIndex,
 }) => {
+  const navigate = useNavigate();
+
+  const handleProductClick = (artikel) => {
+    navigate(`/product/${artikel}`);
+  };
   const carouselRef = useRef(null);
   const {
     handleMouseDown,
@@ -79,6 +85,7 @@ const ProductCarousel = ({
               <ProductCard
                 key={product.id}
                 product={product}
+                onProductClick={handleProductClick}
                 onAddToCart={onAddToCart}
                 onToggleWishlist={onToggleWishlist}
                 isInWishlist={wishlist.includes(product.id)}
