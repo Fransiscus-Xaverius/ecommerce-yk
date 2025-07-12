@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "http://localhost:8080",
+        target: process.env.NODE_ENV === "development" ? "http://localhost:8080" : process.env.BACKEND_URL,
         changeOrigin: true,
         secure: false,
       },
