@@ -1,12 +1,53 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 
-const HeroSection = ({ slides, currentSlide, setCurrentSlide }) => {
+import useApiRequest from "../../hooks/useApiRequest";
+import { useHeroSlider } from "../../hooks/useHeroSlider";
+
+const HeroSection = () => {
+  const [heroSlides, setHeroSlides] = useState([]);
+
+  const { currentSlide, setCurrentSlide } = useHeroSlider(heroSlides);
+
+  const {
+    response: bannerResponse,
+    isLoading: loadingBanners,
+    error: errorBanners,
+  } = useApiRequest({
+    url: "/api/banners/active",
+    method: "GET",
+  });
+
+  // Fetch banners from backend
+  useEffect(() => {
+    if (!bannerResponse) return;
+    const responseData = bannerResponse.data;
+    // Map backend banner data to existing hero slide structure
+    const mappedSlides = responseData.banners.map((banner) => ({
+      id: banner.id,
+      title: banner.title,
+      subtitle: banner.subtitle,
+      description: banner.description,
+      cta: banner.cta_text,
+      image: `${import.meta.env.VITE_BACKEND_URL}${banner.image_url}`,
+    }));
+    console.log(mappedSlides);
+    setHeroSlides(mappedSlides);
+  }, [bannerResponse]);
+
+  if (loadingBanners) {
+    return <div>Loading banners...</div>; // Or a more sophisticated loading spinner
+  }
+
+  if (errorBanners) {
+    return <div>Error loading banners: {errorBanners.message}</div>;
+  }
+
   return (
     <section className="position-relative">
       <div id="heroCarousel" className="carousel slide carousel-fade" data-bs-ride="carousel">
         <div className="carousel-indicators">
-          {slides.map((_, index) => (
+          {heroSlides.map((_, index) => (
             <button
               key={index}
               type="button"
@@ -17,7 +58,7 @@ const HeroSection = ({ slides, currentSlide, setCurrentSlide }) => {
         </div>
 
         <div className="carousel-inner">
-          {slides.map((slide, index) => (
+          {heroSlides.map((slide, index) => (
             <div
               key={slide.id}
               className={`carousel-item ${index === currentSlide ? "active" : ""}`}
@@ -26,7 +67,11 @@ const HeroSection = ({ slides, currentSlide, setCurrentSlide }) => {
               <div
                 className="d-flex align-items-center justify-content-center h-100 text-white"
                 style={{
-                  background: `radial-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.3)), ${slide.image}`,
+                  background: `radial-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.3)), url(${slide.image})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                  backgroundRepeat: "no-repeat",
+                  backgroundBlendMode: "darken",
                 }}
               >
                 <div className="container text-center">
@@ -63,14 +108,14 @@ const HeroSection = ({ slides, currentSlide, setCurrentSlide }) => {
         <button
           className="carousel-control-prev"
           type="button"
-          onClick={() => setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length)}
+          onClick={() => setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length)}
         >
           <span className="carousel-control-prev-icon"></span>
         </button>
         <button
           className="carousel-control-next"
           type="button"
-          onClick={() => setCurrentSlide((prev) => (prev + 1) % slides.length)}
+          onClick={() => setCurrentSlide((prev) => (prev + 1) % heroSlides.length)}
         >
           <span className="carousel-control-next-icon"></span>
         </button>
