@@ -65,22 +65,34 @@ const HeroSection = () => {
               style={{ height: "70vh", minHeight: "500px" }}
             >
               <div
-                className="d-flex align-items-center justify-content-center h-100 text-white"
+                className="d-flex align-items-center justify-content-center h-100 position-relative text-white"
                 style={{
-                  background: `radial-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.3)), url(${slide.image})`,
+                  background: `radial-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.0))`,
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                   backgroundRepeat: "no-repeat",
-                  backgroundBlendMode: "darken",
                 }}
               >
+                {/* Semi-transparent background image */}
+                <div
+                  className="position-absolute w-100 h-100"
+                  style={{
+                    background: `url(${slide.image})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                    mask: "radial-gradient(circle at center, black 0%, rgba(0,0,0,0.8) 100%)",
+                    WebkitMask: "radial-gradient(circle at center, black 0%, rgba(0,0,0,0.8) 100%)",
+                    zIndex: -1,
+                  }}
+                ></div>
                 <div className="container text-center">
                   <div className="row justify-content-center">
                     <div className="col-lg-8">
                       <h2
                         className="display-3 fw-bold animate_animated animate_fadeInDown text-shadow-4xl mb-3"
                         style={{
-                          textShadow: "0 0 12px rgba(0,0,0,0.8), 0 0 24px rgba(0,0,0,0.6)",
+                          textShadow: "0 0 12px rgba(0,0,0,0.5), 0 0 24px rgba(0,0,0,0.3)",
                         }}
                       >
                         {slide.title}
