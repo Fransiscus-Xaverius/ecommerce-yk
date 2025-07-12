@@ -3,10 +3,14 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Star, ChevronDown, ArrowLeft, Package, Truck } from "lucide-react";
 import { formatPrice } from "../../utils/helpers";
 
+// Hooks
+import { useCart } from "../../hooks/useCart";
+
 /**
  * Product Detail Page Component
  */
-const ProductDetail = ({ onAddToCart }) => {
+export default function ProductDetail() {
+  const { addToCart } = useCart();
   const { id: productArticle } = useParams();
   const navigate = useNavigate();
 
@@ -118,7 +122,7 @@ const ProductDetail = ({ onAddToCart }) => {
   });
 
   const handleAddToCart = () => {
-    onAddToCart({
+    addToCart({
       ...product,
       selectedColor,
       selectedSize,
@@ -482,6 +486,4 @@ const ProductDetail = ({ onAddToCart }) => {
       </div>
     </div>
   );
-};
-
-export default ProductDetail;
+}

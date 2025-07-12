@@ -1,11 +1,19 @@
 import React, { useState } from "react";
 import { ShoppingCart, Menu, X, Search, User, Heart } from "lucide-react";
+import { useWishlist } from "../../hooks/useWishlist";
+import { useCart } from "../../hooks/useCart";
 
-const Header = ({ cartItems, wishlist, onSearch, onSearchSubmit }) => {
+const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const { wishlist } = useWishlist();
+  const { cartItems } = useCart();
   const wishlistCount = wishlist ? wishlist.length : 0;
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [loadingSearch, setLoadingSearch] = useState(false);
+  const [errorSearch, setErrorSearch] = useState(null);
 
   const navigationItems = [
     { label: "New Arrivals", href: "#" },
@@ -15,6 +23,26 @@ const Header = ({ cartItems, wishlist, onSearch, onSearchSubmit }) => {
     { label: "Collections", href: "#" },
     { label: "About", href: "#" },
   ];
+
+  const handleSearchSubmit = async (query) => {
+    setSearchQuery(query);
+    setLoadingSearch(true);
+    setErrorSearch(null);
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/products/?q=${query}`
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const responseData = await response.json();
+      setSearchResults(responseData.data.items);
+    } catch (error) {
+      setErrorSearch(error);
+    } finally {
+      setLoadingSearch(false);
+    }
+  };
 
   return (
     <header className="bg-white shadow-lg sticky top-0 z-50">
@@ -72,8 +100,8 @@ const Header = ({ cartItems, wishlist, onSearch, onSearchSubmit }) => {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        onSearchSubmit(searchQuery);
+                      if (e.key === "Enter") {
+                        handleSearchSubmit(searchQuery);
                         setIsSearchOpen(false); // Close search after submit
                       }
                     }}
