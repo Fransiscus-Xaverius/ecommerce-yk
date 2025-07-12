@@ -52,9 +52,7 @@ const transformProductData = (backendProduct) => {
     tanggalProduk: backendProduct.tanggal_produk,
     tanggalTerima: backendProduct.tanggal_terima,
     tanggalUpdate: backendProduct.tanggal_update,
-    description: `Premium ${
-      backendProduct.artikel
-    } dengan kualitas terbaik dari ${
+    description: `Premium ${backendProduct.artikel} dengan kualitas terbaik dari ${
       backendProduct.supplier || "supplier terpercaya"
     }.`,
     isNew: calculateIsNew(backendProduct.tanggal_produk),

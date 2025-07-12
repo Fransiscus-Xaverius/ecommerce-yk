@@ -30,19 +30,19 @@ const FeaturesSection = () => {
   ];
 
   return (
-    <section className="py-12 bg-white">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+    <section className="bg-white py-12">
+      <div className="mx-auto max-w-7xl px-4">
+        <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
           {features.map((feature, index) => (
-            <div key={index} className="text-center p-6 group hover:bg-gray-50 rounded-lg transition-all duration-300">
+            <div key={index} className="group rounded-lg p-6 text-center transition-all duration-300 hover:bg-gray-50">
               <div
-                className={`${feature.bgColor} rounded-full inline-flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}
+                className={`${feature.bgColor} mb-4 inline-flex items-center justify-center rounded-full transition-transform duration-300 group-hover:scale-110`}
                 style={{ width: "70px", height: "70px" }}
               >
                 {feature.icon}
               </div>
-              <h5 className="font-bold text-gray-900 mb-2">{feature.title}</h5>
-              <p className="text-gray-600 text-sm">{feature.description}</p>
+              <h5 className="mb-2 font-bold text-gray-900">{feature.title}</h5>
+              <p className="text-sm text-gray-600">{feature.description}</p>
             </div>
           ))}
         </div>

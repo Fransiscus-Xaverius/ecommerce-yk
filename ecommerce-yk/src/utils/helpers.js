@@ -35,8 +35,7 @@ export const scrollCarousel = (ref, direction) => {
 export const loadBootstrapCSS = () => {
   const link = document.createElement("link");
   link.rel = "stylesheet";
-  link.href =
-    "https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css";
+  link.href = "https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css";
   document.head.appendChild(link);
 
   return () => {

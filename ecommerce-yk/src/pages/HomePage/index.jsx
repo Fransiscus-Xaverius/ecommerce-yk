@@ -47,13 +47,9 @@ export default function HomePage() {
         const fetchedProducts = [];
         for (let i = 1; i <= 10; i++) {
           const artikel = `ART-${String(i).padStart(6, "0")}`;
-          const response = await fetch(
-            `http://localhost:8080/api/products/${artikel}`
-          );
+          const response = await fetch(`http://localhost:8080/api/products/${artikel}`);
           if (!response.ok) {
-            console.error(
-              `Error fetching New Arrival ${artikel}: HTTP error! status: ${response.status}`
-            );
+            console.error(`Error fetching New Arrival ${artikel}: HTTP error! status: ${response.status}`);
             continue;
           }
           const responseData = await response.json();
@@ -79,13 +75,9 @@ export default function HomePage() {
         const fetchedProducts = [];
         for (let i = 11; i <= 20; i++) {
           const artikel = `ART-${String(i).padStart(6, "0")}`;
-          const response = await fetch(
-            `http://localhost:8080/api/products/${artikel}`
-          );
+          const response = await fetch(`http://localhost:8080/api/products/${artikel}`);
           if (!response.ok) {
-            console.error(
-              `Error fetching Best Seller ${artikel}: HTTP error! status: ${response.status}`
-            );
+            console.error(`Error fetching Best Seller ${artikel}: HTTP error! status: ${response.status}`);
             continue;
           }
           const responseData = await response.json();
@@ -111,13 +103,9 @@ export default function HomePage() {
         const fetchedProducts = [];
         for (let i = 21; i <= 30; i++) {
           const artikel = `ART-${String(i).padStart(6, "0")}`;
-          const response = await fetch(
-            `http://localhost:8080/api/products/${artikel}`
-          );
+          const response = await fetch(`http://localhost:8080/api/products/${artikel}`);
           if (!response.ok) {
-            console.error(
-              `Error fetching Special Deal ${artikel}: HTTP error! status: ${response.status}`
-            );
+            console.error(`Error fetching Special Deal ${artikel}: HTTP error! status: ${response.status}`);
             continue;
           }
           const responseData = await response.json();
@@ -147,9 +135,7 @@ export default function HomePage() {
   useEffect(() => {
     const fetchBanners = async () => {
       try {
-        const response = await fetch(
-          "http://localhost:8080/api/banners/active"
-        );
+        const response = await fetch("http://localhost:8080/api/banners/active");
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -193,11 +179,7 @@ export default function HomePage() {
   return (
     <>
       {/* Hero Section */}
-      <HeroSection
-        slides={heroSlides}
-        currentSlide={currentSlide}
-        setCurrentSlide={setCurrentSlide}
-      />
+      <HeroSection slides={heroSlides} currentSlide={currentSlide} setCurrentSlide={setCurrentSlide} />
 
       {/* Features Section */}
       <FeaturesSection />
@@ -226,14 +208,9 @@ export default function HomePage() {
         <div>Loading products...</div>
       ) : errorNewArrivals || errorBestSellers || errorSpecialDeals ? (
         <div>
-          Error loading products:{" "}
-          {errorNewArrivals?.message ||
-            errorBestSellers?.message ||
-            errorSpecialDeals?.message}
+          Error loading products: {errorNewArrivals?.message || errorBestSellers?.message || errorSpecialDeals?.message}
         </div>
-      ) : newArrivals.length > 0 ||
-        bestSellers.length > 0 ||
-        specialDeals.length > 0 ? (
+      ) : newArrivals.length > 0 || bestSellers.length > 0 || specialDeals.length > 0 ? (
         productSections.map((section, sectionIndex) => (
           <ProductCarousel
             key={sectionIndex}

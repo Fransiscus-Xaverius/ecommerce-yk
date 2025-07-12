@@ -13,13 +13,7 @@ import { useCarouselDrag } from "../../hooks/useCarouselDrag";
  * @param {Array} wishlist - Array of wishlist product IDs
  * @param {number} sectionIndex - Section index for styling
  */
-const ProductCarousel = ({
-  section,
-  onAddToCart,
-  onToggleWishlist,
-  wishlist,
-  sectionIndex,
-}) => {
+const ProductCarousel = ({ section, onAddToCart, onToggleWishlist, wishlist, sectionIndex }) => {
   const navigate = useNavigate();
 
   const handleProductClick = (artikel) => {
@@ -37,24 +31,22 @@ const ProductCarousel = ({
   } = useCarouselDrag();
 
   return (
-    <section
-      className={`py-12 ${sectionIndex % 2 === 0 ? "bg-gray-50" : "bg-white"}`}
-    >
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="flex justify-between items-center mb-8">
+    <section className={`py-12 ${sectionIndex % 2 === 0 ? "bg-gray-50" : "bg-white"}`}>
+      <div className="mx-auto max-w-7xl px-4">
+        <div className="mb-8 flex items-center justify-between">
           <div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">{section.title}</h2>
+            <h2 className="mb-2 text-3xl font-bold text-gray-900">{section.title}</h2>
             <p className="text-gray-600">{section.subtitle}</p>
           </div>
-          <div className="hidden md:flex gap-2">
+          <div className="hidden gap-2 md:flex">
             <button
-              className="border border-gray-300 hover:border-gray-400 rounded-full p-2 hover:bg-gray-50 transition-all duration-300"
+              className="rounded-full border border-gray-300 p-2 transition-all duration-300 hover:border-gray-400 hover:bg-gray-50"
               onClick={() => scrollCarousel(carouselRef, "left")}
             >
               <ChevronLeft size={20} />
             </button>
             <button
-              className="border border-gray-300 hover:border-gray-400 rounded-full p-2 hover:bg-gray-50 transition-all duration-300"
+              className="rounded-full border border-gray-300 p-2 transition-all duration-300 hover:border-gray-400 hover:bg-gray-50"
               onClick={() => scrollCarousel(carouselRef, "right")}
             >
               <ChevronRight size={20} />
@@ -66,7 +58,7 @@ const ProductCarousel = ({
         <div className="relative overflow-hidden">
           <div
             ref={carouselRef}
-            className="flex gap-6 pb-4 overflow-x-auto scrollbar-hide"
+            className="scrollbar-hide flex gap-6 overflow-x-auto pb-4"
             style={{
               scrollBehavior: "smooth",
               WebkitOverflowScrolling: "touch",

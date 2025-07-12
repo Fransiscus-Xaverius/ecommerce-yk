@@ -16,7 +16,7 @@ import ProductDetail from "./pages/ProductDetail";
 const YongkiKomaladiWebsite = () => {
   return (
     <BrowserRouter>
-      <div className="min-h-screen bg-gray-50 overflow-x-hidden">
+      <div className="min-h-screen overflow-x-hidden bg-gray-50">
         {/* Top Announcement Bar */}
         <AnnouncementBar />
 
