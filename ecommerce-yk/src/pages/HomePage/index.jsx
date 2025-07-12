@@ -24,11 +24,6 @@ export default function HomePage() {
   const [loadingSearch, setLoadingSearch] = useState(false);
   const [errorSearch, setErrorSearch] = useState(null);
 
-  const [heroSlides, setHeroSlides] = useState([]);
-  const [loadingBanners, setLoadingBanners] = useState(true);
-  const [errorBanners, setErrorBanners] = useState(null);
-
-  const { currentSlide, setCurrentSlide } = useHeroSlider(heroSlides);
   const [newArrivals, setNewArrivals] = useState([]);
   const [loadingNewArrivals, setLoadingNewArrivals] = useState(true);
   const [errorNewArrivals, setErrorNewArrivals] = useState(null);
@@ -131,55 +126,16 @@ export default function HomePage() {
     { title: "Special Deal", products: specialDeals },
   ];
 
-  // Fetch banners from backend
-  useEffect(() => {
-    const fetchBanners = async () => {
-      try {
-        const response = await fetch("http://localhost:8080/api/banners/active");
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const responseData = await response.json();
-        console.log(responseData);
-        // Map backend banner data to existing hero slide structure
-        const mappedSlides = responseData.data.banners.map((banner) => ({
-          id: banner.id,
-          title: banner.title,
-          subtitle: banner.subtitle,
-          description: banner.description,
-          cta: banner.cta_text,
-          image: `url('http://localhost:8080${banner.image_url}')`, // Prepend backend URL
-        }));
-        console.log(mappedSlides);
-        setHeroSlides(mappedSlides);
-      } catch (error) {
-        console.error("Error fetching banners:", error);
-        setErrorBanners(error);
-      } finally {
-        setLoadingBanners(false);
-      }
-    };
-    fetchBanners();
-  }, []);
-
   // Load Bootstrap CSS
   useEffect(() => {
     const cleanup = loadBootstrapCSS();
     return cleanup;
   }, []);
 
-  if (loadingBanners) {
-    return <div>Loading banners...</div>; // Or a more sophisticated loading spinner
-  }
-
-  if (errorBanners) {
-    return <div>Error loading banners: {errorBanners.message}</div>;
-  }
-
   return (
     <>
       {/* Hero Section */}
-      <HeroSection slides={heroSlides} currentSlide={currentSlide} setCurrentSlide={setCurrentSlide} />
+      <HeroSection />
 
       {/* Features Section */}
       <FeaturesSection />
