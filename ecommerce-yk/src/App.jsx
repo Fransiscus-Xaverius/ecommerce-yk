@@ -10,6 +10,7 @@ import Footer from "./components/layout/Footer";
 // Pages
 import HomePage from "./pages/HomePage";
 import ProductDetail from "./pages/ProductDetail";
+import SearchResults from "./pages/SearchResults";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -39,6 +40,7 @@ const YongkiKomaladiWebsite = () => {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/product/:id" element={<ProductDetail />} />
+            <Route path="/search" element={<SearchResults />} />
           </Routes>
 
           {/* Footer */}
