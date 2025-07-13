@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Star, ChevronDown, ArrowLeft, Package, Truck } from "lucide-react";
 import { formatPrice } from "../../utils/helpers";
@@ -91,11 +91,13 @@ export default function ProductDetail() {
   //   { name: "RED", color: "#dc2626", label: "Merah" },
   // ];
 
-  const colors = product.colors.map((color) => ({
-    id: color.id,
-    color: color.hex,
-    label: color.name,
-  }));
+  const colors = product.colors
+    ? product.colors.map((color) => ({
+        id: color.id,
+        color: color.hex,
+        label: color.name,
+      }))
+    : [];
 
   // const sizes = [
   //   { size: "36", available: true },
@@ -108,12 +110,14 @@ export default function ProductDetail() {
   //   { size: "43", available: true },
   // ];
 
-  const sizes = product.size.split(",").map((size) => {
-    return {
-      size,
-      available: true,
-    };
-  });
+  const sizes = product.size
+    ? product.size.split(",").map((size) => {
+        return {
+          size: size.trim(),
+          available: true,
+        };
+      })
+    : [];
 
   const handleAddToCart = () => {
     addToCart({
@@ -125,11 +129,17 @@ export default function ProductDetail() {
   };
 
   const handleTokopediaClick = () => {
-    window.open(`https://tokopedia.com/search?st=product&q=${encodeURIComponent(product.model)}`, "_blank");
+    window.open(
+      `https://tokopedia.com/search?st=product&q=${encodeURIComponent(product.artikel || product.model || "")}`,
+      "_blank"
+    );
   };
 
   const handleShopeeClick = () => {
-    window.open(`https://shopee.co.id/search?keyword=${encodeURIComponent(product.model)}`, "_blank");
+    window.open(
+      `https://shopee.co.id/search?keyword=${encodeURIComponent(product.artikel || product.model || "")}`,
+      "_blank"
+    );
   };
 
   return (
@@ -159,7 +169,7 @@ export default function ProductDetail() {
                       }`}
                       onClick={() => setSelectedImage(index)}
                     >
-                      <img src={img} alt={`${product.model} ${index + 1}`} className="h-full w-full object-cover" />
+                      <img src={img} alt={`${product.artikel} ${index + 1}`} className="h-full w-full object-cover" />
                     </button>
                   ))}
                 </div>
@@ -169,7 +179,7 @@ export default function ProductDetail() {
                   <div className="h-64 overflow-hidden rounded-xl bg-gray-50 sm:h-80 md:h-96 lg:h-[500px]">
                     <img
                       src={productImages[selectedImage]}
-                      alt={product.model}
+                      alt={product.artikel}
                       className="h-full w-full object-cover"
                     />
                   </div>
@@ -195,7 +205,7 @@ export default function ProductDetail() {
               </nav>
 
               {/* Product Title */}
-              <h1 className="mb-2 text-xl font-bold text-gray-900 md:text-2xl lg:text-3xl">{product.nama}</h1>
+              <h1 className="mb-2 text-xl font-bold text-gray-900 md:text-2xl lg:text-3xl">{product.artikel}</h1>
 
               {/* Product Code */}
               <p className="mb-4 text-sm text-gray-500">Kode Produk: {product.artikel}</p>
@@ -333,6 +343,35 @@ export default function ProductDetail() {
                 </div>
               </div>
 
+              {/* Description */}
+              <div className="mb-6 border-t border-gray-200 pt-4 md:mb-8">
+                <button
+                  className="flex w-full items-center justify-between text-sm font-bold tracking-wide text-gray-900"
+                  onClick={() => setShowDescription(!showDescription)}
+                >
+                  <span>DESKRIPSI PRODUK</span>
+                  <ChevronDown size={20} className={`transition-transform ${showDescription ? "rotate-180" : ""}`} />
+                </button>
+
+                {showDescription && (
+                  <div className="mt-4 space-y-3">
+                    <p className="leading-relaxed text-gray-600">
+                      {product.deskripsi ||
+                        "Sepatu sneakers premium dengan desain modern dan kualitas terbaik. Terbuat dari bahan berkualitas tinggi yang memberikan kenyamanan maksimal untuk aktivitas sehari-hari."}
+                    </p>
+                    <div className="text-sm text-gray-500">
+                      <p className="mb-2 font-medium">Spesifikasi:</p>
+                      <ul className="space-y-1">
+                        <li>• Bahan: Canvas Premium & Synthetic Leather</li>
+                        <li>• Sol: Rubber Outsole</li>
+                        <li>• Tinggi Sol: 3cm</li>
+                        <li>• Berat: ±350 gram</li>
+                      </ul>
+                    </div>
+                  </div>
+                )}
+              </div>
+
               {/* Quantity Selection */}
               <div className="mb-6 md:mb-8">
                 <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-gray-900 md:mb-4 md:text-sm">
@@ -370,42 +409,13 @@ export default function ProductDetail() {
                   </span>
                 </button>
 
-                <button className="w-full rounded-xl bg-gray-900 py-3 text-xs font-bold tracking-wide text-white transition-all duration-200 hover:bg-gray-800 md:py-4 md:text-sm hidden">
+                <button className="hidden w-full rounded-xl bg-gray-900 py-3 text-xs font-bold tracking-wide text-white transition-all duration-200 hover:bg-gray-800 md:py-4 md:text-sm">
                   <span className="flex items-center justify-center gap-2">
                     <Truck size={18} className="md:hidden" />
                     <Truck size={20} className="hidden md:block" />
                     BELI SEKARANG
                   </span>
                 </button>
-              </div>
-
-              {/* Description */}
-              <div className="border-t border-gray-200 pt-6">
-                <button
-                  className="flex w-full items-center justify-between text-sm font-bold tracking-wide text-gray-900"
-                  onClick={() => setShowDescription(!showDescription)}
-                >
-                  <span>DESKRIPSI PRODUK</span>
-                  <ChevronDown size={20} className={`transition-transform ${showDescription ? "rotate-180" : ""}`} />
-                </button>
-
-                {showDescription && (
-                  <div className="mt-4 space-y-3">
-                    <p className="leading-relaxed text-gray-600">
-                      {product.deskripsi ||
-                        "Sepatu sneakers premium dengan desain modern dan kualitas terbaik. Terbuat dari bahan berkualitas tinggi yang memberikan kenyamanan maksimal untuk aktivitas sehari-hari."}
-                    </p>
-                    <div className="text-sm text-gray-500">
-                      <p className="mb-2 font-medium">Spesifikasi:</p>
-                      <ul className="space-y-1">
-                        <li>• Bahan: Canvas Premium & Synthetic Leather</li>
-                        <li>• Sol: Rubber Outsole</li>
-                        <li>• Tinggi Sol: 3cm</li>
-                        <li>• Berat: ±350 gram</li>
-                      </ul>
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
           </div>
