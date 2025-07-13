@@ -370,7 +370,7 @@ export default function ProductDetail() {
                   </span>
                 </button>
 
-                <button className="w-full rounded-xl bg-gray-900 py-3 text-xs font-bold tracking-wide text-white transition-all duration-200 hover:bg-gray-800 md:py-4 md:text-sm">
+                <button className="w-full rounded-xl bg-gray-900 py-3 text-xs font-bold tracking-wide text-white transition-all duration-200 hover:bg-gray-800 md:py-4 md:text-sm hidden">
                   <span className="flex items-center justify-center gap-2">
                     <Truck size={18} className="md:hidden" />
                     <Truck size={20} className="hidden md:block" />
