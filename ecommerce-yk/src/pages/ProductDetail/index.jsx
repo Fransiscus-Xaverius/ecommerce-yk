@@ -346,7 +346,7 @@ export default function ProductDetail() {
               </div>
 
               {/* Quantity Selection */}
-              <div className="mb-6 md:mb-8">
+              <div className="mb-6 md:mb-8 hidden">
                 <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-gray-900 md:mb-4 md:text-sm">
                   Jumlah: {quantity}
                 </h3>
@@ -370,7 +370,7 @@ export default function ProductDetail() {
               </div>
 
               {/* Action Buttons */}
-              <div className="mb-6 space-y-3 md:mb-8">
+              <div className="mb-6 space-y-3 md:mb-8 hidden">
                 <button
                   onClick={handleAddToCart}
                   className="w-full rounded-xl border-2 border-gray-900 py-3 text-xs font-bold tracking-wide text-gray-900 transition-all duration-200 hover:bg-gray-900 hover:text-white md:py-4 md:text-sm"
