@@ -8,6 +8,7 @@ export const useHeroSlider = (slides) => {
 
   // Auto-rotate hero slider
   useEffect(() => {
+    if (slides.length === 0) return; // Don't start timer if no slides
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
     }, 4000);

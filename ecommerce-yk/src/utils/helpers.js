@@ -20,7 +20,8 @@ export const formatPrice = (price) => {
  */
 export const scrollCarousel = (ref, direction) => {
   if (ref.current) {
-    const scrollAmount = 320;
+    // Updated scroll amount to match new card width (280px) + gap (24px)
+    const scrollAmount = 304;
     ref.current.scrollBy({
       left: direction === "left" ? -scrollAmount : scrollAmount,
       behavior: "smooth",
@@ -34,8 +35,7 @@ export const scrollCarousel = (ref, direction) => {
 export const loadBootstrapCSS = () => {
   const link = document.createElement("link");
   link.rel = "stylesheet";
-  link.href =
-    "https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css";
+  link.href = "https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css";
   document.head.appendChild(link);
 
   return () => {

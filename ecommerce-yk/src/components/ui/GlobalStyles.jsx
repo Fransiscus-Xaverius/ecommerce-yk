@@ -49,6 +49,22 @@ const GlobalStyles = () => {
         transform: translateY(-5px);
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
       }
+      .cursor-pointer {
+        cursor: pointer;
+      }
+      .fill-warning {
+        fill: #ffc107;
+      }
+      .text-warning {
+        color: #ffc107 !important;
+      }
+      .platform-button {
+        transition: all 0.3s ease;
+      }
+      .platform-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
       .product-card:hover .shoe-icon {
         transform: rotate(-10deg) scale(1.1);
       }
