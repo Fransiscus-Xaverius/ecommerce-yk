@@ -205,7 +205,7 @@ export default function ProductDetail() {
               </nav>
 
               {/* Product Title */}
-              <h1 className="mb-2 text-xl font-bold text-gray-900 md:text-2xl lg:text-3xl">{product.artikel}</h1>
+              <h1 className="mb-2 text-xl font-bold text-gray-900 md:text-2xl lg:text-3xl">{product.nama}</h1>
 
               {/* Product Code */}
               <p className="mb-4 text-sm text-gray-500">Kode Produk: {product.artikel}</p>
@@ -224,33 +224,6 @@ export default function ProductDetail() {
                 <span className="text-sm font-medium text-gray-600">({product.rating || 4.5})</span>
                 <span className="text-sm text-gray-400">•</span>
                 <span className="text-sm text-gray-600">{Math.floor(Math.random() * 100) + 50} ulasan</span>
-              </div>
-
-              {/* Available on Platforms */}
-              <div className="mb-4 md:mb-6">
-                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
-                  <span className="text-xs font-medium text-gray-500">Available on:</span>
-                  <div className="flex items-center gap-2 md:gap-3">
-                    <button
-                      onClick={handleTokopediaClick}
-                      className="flex items-center gap-1 rounded-lg border-2 border-green-600 px-2 py-1 transition-all duration-200 hover:bg-green-50 md:gap-2"
-                    >
-                      <div className="flex h-4 w-4 items-center justify-center rounded-sm bg-green-600 md:h-5 md:w-5">
-                        <span className="text-xs font-bold text-white">T</span>
-                      </div>
-                      <span className="text-xs font-medium text-green-600">Tokopedia</span>
-                    </button>
-                    <button
-                      onClick={handleShopeeClick}
-                      className="flex items-center gap-1 rounded-lg border-2 border-orange-500 px-2 py-1 transition-all duration-200 hover:bg-orange-50 md:gap-2"
-                    >
-                      <div className="flex h-4 w-4 items-center justify-center rounded-full bg-orange-500 md:h-5 md:w-5">
-                        <span className="text-xs font-bold text-white">S</span>
-                      </div>
-                      <span className="text-xs font-medium text-orange-500">Shopee</span>
-                    </button>
-                  </div>
-                </div>
               </div>
 
               {/* Price */}
@@ -416,6 +389,56 @@ export default function ProductDetail() {
                     BELI SEKARANG
                   </span>
                 </button>
+              </div>
+
+              {/* Available on E-commerce Platforms */}
+              <div className="mb-6 border-t border-gray-200 pt-6 md:mb-8">
+                <h3 className="mb-4 text-center text-sm font-bold uppercase tracking-wider text-gray-900 md:text-base">
+                  Beli di Platform E-commerce
+                </h3>
+                <div className="space-y-3">
+                  <button
+                    onClick={handleTokopediaClick}
+                    className="flex w-full items-center justify-center gap-3 rounded-xl border-2 border-green-600 bg-white px-4 py-4 transition-all duration-200 hover:bg-green-50 hover:shadow-lg md:gap-4 md:px-6 md:py-5"
+                  >
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-green-600 md:h-10 md:w-10">
+                      <span className="text-sm font-bold text-white md:text-lg">T</span>
+                    </div>
+                    <div className="flex-1 text-left">
+                      <div className="text-sm font-bold text-green-600 md:text-base">Tokopedia</div>
+                      <div className="text-xs text-gray-500 md:text-sm">Cari produk ini di Tokopedia</div>
+                    </div>
+                    <svg
+                      className="h-5 w-5 text-green-600 md:h-6 md:w-6"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+
+                  <button
+                    onClick={handleShopeeClick}
+                    className="flex w-full items-center justify-center gap-3 rounded-xl border-2 border-orange-500 bg-white px-4 py-4 transition-all duration-200 hover:bg-orange-50 hover:shadow-lg md:gap-4 md:px-6 md:py-5"
+                  >
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-orange-500 md:h-10 md:w-10">
+                      <span className="text-sm font-bold text-white md:text-lg">S</span>
+                    </div>
+                    <div className="flex-1 text-left">
+                      <div className="text-sm font-bold text-orange-500 md:text-base">Shopee</div>
+                      <div className="text-xs text-gray-500 md:text-sm">Cari produk ini di Shopee</div>
+                    </div>
+                    <svg
+                      className="h-5 w-5 text-orange-500 md:h-6 md:w-6"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
