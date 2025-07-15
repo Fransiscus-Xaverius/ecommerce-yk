@@ -91,10 +91,7 @@ export default function ProductDetail() {
     );
   }
 
-  const productImages =
-    product.gambar && product.gambar.length > 0
-      ? product.gambar
-      : []; // Removed static images fallback
+  const productImages = product.gambar && product.gambar.length > 0 ? product.gambar : []; // Removed static images fallback
 
   const colors = product.colors
     ? product.colors.map((color) => ({
@@ -332,7 +329,11 @@ export default function ProductDetail() {
               <div className="mb-6 md:mb-8">
                 <div className="mb-1 flex items-baseline gap-2 md:gap-3">
                   <h2 className="text-2xl font-bold text-gray-900 md:text-3xl">
-                    {formatPrice(product.harga_diskon > 0 && product.harga_diskon < product.originalPrice ? product.harga_diskon : product.originalPrice)}
+                    {formatPrice(
+                      product.harga_diskon > 0 && product.harga_diskon < product.originalPrice
+                        ? product.harga_diskon
+                        : product.originalPrice
+                    )}
                   </h2>
                   {product.harga_diskon > 0 && product.harga_diskon < product.originalPrice && (
                     <span className="text-base text-gray-500 line-through md:text-lg">
@@ -428,18 +429,9 @@ export default function ProductDetail() {
                 {showDescription && (
                   <div className="mt-4 space-y-3">
                     <p className="leading-relaxed text-gray-600">
-                      {product.deskripsi ||
+                      {product.description ||
                         "Sepatu sneakers premium dengan desain modern dan kualitas terbaik. Terbuat dari bahan berkualitas tinggi yang memberikan kenyamanan maksimal untuk aktivitas sehari-hari."}
                     </p>
-                    <div className="text-sm text-gray-500">
-                      <p className="mb-2 font-medium">Spesifikasi:</p>
-                      <ul className="space-y-1">
-                        <li>• Bahan: Canvas Premium & Synthetic Leather</li>
-                        <li>• Sol: Rubber Outsole</li>
-                        <li>• Tinggi Sol: 3cm</li>
-                        <li>• Berat: ±350 gram</li>
-                      </ul>
-                    </div>
                   </div>
                 )}
               </div>

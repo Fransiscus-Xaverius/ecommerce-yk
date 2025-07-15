@@ -62,7 +62,7 @@ const transformProductData = (backendProduct) => {
     nama: backendProduct.nama,
     harga_diskon: parseFloat(backendProduct.harga_diskon) || 0,
     originalPrice: parseFloat(backendProduct.harga) || 0,
-    rating: 4.0 + Math.random() * 1,
+    rating: parseFloat(backendProduct.rating) || 0,
     gambar: gambar,
     colors: backendProduct.colors || [],
     size: backendProduct.size || "",
@@ -78,9 +78,7 @@ const transformProductData = (backendProduct) => {
     tanggal_produk: backendProduct.tanggal_produk,
     tanggal_terima: backendProduct.tanggal_terima,
     tanggal_update: backendProduct.tanggal_update,
-    description: `Premium ${backendProduct.nama} dengan kualitas terbaik dari ${
-      backendProduct.supplier || "supplier terpercaya"
-    }.`,
+    description: backendProduct.deskripsi || `Premium ${backendProduct.nama} dengan kualitas terbaik dari ${backendProduct.supplier || "supplier terpercaya"}.`,
     isNew: calculateIsNew(backendProduct.tanggal_produk),
     isSale: false,
     marketplace: backendProduct.marketplace || {},
