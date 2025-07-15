@@ -14,6 +14,7 @@ import { loadBootstrapCSS } from "../../utils/helpers";
 // Hooks
 import { useWishlist } from "../../hooks/useWishlist";
 import { useCart } from "../../hooks/useCart";
+import { fetchProductByArtikel, searchProducts } from "../../services/productService"; // Import the service and searchProducts
 
 export default function HomePage() {
   const { wishlist, toggleWishlist } = useWishlist();
@@ -37,88 +38,56 @@ export default function HomePage() {
   const [errorSpecialDeals, setErrorSpecialDeals] = useState(null);
 
   useEffect(() => {
-    const fetchNewArrivals = async () => {
+    const fetchProducts = async (start, end, setter, setLoading, setError) => {
       try {
         const fetchedProducts = [];
-        for (let i = 1; i <= 10; i++) {
+        for (let i = start; i <= end; i++) {
           const artikel = `ART-${String(i).padStart(6, "0")}`;
-          const response = await fetch(`http://localhost:8080/api/products/${artikel}`);
-          if (!response.ok) {
-            console.error(`Error fetching New Arrival ${artikel}: HTTP error! status: ${response.status}`);
-            continue;
-          }
-          const responseData = await response.json();
-          if (responseData.data) {
-            fetchedProducts.push(responseData.data);
+          const product = await fetchProductByArtikel(artikel); // Use the service
+          if (product) {
+            fetchedProducts.push(product);
           }
         }
-        setNewArrivals(fetchedProducts);
-        console.log("Fetched New Arrivals:", fetchedProducts);
+        setter(fetchedProducts);
+        console.log(`Fetched products from ${start} to ${end}:`, fetchedProducts);
       } catch (error) {
-        setErrorNewArrivals(error);
+        setError(error);
       } finally {
-        setLoadingNewArrivals(false);
+        setLoading(false);
       }
     };
 
-    fetchNewArrivals();
+    fetchProducts(1, 10, setNewArrivals, setLoadingNewArrivals, setErrorNewArrivals);
+    fetchProducts(11, 20, setBestSellers, setLoadingBestSellers, setErrorBestSellers);
+    fetchProducts(21, 30, setSpecialDeals, setLoadingSpecialDeals, setErrorSpecialDeals);
   }, []);
 
+  // Effect for handling search
   useEffect(() => {
-    const fetchBestSellers = async () => {
+    const handleSearch = async () => {
+      if (searchQuery.trim() === "") {
+        setSearchResults([]);
+        return;
+      }
+
+      setLoadingSearch(true);
+      setErrorSearch(null);
       try {
-        const fetchedProducts = [];
-        for (let i = 11; i <= 20; i++) {
-          const artikel = `ART-${String(i).padStart(6, "0")}`;
-          const response = await fetch(`http://localhost:8080/api/products/${artikel}`);
-          if (!response.ok) {
-            console.error(`Error fetching Best Seller ${artikel}: HTTP error! status: ${response.status}`);
-            continue;
-          }
-          const responseData = await response.json();
-          if (responseData.data) {
-            fetchedProducts.push(responseData.data);
-          }
-        }
-        setBestSellers(fetchedProducts);
-        console.log("Fetched Best Sellers:", fetchedProducts);
+        const results = await searchProducts(searchQuery);
+        setSearchResults(results);
       } catch (error) {
-        setErrorBestSellers(error);
+        setErrorSearch(error);
       } finally {
-        setLoadingBestSellers(false);
+        setLoadingSearch(false);
       }
     };
 
-    fetchBestSellers();
-  }, []);
+    const delayDebounceFn = setTimeout(() => {
+      handleSearch();
+    }, 500); // Debounce search by 500ms
 
-  useEffect(() => {
-    const fetchSpecialDeals = async () => {
-      try {
-        const fetchedProducts = [];
-        for (let i = 21; i <= 30; i++) {
-          const artikel = `ART-${String(i).padStart(6, "0")}`;
-          const response = await fetch(`http://localhost:8080/api/products/${artikel}`);
-          if (!response.ok) {
-            console.error(`Error fetching Special Deal ${artikel}: HTTP error! status: ${response.status}`);
-            continue;
-          }
-          const responseData = await response.json();
-          if (responseData.data) {
-            fetchedProducts.push(responseData.data);
-          }
-        }
-        setSpecialDeals(fetchedProducts);
-        console.log("Fetched Special Deals:", fetchedProducts);
-      } catch (error) {
-        setErrorSpecialDeals(error);
-      } finally {
-        setLoadingSpecialDeals(false);
-      }
-    };
-
-    fetchSpecialDeals();
-  }, []);
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchQuery]);
 
   const productSections = [
     { title: "New Arrivals", products: newArrivals },

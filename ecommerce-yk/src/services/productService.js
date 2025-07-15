@@ -1,11 +1,11 @@
-import API_CONFIG from "../config/api.js";
+const BACKEND_URL = "http://localhost:8080";
 
 /**
  * Fetch product by artikel from backend
  */
 export const fetchProductByArtikel = async (artikel) => {
   try {
-    const response = await fetch(`${API_CONFIG.BASE_URL}/products/${artikel}`);
+    const response = await fetch(`/api/products/${artikel}`);
 
     if (!response.ok) {
       if (response.status === 404) {
@@ -17,10 +17,31 @@ export const fetchProductByArtikel = async (artikel) => {
     const data = await response.json();
 
     // Transform backend data to frontend format
-    return transformProductData(data);
+    const transformedData = transformProductData(data.data);
+    console.log("Backend Product Data:", data);
+    console.log("Transformed Product Data:", transformedData);
+    return transformedData;
   } catch (error) {
     console.error("Error fetching product:", error);
     return null;
+  }
+};
+
+export const searchProducts = async (query) => {
+  try {
+    const response = await fetch(`/api/products?q=${query}`);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    // Assuming the search results are also in data.data and need transformation
+    const transformedResults = data.data.map(product => transformProductData(product));
+    return transformedResults;
+  } catch (error) {
+    console.error("Error searching products:", error);
+    return [];
   }
 };
 
@@ -30,33 +51,39 @@ export const fetchProductByArtikel = async (artikel) => {
 const transformProductData = (backendProduct) => {
   if (!backendProduct) return null;
 
+  const gambar =
+    backendProduct.gambar && Array.isArray(backendProduct.gambar)
+      ? backendProduct.gambar.map((g) => `${BACKEND_URL}${g}`)
+      : [];
+
   return {
     id: backendProduct.no || backendProduct.artikel,
     artikel: backendProduct.artikel,
-    name: backendProduct.artikel,
-    price: backendProduct.harga || 0,
-    originalPrice: null,
+    nama: backendProduct.nama,
+    harga_diskon: parseFloat(backendProduct.harga_diskon) || 0,
+    originalPrice: parseFloat(backendProduct.harga) || 0,
     rating: 4.0 + Math.random() * 1,
-    image: `https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400&h=400&fit=crop&crop=center`,
+    gambar: gambar,
     colors: backendProduct.colors || [],
     size: backendProduct.size || "",
-    group: backendProduct.grup || "",
-    category: backendProduct.kat || "",
+    grup: backendProduct.grup || "",
+    kat: backendProduct.kat || "",
     gender: backendProduct.gender || "",
-    type: backendProduct.tipe || "",
+    tipe: backendProduct.tipe || "",
     unit: backendProduct.unit || "",
     model: backendProduct.model || "",
     status: backendProduct.status || "",
     supplier: backendProduct.supplier || "",
     usia: backendProduct.usia || "",
-    tanggalProduk: backendProduct.tanggal_produk,
-    tanggalTerima: backendProduct.tanggal_terima,
-    tanggalUpdate: backendProduct.tanggal_update,
-    description: `Premium ${backendProduct.artikel} dengan kualitas terbaik dari ${
+    tanggal_produk: backendProduct.tanggal_produk,
+    tanggal_terima: backendProduct.tanggal_terima,
+    tanggal_update: backendProduct.tanggal_update,
+    description: `Premium ${backendProduct.nama} dengan kualitas terbaik dari ${
       backendProduct.supplier || "supplier terpercaya"
     }.`,
     isNew: calculateIsNew(backendProduct.tanggal_produk),
     isSale: false,
+    marketplace: backendProduct.marketplace || {},
   };
 };
 

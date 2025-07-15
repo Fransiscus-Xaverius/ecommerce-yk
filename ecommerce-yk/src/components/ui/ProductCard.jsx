@@ -48,7 +48,11 @@ const ProductCard = ({ product, onAddToCart, onToggleWishlist, isInWishlist, onP
         {/* Product Image */}
         <div className="relative flex h-56 items-center justify-center overflow-hidden bg-gray-50">
           <img
-            src={`https://via.placeholder.com/280x224/e3e3e3/666?text=${encodeURIComponent(product.nama)}`}
+            src={
+              product.gambar && product.gambar.length > 0
+                ? product.gambar[0]
+                : `https://via.placeholder.com/280x224/e3e3e3/666?text=${encodeURIComponent(product.nama)}`
+            }
             alt={product.nama}
             className="h-full w-full object-cover"
             onError={(e) => {
@@ -81,7 +85,7 @@ const ProductCard = ({ product, onAddToCart, onToggleWishlist, isInWishlist, onP
 
           {/* Price */}
           <div className="mb-4 flex flex-1 flex-col justify-end">
-            <h5 className="mb-1 text-lg font-bold text-blue-600">{formatPrice(product.harga)}</h5>
+            <h5 className="mb-1 text-lg font-bold text-blue-600">{formatPrice(product.harga_diskon)}</h5>
             {product.originalPrice && (
               <span className="text-sm text-gray-500 line-through">{formatPrice(product.originalPrice)}</span>
             )}

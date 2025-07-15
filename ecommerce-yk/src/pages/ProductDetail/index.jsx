@@ -5,6 +5,7 @@ import { formatPrice } from "../../utils/helpers";
 
 // Hooks
 import { useCart } from "../../hooks/useCart";
+import { fetchProductByArtikel } from "../../services/productService"; // Import the service
 
 /**
  * Product Detail Page Component
@@ -26,27 +27,28 @@ export default function ProductDetail() {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/api/products/${productArticle}`);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const responseData = await response.json();
-        const productData = responseData.data;
+        const fetchedProduct = await fetchProductByArtikel(productArticle);
 
-        // Transform marketplace object to array
-        const marketplaces = Object.entries(productData.marketplace).map(([name, link]) => ({
-          name: name.charAt(0).toUpperCase() + name.slice(1),
-          link,
-        }));
+        if (!fetchedProduct) {
+          setError(new Error("Product not found"));
+          return;
+        }
+
+        // Transform marketplace object to array (if needed, otherwise remove)
+        const marketplaces = fetchedProduct.marketplace
+          ? Object.entries(fetchedProduct.marketplace).map(([name, link]) => ({
+              name: name.charAt(0).toUpperCase() + name.slice(1),
+              link,
+            }))
+          : [];
 
         const transformedProduct = {
-          ...productData,
-          originalPrice: productData.harga,
-          harga: productData.harga_diskon,
+          ...fetchedProduct,
           marketplaces,
         };
 
         setProduct(transformedProduct);
+        console.log("Final Product Data for Rendering:", transformedProduct);
       } catch (error) {
         setError(error);
       } finally {
@@ -92,14 +94,7 @@ export default function ProductDetail() {
   const productImages =
     product.gambar && product.gambar.length > 0
       ? product.gambar
-      : [
-          "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=600&h=600&fit=crop&crop=center",
-          "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=600&h=600&fit=crop&crop=center",
-          "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=600&h=600&fit=crop&crop=center",
-          "https://images.unsplash.com/photo-1551107696-a4b0c5a0d9a2?w=600&h=600&fit=crop&crop=center",
-          "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=600&h=600&fit=crop&crop=center",
-          "https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=600&h=600&fit=crop&crop=center",
-        ];
+      : []; // Removed static images fallback
 
   const colors = product.colors
     ? product.colors.map((color) => ({
@@ -336,8 +331,10 @@ export default function ProductDetail() {
               {/* Price */}
               <div className="mb-6 md:mb-8">
                 <div className="mb-1 flex items-baseline gap-2 md:gap-3">
-                  <h2 className="text-2xl font-bold text-gray-900 md:text-3xl">{formatPrice(product.harga)}</h2>
-                  {product.originalPrice && (
+                  <h2 className="text-2xl font-bold text-gray-900 md:text-3xl">
+                    {formatPrice(product.harga_diskon > 0 && product.harga_diskon < product.originalPrice ? product.harga_diskon : product.originalPrice)}
+                  </h2>
+                  {product.harga_diskon > 0 && product.harga_diskon < product.originalPrice && (
                     <span className="text-base text-gray-500 line-through md:text-lg">
                       {formatPrice(product.originalPrice)}
                     </span>
