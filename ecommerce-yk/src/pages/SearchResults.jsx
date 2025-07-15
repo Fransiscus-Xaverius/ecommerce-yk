@@ -1,53 +1,101 @@
-import React from 'react';
-import { useLocation } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-import ProductCarousel from '../components/ui/ProductCarousel';
-import { useWishlist } from '../hooks/useWishlist';
-import { useCart } from '../hooks/useCart';
+import React from "react";
+import { useLocation } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import ProductCarousel from "../components/ui/ProductCarousel";
+import { useWishlist } from "../hooks/useWishlist";
+import { useCart } from "../hooks/useCart";
 
 const fetchSearchResults = async (query) => {
   const response = await fetch(`http://localhost:8080/api/products/?q=${query}`);
   if (!response.ok) {
-    throw new Error('Network response was not ok');
+    throw new Error(`HTTP error! status: ${response.status}`);
   }
-  return response.json();
+  const data = await response.json();
+  return data;
 };
 
 const SearchResults = () => {
   const location = useLocation();
-  const query = new URLSearchParams(location.search).get('q');
+  const query = new URLSearchParams(location.search).get("q");
   const { wishlist, toggleWishlist } = useWishlist();
-  const { cartItems, addToCart } = useCart();
+  const { addToCart } = useCart();
 
   const { data, error, isLoading } = useQuery({
-    queryKey: ['searchResults', query],
+    queryKey: ["searchResults", query],
     queryFn: () => fetchSearchResults(query),
     enabled: !!query, // Only run the query if a query exists
   });
 
   if (isLoading) {
-    return <div className="container mx-auto px-4 py-8 text-center">Loading...</div>;
+    return (
+      <div className="container mx-auto px-4 py-8 text-center">
+        <div className="flex items-center justify-center">
+          <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-purple-600"></div>
+        </div>
+        <p className="mt-4 text-gray-600">Mencari produk...</p>
+      </div>
+    );
   }
 
   if (error) {
-    return <div className="container mx-auto px-4 py-8 text-center text-red-500">Error: {error.message}</div>;
+    return (
+      <div className="container mx-auto px-4 py-8 text-center">
+        <div className="text-red-500">
+          <h2 className="mb-2 text-xl font-bold">Terjadi Kesalahan</h2>
+          <p>Error: {error.message}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-4 rounded bg-purple-600 px-4 py-2 text-white hover:bg-purple-700"
+          >
+            Coba Lagi
+          </button>
+        </div>
+      </div>
+    );
   }
 
-  const products = data?.data?.items || [];
+  // Handle different possible data structures
+  let products = [];
+  if (data) {
+    if (data.data && Array.isArray(data.data)) {
+      products = data.data;
+    } else if (data.data && data.data.items && Array.isArray(data.data.items)) {
+      products = data.data.items;
+    } else if (Array.isArray(data)) {
+      products = data;
+    }
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-4">Search Results for "{query}"</h1>
+      <h1 className="mb-4 text-2xl font-bold">Search Results for "{query}"</h1>
+
       {products.length > 0 ? (
-        <ProductCarousel
-          section={{ title: `Search Results`, products: products }}
-          onAddToCart={addToCart}
-          onToggleWishlist={toggleWishlist}
-          wishlist={wishlist}
-          sectionIndex={0}
-        />
+        <div>
+          <p className="mb-6 text-gray-600">Ditemukan {products.length} produk</p>
+          <ProductCarousel
+            section={{ title: `Hasil Pencarian`, products: products }}
+            onAddToCart={addToCart}
+            onToggleWishlist={toggleWishlist}
+            wishlist={wishlist}
+            sectionIndex={0}
+          />
+        </div>
       ) : (
-        <p>No products found for "{query}".</p>
+        <div className="py-12 text-center">
+          <div className="mb-4 text-gray-500">
+            <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+          </div>
+          <h3 className="text-lg font-medium text-gray-900">Tidak ada produk ditemukan</h3>
+          <p className="mt-2 text-gray-500">Coba gunakan kata kunci yang berbeda untuk pencarian Anda.</p>
+        </div>
       )}
     </div>
   );

@@ -41,6 +41,7 @@ const YongkiKomaladiWebsite = () => {
             <Route path="/" element={<HomePage />} />
             <Route path="/product/:id" element={<ProductDetail />} />
             <Route path="/search" element={<SearchResults />} />
+            <Route path="/products" element={<SearchResults />} />
           </Routes>
 
           {/* Footer */}

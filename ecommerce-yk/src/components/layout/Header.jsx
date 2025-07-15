@@ -26,7 +26,7 @@ const Header = () => {
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      navigate(`/search?q=${searchQuery}`);
+      navigate(`/products?q=${searchQuery}`);
       setIsMobileSearchOpen(false);
     }
   };
