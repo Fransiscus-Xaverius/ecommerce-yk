@@ -1,6 +1,61 @@
 const BACKEND_URL = "http://localhost:8080";
 
 /**
+ * Calculate if product is new (less than 30 days old)
+ */
+const calculateIsNew = (tanggalProduk) => {
+  if (!tanggalProduk) return false;
+
+  const productDate = new Date(tanggalProduk);
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+  return productDate > thirtyDaysAgo;
+};
+
+/**
+ * Transform backend product data to frontend format
+ */
+const transformProductData = (backendProduct) => {
+  if (!backendProduct) return null;
+
+  const gambar =
+    backendProduct.gambar && Array.isArray(backendProduct.gambar)
+      ? backendProduct.gambar.map((g) => `${BACKEND_URL}${g}`)
+      : [];
+
+  return {
+    id: backendProduct.no || backendProduct.artikel,
+    artikel: backendProduct.artikel,
+    nama: backendProduct.nama,
+    harga_diskon: parseFloat(backendProduct.harga_diskon) || 0,
+    originalPrice: parseFloat(backendProduct.harga) || 0,
+    rating: parseFloat(backendProduct.rating) || 0,
+    gambar: gambar,
+    colors: backendProduct.colors || [],
+    size: backendProduct.size || "",
+    grup: backendProduct.grup || "",
+    kat: backendProduct.kat || "",
+    gender: backendProduct.gender || "",
+    tipe: backendProduct.tipe || "",
+    unit: backendProduct.unit || "",
+    model: backendProduct.model || "",
+    status: backendProduct.status || "",
+    supplier: backendProduct.supplier || "",
+    usia: backendProduct.usia || "",
+    tanggal_produk: backendProduct.tanggal_produk,
+    tanggal_terima: backendProduct.tanggal_terima,
+    tanggal_update: backendProduct.tanggal_update,
+    description:
+      backendProduct.deskripsi ||
+      `Premium ${backendProduct.nama} dengan kualitas terbaik dari ${backendProduct.supplier || "supplier terpercaya"}.`,
+    isNew: calculateIsNew(backendProduct.tanggal_produk),
+    isSale: false,
+    marketplace: backendProduct.marketplace || {},
+  };
+};
+
+/**
  * Fetch product by artikel from backend
  */
 export const fetchProductByArtikel = async (artikel) => {
@@ -47,7 +102,7 @@ export const searchProducts = async (query) => {
       productsArray = data;
     }
 
-    const transformedResults = productsArray.map(product => transformProductData(product));
+    const transformedResults = productsArray.map((product) => transformProductData(product));
     console.log("Transformed Search Results:", transformedResults);
     return transformedResults;
   } catch (error) {
@@ -56,57 +111,41 @@ export const searchProducts = async (query) => {
   }
 };
 
-/**
- * Transform backend product data to frontend format
- */
-const transformProductData = (backendProduct) => {
-  if (!backendProduct) return null;
+export const fetchProductList = async ({
+  limit = 10,
+  offset = 0,
+  sortColumn = "tanggal_terima",
+  sortDirection = "desc",
+  query = "",
+}) => {
+  try {
+    let url = `/api/products?limit=${limit}&offset=${offset}&sort=${sortColumn}&order=${sortDirection}`;
+    if (query) {
+      url += `&q=${query}`;
+    }
+    const response = await fetch(url);
 
-  const gambar =
-    backendProduct.gambar && Array.isArray(backendProduct.gambar)
-      ? backendProduct.gambar.map((g) => `${BACKEND_URL}${g}`)
-      : [];
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
 
-  return {
-    id: backendProduct.no || backendProduct.artikel,
-    artikel: backendProduct.artikel,
-    nama: backendProduct.nama,
-    harga_diskon: parseFloat(backendProduct.harga_diskon) || 0,
-    originalPrice: parseFloat(backendProduct.harga) || 0,
-    rating: parseFloat(backendProduct.rating) || 0,
-    gambar: gambar,
-    colors: backendProduct.colors || [],
-    size: backendProduct.size || "",
-    grup: backendProduct.grup || "",
-    kat: backendProduct.kat || "",
-    gender: backendProduct.gender || "",
-    tipe: backendProduct.tipe || "",
-    unit: backendProduct.unit || "",
-    model: backendProduct.model || "",
-    status: backendProduct.status || "",
-    supplier: backendProduct.supplier || "",
-    usia: backendProduct.usia || "",
-    tanggal_produk: backendProduct.tanggal_produk,
-    tanggal_terima: backendProduct.tanggal_terima,
-    tanggal_update: backendProduct.tanggal_update,
-    description: backendProduct.deskripsi || `Premium ${backendProduct.nama} dengan kualitas terbaik dari ${backendProduct.supplier || "supplier terpercaya"}.`,
-    isNew: calculateIsNew(backendProduct.tanggal_produk),
-    isSale: false,
-    marketplace: backendProduct.marketplace || {},
-  };
+    const data = await response.json();
+    console.log("Backend Product List Data:", data);
+
+    let productsArray = [];
+    if (data.data && Array.isArray(data.data)) {
+      productsArray = data.data;
+    } else if (data.data && data.data.items && Array.isArray(data.data.items)) {
+      productsArray = data.data.items;
+    } else if (Array.isArray(data)) {
+      productsArray = data;
+    }
+
+    const transformedResults = productsArray.map((product) => transformProductData(product));
+    console.log("Transformed Product List Results:", transformedResults);
+    return transformedResults;
+  } catch (error) {
+    console.error("Error fetching product list:", error);
+    return [];
+  }
 };
-
-/**
- * Calculate if product is new (less than 30 days old)
- */
-const calculateIsNew = (tanggalProduk) => {
-  if (!tanggalProduk) return false;
-
-  const productDate = new Date(tanggalProduk);
-  const thirtyDaysAgo = new Date();
-  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-
-  return productDate > thirtyDaysAgo;
-};
-
-export default fetchProductByArtikel;

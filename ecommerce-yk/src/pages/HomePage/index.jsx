@@ -14,7 +14,7 @@ import { loadBootstrapCSS } from "../../utils/helpers";
 // Hooks
 import { useWishlist } from "../../hooks/useWishlist";
 import { useCart } from "../../hooks/useCart";
-import { fetchProductByArtikel } from "../../services/productService"; // Import the service
+import { fetchProductByArtikel, fetchProductList } from "../../services/productService"; // Import fetchProductList
 
 export default function HomePage() {
   const { wishlist, toggleWishlist } = useWishlist();
@@ -34,29 +34,34 @@ export default function HomePage() {
   const [errorSpecialDeals, setErrorSpecialDeals] = useState(null);
 
   useEffect(() => {
-    const fetchProducts = async (start, end, setter, setLoading, setError) => {
+    const fetchInitialProducts = async () => {
       try {
-        const fetchedProducts = [];
-        for (let i = start; i <= end; i++) {
-          const artikel = `ART-${String(i).padStart(6, "0")}`;
-          const product = await fetchProductByArtikel(artikel); // Use the service
-          if (product) {
-            fetchedProducts.push(product);
-          }
-        }
-        setter(fetchedProducts);
-        console.log(`Fetched products from ${start} to ${end}:`, fetchedProducts);
+        // Fetch New Arrivals (10 newest products by tanggal_terima)
+        const newArrivalsData = await fetchProductList({ limit: 10, sortColumn: "tanggal_terima", sortDirection: "desc" });
+        setNewArrivals(newArrivalsData);
+        setLoadingNewArrivals(false);
+
+        // Fetch Best Sellers (example: first 10 products by artikel, you might want a different logic here)
+        // const bestSellersData = await fetchProductList({ limit: 10, offset: 10, sortColumn: "artikel", sortDirection: "asc" });
+        // setBestSellers(bestSellersData);
+        // setLoadingBestSellers(false);
+
+        // Fetch Special Deals (example: next 10 products by artikel, you might want a different logic here)
+        const specialDealsData = await fetchProductList({ limit: 10, offset: 20, sortColumn: "artikel", sortDirection: "asc" });
+        setSpecialDeals(specialDealsData);
+        setLoadingSpecialDeals(false);
+
       } catch (error) {
-        setError(error);
-      } finally {
-        setLoading(false);
+        setErrorNewArrivals(error);
+        // setErrorBestSellers(error);
+        setErrorSpecialDeals(error);
+        setLoadingNewArrivals(false);
+        // setLoadingBestSellers(false);
+        setLoadingSpecialDeals(false);
       }
     };
 
-    fetchProducts(1, 10, setNewArrivals, setLoadingNewArrivals, setErrorNewArrivals);
-    // Best Seller section is hidden
-    // fetchProducts(11, 20, setBestSellers, setLoadingBestSellers, setErrorBestSellers);
-    fetchProducts(21, 30, setSpecialDeals, setLoadingSpecialDeals, setErrorSpecialDeals);
+    fetchInitialProducts();
   }, []);
 
   const productSections = [
