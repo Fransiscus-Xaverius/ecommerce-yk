@@ -38,7 +38,7 @@ export default function HomePage() {
       try {
         // Fetch New Arrivals (10 newest products by tanggal_terima)
         const newArrivalsData = await fetchProductList({ limit: 10, sortColumn: "tanggal_terima", sortDirection: "desc" });
-        setNewArrivals(newArrivalsData);
+        setNewArrivals(newArrivalsData.map(product => ({ ...product, isNew: true })));
         setLoadingNewArrivals(false);
 
         // Fetch Best Sellers (example: first 10 products by artikel, you might want a different logic here)

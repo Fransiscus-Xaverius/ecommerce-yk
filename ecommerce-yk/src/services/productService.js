@@ -1,19 +1,6 @@
 const BACKEND_URL = "http://localhost:8080";
 
 /**
- * Calculate if product is new (less than 30 days old)
- */
-const calculateIsNew = (tanggalProduk) => {
-  if (!tanggalProduk) return false;
-
-  const productDate = new Date(tanggalProduk);
-  const thirtyDaysAgo = new Date();
-  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-
-  return productDate > thirtyDaysAgo;
-};
-
-/**
  * Transform backend product data to frontend format
  */
 const transformProductData = (backendProduct) => {
@@ -49,7 +36,6 @@ const transformProductData = (backendProduct) => {
     description:
       backendProduct.deskripsi ||
       `Premium ${backendProduct.nama} dengan kualitas terbaik dari ${backendProduct.supplier || "supplier terpercaya"}.`,
-    isNew: calculateIsNew(backendProduct.tanggal_produk),
     isSale: false,
     marketplace: backendProduct.marketplace || {},
   };
@@ -149,3 +135,5 @@ export const fetchProductList = async ({
     return [];
   }
 };
+
+export default fetchProductByArtikel;
