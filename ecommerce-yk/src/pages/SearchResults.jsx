@@ -4,15 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import ProductCarousel from "../components/ui/ProductCarousel";
 import { useWishlist } from "../hooks/useWishlist";
 import { useCart } from "../hooks/useCart";
-
-const fetchSearchResults = async (query) => {
-  const response = await fetch(`http://localhost:8080/api/products/?q=${query}`);
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
-  }
-  const data = await response.json();
-  return data;
-};
+import { searchProducts } from "../services/productService"; // Import searchProducts
 
 const SearchResults = () => {
   const location = useLocation();
@@ -20,9 +12,9 @@ const SearchResults = () => {
   const { wishlist, toggleWishlist } = useWishlist();
   const { addToCart } = useCart();
 
-  const { data, error, isLoading } = useQuery({
+  const { data: products, error, isLoading } = useQuery({
     queryKey: ["searchResults", query],
-    queryFn: () => fetchSearchResults(query),
+    queryFn: () => searchProducts(query), // Use searchProducts
     enabled: !!query, // Only run the query if a query exists
   });
 
@@ -54,23 +46,11 @@ const SearchResults = () => {
     );
   }
 
-  // Handle different possible data structures
-  let products = [];
-  if (data) {
-    if (data.data && Array.isArray(data.data)) {
-      products = data.data;
-    } else if (data.data && data.data.items && Array.isArray(data.data.items)) {
-      products = data.data.items;
-    } else if (Array.isArray(data)) {
-      products = data;
-    }
-  }
-
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="mb-4 text-2xl font-bold">Search Results for "{query}"</h1>
 
-      {products.length > 0 ? (
+      {products && products.length > 0 ? (
         <div>
           <p className="mb-6 text-gray-600">Ditemukan {products.length} produk</p>
           <ProductCarousel

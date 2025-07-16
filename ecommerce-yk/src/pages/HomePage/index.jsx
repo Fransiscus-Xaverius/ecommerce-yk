@@ -14,16 +14,11 @@ import { loadBootstrapCSS } from "../../utils/helpers";
 // Hooks
 import { useWishlist } from "../../hooks/useWishlist";
 import { useCart } from "../../hooks/useCart";
-import { fetchProductByArtikel, searchProducts } from "../../services/productService"; // Import the service and searchProducts
+import { fetchProductByArtikel } from "../../services/productService"; // Import the service
 
 export default function HomePage() {
   const { wishlist, toggleWishlist } = useWishlist();
   const { cartItems, addToCart } = useCart();
-
-  const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
-  const [loadingSearch, setLoadingSearch] = useState(false);
-  const [errorSearch, setErrorSearch] = useState(null);
 
   const [newArrivals, setNewArrivals] = useState([]);
   const [loadingNewArrivals, setLoadingNewArrivals] = useState(true);
@@ -62,33 +57,6 @@ export default function HomePage() {
     fetchProducts(21, 30, setSpecialDeals, setLoadingSpecialDeals, setErrorSpecialDeals);
   }, []);
 
-  // Effect for handling search
-  useEffect(() => {
-    const handleSearch = async () => {
-      if (searchQuery.trim() === "") {
-        setSearchResults([]);
-        return;
-      }
-
-      setLoadingSearch(true);
-      setErrorSearch(null);
-      try {
-        const results = await searchProducts(searchQuery);
-        setSearchResults(results);
-      } catch (error) {
-        setErrorSearch(error);
-      } finally {
-        setLoadingSearch(false);
-      }
-    };
-
-    const delayDebounceFn = setTimeout(() => {
-      handleSearch();
-    }, 500); // Debounce search by 500ms
-
-    return () => clearTimeout(delayDebounceFn);
-  }, [searchQuery]);
-
   const productSections = [
     { title: "New Arrivals", products: newArrivals },
     { title: "Best Seller", products: bestSellers },
@@ -110,26 +78,7 @@ export default function HomePage() {
       <FeaturesSection />
 
       {/* Product Sections */}
-      {searchQuery ? (
-        loadingSearch ? (
-          <div>Searching products...</div>
-        ) : errorSearch ? (
-          <div>Error searching products: {errorSearch.message}</div>
-        ) : searchResults.length > 0 ? (
-          <ProductCarousel
-            section={{
-              title: `Search Results for "${searchQuery}"`,
-              products: searchResults,
-            }}
-            sectionIndex={-1} // Use a unique index for search results
-            onAddToCart={addToCart}
-            onToggleWishlist={toggleWishlist}
-            wishlist={wishlist}
-          />
-        ) : (
-          <div>No products found for "{searchQuery}".</div>
-        )
-      ) : loadingNewArrivals || loadingBestSellers || loadingSpecialDeals ? (
+      {loadingNewArrivals || loadingBestSellers || loadingSpecialDeals ? (
         <div>Loading products...</div>
       ) : errorNewArrivals || errorBestSellers || errorSpecialDeals ? (
         <div>

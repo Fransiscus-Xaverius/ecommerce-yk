@@ -36,8 +36,19 @@ export const searchProducts = async (query) => {
     }
 
     const data = await response.json();
-    // Assuming the search results are also in data.data and need transformation
-    const transformedResults = data.data.map(product => transformProductData(product));
+    console.log("Backend Search Data:", data);
+
+    let productsArray = [];
+    if (data.data && Array.isArray(data.data)) {
+      productsArray = data.data;
+    } else if (data.data && data.data.items && Array.isArray(data.data.items)) {
+      productsArray = data.data.items;
+    } else if (Array.isArray(data)) {
+      productsArray = data;
+    }
+
+    const transformedResults = productsArray.map(product => transformProductData(product));
+    console.log("Transformed Search Results:", transformedResults);
     return transformedResults;
   } catch (error) {
     console.error("Error searching products:", error);
