@@ -4,14 +4,14 @@ import { Star, ChevronDown, ArrowLeft, Package, Truck } from "lucide-react";
 import { formatPrice } from "../../utils/helpers";
 
 // Hooks
-import { useCart } from "../../hooks/useCart";
+// import { useCart } from "../../hooks/useCart";
 import { fetchProductByArtikel } from "../../services/productService"; // Import the service
 
 /**
  * Product Detail Page Component
  */
 export default function ProductDetail() {
-  const { addToCart } = useCart();
+  // const { addToCart } = useCart();
   const { id: productArticle } = useParams();
   const navigate = useNavigate();
 
@@ -63,7 +63,7 @@ export default function ProductDetail() {
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedImage, setSelectedImage] = useState(0);
   const [showDescription, setShowDescription] = useState(false);
-  const [quantity, setQuantity] = useState(1);
+  // const [quantity, setQuantity] = useState(1);
 
   if (loading) {
     return (
@@ -110,14 +110,14 @@ export default function ProductDetail() {
       })
     : [];
 
-  const handleAddToCart = () => {
-    addToCart({
-      ...product,
-      selectedColor,
-      selectedSize,
-      quantity,
-    });
-  };
+  // const handleAddToCart = () => {
+  //   addToCart({
+  //     ...product,
+  //     selectedColor,
+  //     selectedSize,
+  //     quantity,
+  //   });
+  // };
 
   const handleMarketplaceClick = (url) => {
     window.open(url, "_blank");

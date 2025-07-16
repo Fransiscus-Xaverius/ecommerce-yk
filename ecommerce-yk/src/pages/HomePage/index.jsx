@@ -8,7 +8,7 @@ import Newsletter from "../../components/sections/Newsletter";
 // UI Components
 import ProductCarousel from "../../components/ui/ProductCarousel";
 
-import { useHeroSlider } from "../../hooks/useHeroSlider";
+// import { useHeroSlider } from "../../hooks/useHeroSlider";
 import { loadBootstrapCSS } from "../../utils/helpers";
 
 // Hooks
@@ -18,15 +18,16 @@ import { fetchProductByArtikel } from "../../services/productService"; // Import
 
 export default function HomePage() {
   const { wishlist, toggleWishlist } = useWishlist();
-  const { cartItems, addToCart } = useCart();
+  const { addToCart } = useCart();
 
   const [newArrivals, setNewArrivals] = useState([]);
   const [loadingNewArrivals, setLoadingNewArrivals] = useState(true);
   const [errorNewArrivals, setErrorNewArrivals] = useState(null);
 
-  const [bestSellers, setBestSellers] = useState([]);
-  const [loadingBestSellers, setLoadingBestSellers] = useState(true);
-  const [errorBestSellers, setErrorBestSellers] = useState(null);
+  // Best Seller section is hidden
+  // const [bestSellers, setBestSellers] = useState([]);
+  // const [loadingBestSellers, setLoadingBestSellers] = useState(true);
+  // const [errorBestSellers, setErrorBestSellers] = useState(null);
 
   const [specialDeals, setSpecialDeals] = useState([]);
   const [loadingSpecialDeals, setLoadingSpecialDeals] = useState(true);
@@ -53,13 +54,14 @@ export default function HomePage() {
     };
 
     fetchProducts(1, 10, setNewArrivals, setLoadingNewArrivals, setErrorNewArrivals);
-    fetchProducts(11, 20, setBestSellers, setLoadingBestSellers, setErrorBestSellers);
+    // Best Seller section is hidden
+    // fetchProducts(11, 20, setBestSellers, setLoadingBestSellers, setErrorBestSellers);
     fetchProducts(21, 30, setSpecialDeals, setLoadingSpecialDeals, setErrorSpecialDeals);
   }, []);
 
   const productSections = [
     { title: "New Arrivals", products: newArrivals },
-    { title: "Best Seller", products: bestSellers },
+    // { title: "Best Seller", products: bestSellers }, // Hidden
     { title: "Special Deal", products: specialDeals },
   ];
 
@@ -78,13 +80,11 @@ export default function HomePage() {
       <FeaturesSection />
 
       {/* Product Sections */}
-      {loadingNewArrivals || loadingBestSellers || loadingSpecialDeals ? (
+      {loadingNewArrivals || loadingSpecialDeals ? (
         <div>Loading products...</div>
-      ) : errorNewArrivals || errorBestSellers || errorSpecialDeals ? (
-        <div>
-          Error loading products: {errorNewArrivals?.message || errorBestSellers?.message || errorSpecialDeals?.message}
-        </div>
-      ) : newArrivals.length > 0 || bestSellers.length > 0 || specialDeals.length > 0 ? (
+      ) : errorNewArrivals || errorSpecialDeals ? (
+        <div>Error loading products: {errorNewArrivals?.message || errorSpecialDeals?.message}</div>
+      ) : newArrivals.length > 0 || specialDeals.length > 0 ? (
         productSections.map((section, sectionIndex) => (
           <ProductCarousel
             key={sectionIndex}
