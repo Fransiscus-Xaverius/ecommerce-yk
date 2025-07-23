@@ -20,44 +20,36 @@ export default function HomePage() {
   const { wishlist, toggleWishlist } = useWishlist();
   const { addToCart } = useCart();
 
+  const [hotProducts, setHotProducts] = useState([]);
   const [newArrivals, setNewArrivals] = useState([]);
-  const [loadingNewArrivals, setLoadingNewArrivals] = useState(true);
-  const [errorNewArrivals, setErrorNewArrivals] = useState(null);
-
-  // Best Seller section is hidden
-  // const [bestSellers, setBestSellers] = useState([]);
-  // const [loadingBestSellers, setLoadingBestSellers] = useState(true);
-  // const [errorBestSellers, setErrorBestSellers] = useState(null);
-
-  const [specialDeals, setSpecialDeals] = useState([]);
-  const [loadingSpecialDeals, setLoadingSpecialDeals] = useState(true);
-  const [errorSpecialDeals, setErrorSpecialDeals] = useState(null);
+  const [offlineProducts, setOfflineProducts] = useState([]);
+  const [onlineProducts, setOnlineProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchInitialProducts = async () => {
       try {
+        // Fetch Hot Products (example: 10 products with highest rating)
+        const hotData = await fetchProductList({ limit: 10, sortColumn: "rating", sortDirection: "desc" });
+        setHotProducts(hotData.map(product => ({ ...product, isHot: true })));
+
         // Fetch New Arrivals (10 newest products by tanggal_terima)
         const newArrivalsData = await fetchProductList({ limit: 10, sortColumn: "tanggal_terima", sortDirection: "desc" });
         setNewArrivals(newArrivalsData.map(product => ({ ...product, isNew: true })));
-        setLoadingNewArrivals(false);
 
-        // Fetch Best Sellers (example: first 10 products by artikel, you might want a different logic here)
-        // const bestSellersData = await fetchProductList({ limit: 10, offset: 10, sortColumn: "artikel", sortDirection: "asc" });
-        // setBestSellers(bestSellersData);
-        // setLoadingBestSellers(false);
+        // Fetch Offline Products (example: 10 products with 'Offline' status)
+        const offlineData = await fetchProductList({ limit: 10, filters: { status: 'Offline' } });
+        setOfflineProducts(offlineData);
 
-        // Fetch Special Deals (example: next 10 products by artikel, you might want a different logic here)
-        const specialDealsData = await fetchProductList({ limit: 10, offset: 20, sortColumn: "artikel", sortDirection: "asc" });
-        setSpecialDeals(specialDealsData);
-        setLoadingSpecialDeals(false);
+        // Fetch Online Products (example: 10 products with 'Online' status)
+        const onlineData = await fetchProductList({ limit: 10, filters: { status: 'Online' } });
+        setOnlineProducts(onlineData);
 
+        setLoading(false);
       } catch (error) {
-        setErrorNewArrivals(error);
-        // setErrorBestSellers(error);
-        setErrorSpecialDeals(error);
-        setLoadingNewArrivals(false);
-        // setLoadingBestSellers(false);
-        setLoadingSpecialDeals(false);
+        setError(error);
+        setLoading(false);
       }
     };
 
@@ -65,9 +57,10 @@ export default function HomePage() {
   }, []);
 
   const productSections = [
+    { title: "Hot", products: hotProducts },
     { title: "New Arrivals", products: newArrivals },
-    // { title: "Best Seller", products: bestSellers }, // Hidden
-    { title: "Special Deal", products: specialDeals },
+    { title: "Offline", products: offlineProducts },
+    { title: "Online", products: onlineProducts },
   ];
 
   // Load Bootstrap CSS
@@ -85,11 +78,11 @@ export default function HomePage() {
       <FeaturesSection />
 
       {/* Product Sections */}
-      {loadingNewArrivals || loadingSpecialDeals ? (
+      {loading ? (
         <div>Loading products...</div>
-      ) : errorNewArrivals || errorSpecialDeals ? (
-        <div>Error loading products: {errorNewArrivals?.message || errorSpecialDeals?.message}</div>
-      ) : newArrivals.length > 0 || specialDeals.length > 0 ? (
+      ) : error ? (
+        <div>Error loading products: {error.message}</div>
+      ) : (
         productSections.map((section, sectionIndex) => (
           <ProductCarousel
             key={sectionIndex}
@@ -100,8 +93,6 @@ export default function HomePage() {
             wishlist={wishlist}
           />
         ))
-      ) : (
-        <div>No products found.</div>
       )}
 
       {/* Newsletter Section */}

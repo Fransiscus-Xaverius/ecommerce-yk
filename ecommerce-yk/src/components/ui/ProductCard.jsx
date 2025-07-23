@@ -18,12 +18,15 @@ const ProductCard = ({ product, onAddToCart, onToggleWishlist, isInWishlist, onP
         onClick={() => onProductClick(product.artikel)}
       >
         {/* Badges */}
-        <div className="absolute left-3 top-3 z-10 flex flex-col gap-1">
+        <div class="absolute left-3 top-3 z-10 flex flex-col gap-1">
+          {product.isHot && (
+            <span class="rounded bg-yellow-500 px-2 py-1 text-xs font-semibold text-white">HOT</span>
+          )}
           {product.isNew && (
-            <span className="rounded bg-green-500 px-2 py-1 text-xs font-semibold text-white">NEW</span>
+            <span class="rounded bg-green-500 px-2 py-1 text-xs font-semibold text-white">NEW</span>
           )}
           {product.discount && (
-            <span className="rounded bg-red-500 px-2 py-1 text-xs font-semibold text-white">
+            <span class="rounded bg-red-500 px-2 py-1 text-xs font-semibold text-white">
               {product.discount}% OFF
             </span>
           )}
