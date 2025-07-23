@@ -1,9 +1,10 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import ProductCarousel from "../components/ui/ProductCarousel";
 import { useWishlist } from "../hooks/useWishlist";
 import { useCart } from "../hooks/useCart";
+import ProductCard from "../components/ui/ProductCard";
 import { searchProducts } from "../services/productService"; // Import searchProducts
 
 const SearchResults = () => {
@@ -11,6 +12,7 @@ const SearchResults = () => {
   const query = new URLSearchParams(location.search).get("q");
   const { wishlist, toggleWishlist } = useWishlist();
   const { addToCart } = useCart();
+  const navigate = useNavigate();
 
   const { data: products, error, isLoading } = useQuery({
     queryKey: ["searchResults", query],
@@ -47,19 +49,24 @@ const SearchResults = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="mx-auto max-w-7xl px-4 py-8">
       <h1 className="mb-4 text-2xl font-bold">Search Results for "{query}"</h1>
 
       {products && products.length > 0 ? (
         <div>
           <p className="mb-6 text-gray-600">Ditemukan {products.length} produk</p>
-          <ProductCarousel
-            section={{ title: `Hasil Pencarian`, products: products }}
-            onAddToCart={addToCart}
-            onToggleWishlist={toggleWishlist}
-            wishlist={wishlist}
-            sectionIndex={0}
-          />
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {products.map((product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                onAddToCart={addToCart}
+                onToggleWishlist={toggleWishlist}
+                isInWishlist={wishlist.includes(product.id)}
+                onProductClick={(artikel) => navigate(`/product/${artikel}`)}
+              />
+            ))}
+          </div>
         </div>
       ) : (
         <div className="py-12 text-center">
