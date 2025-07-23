@@ -20,7 +20,7 @@ const ProductCard = ({ product, onAddToCart, onToggleWishlist, isInWishlist, onP
         {/* Badges */}
         <div class="absolute left-3 top-3 z-10 flex flex-col gap-1">
           {product.isHot && (
-            <span class="rounded bg-yellow-500 px-2 py-1 text-xs font-semibold text-white">HOT</span>
+            <span class="rounded bg-red-500 px-2 py-1 text-xs font-semibold text-white">HOT</span>
           )}
           {product.isNew && (
             <span class="rounded bg-green-500 px-2 py-1 text-xs font-semibold text-white">NEW</span>
