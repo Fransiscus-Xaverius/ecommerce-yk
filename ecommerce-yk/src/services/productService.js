@@ -68,9 +68,10 @@ export const fetchProductByArtikel = async (artikel) => {
   }
 };
 
-export const searchProducts = async (query) => {
+export const searchProducts = async (query, page = 1, limit = 12) => {
   try {
-    const response = await fetch(`/api/products?q=${query}`);
+    const offset = (page - 1) * limit;
+    const response = await fetch(`/api/products?q=${query}&limit=${limit}&offset=${offset}`);
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -79,21 +80,17 @@ export const searchProducts = async (query) => {
     const data = await response.json();
     console.log("Backend Search Data:", data);
 
-    let productsArray = [];
-    if (data.data && Array.isArray(data.data)) {
-      productsArray = data.data;
-    } else if (data.data && data.data.items && Array.isArray(data.data.items)) {
-      productsArray = data.data.items;
-    } else if (Array.isArray(data)) {
-      productsArray = data;
-    }
+    const responseData = data.data || {};
+    const productsArray = responseData.items || [];
+    const totalItems = responseData.total_items || 0;
 
     const transformedResults = productsArray.map((product) => transformProductData(product));
     console.log("Transformed Search Results:", transformedResults);
-    return transformedResults;
+    return { products: transformedResults, totalItems };
+
   } catch (error) {
     console.error("Error searching products:", error);
-    return [];
+    return { products: [], totalItems: 0 };
   }
 };
 

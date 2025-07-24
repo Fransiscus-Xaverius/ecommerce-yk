@@ -1,24 +1,30 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import ProductCarousel from "../components/ui/ProductCarousel";
+import ProductCard from "../components/ui/ProductCard";
+import { searchProducts } from "../services/productService";
 import { useWishlist } from "../hooks/useWishlist";
 import { useCart } from "../hooks/useCart";
-import ProductCard from "../components/ui/ProductCard";
-import { searchProducts } from "../services/productService"; // Import searchProducts
 
 const SearchResults = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const query = new URLSearchParams(location.search).get("q");
+  const [page, setPage] = useState(1);
+
   const { wishlist, toggleWishlist } = useWishlist();
   const { addToCart } = useCart();
-  const navigate = useNavigate();
 
-  const { data: products, error, isLoading } = useQuery({
-    queryKey: ["searchResults", query],
-    queryFn: () => searchProducts(query), // Use searchProducts
-    enabled: !!query, // Only run the query if a query exists
+  const { data, error, isLoading } = useQuery({
+    queryKey: ["searchResults", query, page],
+    queryFn: () => searchProducts(query, page, 12),
+    enabled: !!query,
+    keepPreviousData: true, // Optional: to keep showing old data while new data is fetching
   });
+
+  const products = data?.products || [];
+  const totalItems = data?.totalItems || 0;
+  const totalPages = Math.ceil(totalItems / 12);
 
   if (isLoading) {
     return (
@@ -50,12 +56,12 @@ const SearchResults = () => {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8">
-      <h1 className="mb-4 text-2xl font-bold">Search Results for "{query}"</h1>
+      <h1 className="mb-4 text-2xl font-bold">Hasil Pencarian untuk "{query}"</h1>
 
-      {products && products.length > 0 ? (
+      {products.length > 0 ? (
         <div>
-          <p className="mb-6 text-gray-600">Ditemukan {products.length} produk</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <p className="mb-6 text-gray-600">Ditemukan {totalItems} produk</p>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {products.map((product) => (
               <ProductCard
                 key={product.id}
@@ -66,6 +72,27 @@ const SearchResults = () => {
                 onProductClick={(artikel) => navigate(`/product/${artikel}`)}
               />
             ))}
+          </div>
+
+          {/* Pagination Controls */}
+          <div className="mt-8 flex items-center justify-center space-x-4">
+            <button
+              onClick={() => setPage((p) => Math.max(p - 1, 1))}
+              disabled={page === 1}
+              className="rounded bg-purple-600 px-4 py-2 text-white hover:bg-purple-700 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              Sebelumnya
+            </button>
+            <span className="text-gray-700">
+              Halaman {page} dari {totalPages}
+            </span>
+            <button
+              onClick={() => setPage((p) => p + 1)}
+              disabled={page >= totalPages}
+              className="rounded bg-purple-600 px-4 py-2 text-white hover:bg-purple-700 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              Berikutnya
+            </button>
           </div>
         </div>
       ) : (
