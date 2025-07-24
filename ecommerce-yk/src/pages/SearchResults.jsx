@@ -75,24 +75,98 @@ const SearchResults = () => {
           </div>
 
           {/* Pagination Controls */}
-          <div className="mt-8 flex items-center justify-center space-x-4">
-            <button
-              onClick={() => setPage((p) => Math.max(p - 1, 1))}
-              disabled={page === 1}
-              className="rounded bg-purple-600 px-4 py-2 text-white hover:bg-purple-700 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              Sebelumnya
-            </button>
-            <span className="text-gray-700">
-              Halaman {page} dari {totalPages}
-            </span>
-            <button
-              onClick={() => setPage((p) => p + 1)}
-              disabled={page >= totalPages}
-              className="rounded bg-purple-600 px-4 py-2 text-white hover:bg-purple-700 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              Berikutnya
-            </button>
+          <div className="mt-12 flex items-center justify-center">
+            <div className="flex items-center space-x-1">
+              {/* Previous Button */}
+              <button
+                onClick={() => setPage((p) => Math.max(p - 1, 1))}
+                disabled={page === 1}
+                className={`flex h-10 w-10 items-center justify-center rounded ${
+                  page === 1
+                    ? 'cursor-not-allowed bg-gray-100 text-gray-400'
+                    : 'bg-black text-white hover:bg-gray-800'
+                }`}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <polyline points="15,18 9,12 15,6"></polyline>
+                </svg>
+              </button>
+
+              {/* Page Numbers */}
+              {(() => {
+                const pageNumbers = [];
+                const maxVisiblePages = 5;
+                
+                if (totalPages <= maxVisiblePages) {
+                  // Show all pages if total is small
+                  for (let i = 1; i <= totalPages; i++) {
+                    pageNumbers.push(i);
+                  }
+                } else {
+                  // Always show first page
+                  pageNumbers.push(1);
+                  
+                  if (page <= 3) {
+                    // Show pages 2, 3, 4 and last page
+                    for (let i = 2; i <= 4; i++) {
+                      pageNumbers.push(i);
+                    }
+                    if (totalPages > 4) {
+                      pageNumbers.push('...', totalPages);
+                    }
+                  } else if (page >= totalPages - 2) {
+                    // Show last few pages
+                    if (totalPages > 4) {
+                      pageNumbers.push('...');
+                    }
+                    for (let i = totalPages - 3; i <= totalPages; i++) {
+                      if (i > 1) pageNumbers.push(i);
+                    }
+                  } else {
+                    // Show current page and neighbors
+                    pageNumbers.push('...');
+                    for (let i = page - 1; i <= page + 1; i++) {
+                      pageNumbers.push(i);
+                    }
+                    pageNumbers.push('...', totalPages);
+                  }
+                }
+                
+                return pageNumbers.map((pageNum, index) => (
+                  <React.Fragment key={index}>
+                    {pageNum === '...' ? (
+                      <span className="flex h-10 w-10 items-center justify-center text-gray-500">...</span>
+                    ) : (
+                      <button
+                        onClick={() => setPage(pageNum)}
+                        className={`h-10 min-w-[2.5rem] rounded px-3 text-sm font-medium ${
+                          page === pageNum
+                            ? 'bg-black text-white'
+                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        }`}
+                      >
+                        {pageNum}
+                      </button>
+                    )}
+                  </React.Fragment>
+                ));
+              })()}
+
+              {/* Next Button */}
+              <button
+                onClick={() => setPage((p) => p + 1)}
+                disabled={page >= totalPages}
+                className={`flex h-10 w-10 items-center justify-center rounded ${
+                  page >= totalPages
+                    ? 'cursor-not-allowed bg-gray-100 text-gray-400'
+                    : 'bg-black text-white hover:bg-gray-800'
+                }`}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <polyline points="9,18 15,12 9,6"></polyline>
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
       ) : (
