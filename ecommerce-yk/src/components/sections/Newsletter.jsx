@@ -14,17 +14,17 @@ const Newsletter = () => {
   };
 
   return (
-    <section className="bg-gradient-to-r from-purple-600 to-pink-600 py-16 text-white">
-      <div className="mx-auto max-w-4xl px-4 text-center">
-        <h2 className="mb-4 text-4xl font-bold md:text-5xl">Stay in Style</h2>
-        <p className="mb-8 text-xl opacity-90">Get exclusive offers and be the first to know about new arrivals!</p>
+    <section className="bg-gradient-to-r from-purple-600 to-pink-600 py-12 text-white sm:py-16">
+      <div className="mx-auto max-w-4xl px-3 text-center sm:px-4 md:px-6">
+        <h2 className="mb-3 text-2xl font-bold sm:mb-4 sm:text-3xl md:text-4xl lg:text-5xl">Stay in Style</h2>
+        <p className="mb-6 text-base opacity-90 sm:mb-8 sm:text-lg md:text-xl">Get exclusive offers and be the first to know about new arrivals!</p>
         <form
           onSubmit={handleSubmit}
-          className="mx-auto flex max-w-md flex-col items-center justify-center gap-4 sm:flex-row"
+          className="mx-auto flex max-w-md flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4"
         >
           <input
             type="email"
-            className="w-full rounded-full px-6 py-4 text-lg text-gray-900 focus:outline-none focus:ring-4 focus:ring-white/30 sm:flex-1"
+            className="w-full rounded-full px-4 py-3 text-base text-gray-900 focus:outline-none focus:ring-4 focus:ring-white/30 sm:flex-1 sm:px-6 sm:py-4 sm:text-lg"
             placeholder="Your email address"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -32,7 +32,7 @@ const Newsletter = () => {
           />
           <button
             type="submit"
-            className="w-full rounded-full bg-white px-8 py-4 text-lg font-bold text-purple-600 transition-all duration-300 hover:scale-105 hover:bg-gray-100 sm:w-auto"
+            className="w-full rounded-full bg-white px-6 py-3 text-base font-bold text-purple-600 transition-all duration-300 hover:scale-105 hover:bg-gray-100 sm:w-auto sm:px-8 sm:py-4 sm:text-lg"
           >
             Subscribe
           </button>

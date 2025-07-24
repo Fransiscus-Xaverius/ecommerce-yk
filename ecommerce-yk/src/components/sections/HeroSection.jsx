@@ -61,8 +61,7 @@ const HeroSection = () => {
           {heroSlides.map((slide, index) => (
             <div
               key={slide.id}
-              className={`carousel-item ${index === currentSlide ? "active" : ""}`}
-              style={{ height: "70vh", minHeight: "500px" }}
+              className={`carousel-item ${index === currentSlide ? "active" : ""} hero-responsive`}
             >
               <div
                 className="d-flex align-items-center justify-content-center h-100 position-relative text-white"
@@ -86,27 +85,33 @@ const HeroSection = () => {
                     zIndex: -1,
                   }}
                 ></div>
-                <div className="container text-center">
+                <div className="container text-center px-3 sm:px-4">
                   <div className="row justify-content-center">
-                    <div className="col-lg-8">
+                    <div className="col-12 col-sm-10 col-lg-8">
                       <h2
-                        className="display-3 fw-bold animate_animated animate_fadeInDown text-shadow-4xl mb-3"
+                        className="display-6 display-sm-4 display-lg-3 fw-bold animate_animated animate_fadeInDown text-shadow-4xl mb-2 mb-sm-3"
                         style={{
                           textShadow: "0 0 12px rgba(0,0,0,0.5), 0 0 24px rgba(0,0,0,0.3)",
+                          fontSize: "clamp(1.5rem, 4vw, 3.5rem)",
+                          lineHeight: "1.2",
                         }}
                       >
                         {slide.title}
                       </h2>
                       <p
-                        className="animate_animated animatefadeInUp animate_delay-2s text-shadow-4xl mb-4 text-2xl font-medium"
-                        style={{ textShadow: "0 0 8px rgba(0,0,0,0.8)" }}
+                        className="animate_animated animatefadeInUp animate_delay-2s text-shadow-4xl mb-3 mb-sm-4"
+                        style={{ 
+                          textShadow: "0 0 8px rgba(0,0,0,0.8)",
+                          fontSize: "clamp(0.9rem, 2.5vw, 1.5rem)",
+                          lineHeight: "1.4",
+                        }}
                       >
                         {slide.description}
                       </p>
-                      <button className="btn btn-light btn-lg rounded-pill fw-bold hover-scale animate_animated animatefadeInUp animate_delay-3s px-5 py-3">
-                        <div className="flex items-center">
-                          {slide.cta}
-                          <ArrowRight className="ms-2" size={20} />
+                      <button className="btn btn-light btn-md btn-lg-lg rounded-pill fw-bold hover-scale animate_animated animatefadeInUp animate_delay-3s px-3 px-sm-4 px-lg-5 py-2 py-sm-2 py-lg-3">
+                        <div className="flex items-center justify-center">
+                          <span style={{ fontSize: "clamp(0.8rem, 2vw, 1rem)" }}>{slide.cta}</span>
+                          <ArrowRight className="ms-2" size={16} style={{ width: "clamp(16px, 3vw, 20px)", height: "clamp(16px, 3vw, 20px)" }} />
                         </div>
                       </button>
                     </div>

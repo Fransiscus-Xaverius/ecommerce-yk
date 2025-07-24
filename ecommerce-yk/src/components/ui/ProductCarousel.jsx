@@ -31,25 +31,25 @@ const ProductCarousel = ({ section, onAddToCart, onToggleWishlist, wishlist, sec
   } = useCarouselDrag();
 
   return (
-    <section className={`py-12 ${sectionIndex % 2 === 0 ? "bg-gray-50" : "bg-white"}`}>
-      <div className="mx-auto max-w-7xl px-4">
-        <div className="mb-8 flex items-center justify-between">
+    <section className={`py-8 sm:py-12 ${sectionIndex % 2 === 0 ? "bg-gray-50" : "bg-white"}`}>
+      <div className="mx-auto max-w-7xl px-3 sm:px-4 md:px-6 lg:px-4">
+        <div className="mb-6 flex items-center justify-between sm:mb-8">
           <div>
-            <h2 className="mb-2 text-3xl font-bold text-gray-900">{section.title}</h2>
-            <p className="text-gray-600">{section.subtitle}</p>
+            <h2 className="mb-1 text-xl font-bold text-gray-900 sm:mb-2 sm:text-2xl md:text-3xl">{section.title}</h2>
+            <p className="text-sm text-gray-600 sm:text-base">{section.subtitle}</p>
           </div>
           <div className="hidden gap-2 md:flex">
             <button
-              className="rounded-full border border-gray-300 p-2 transition-all duration-300 hover:border-gray-400 hover:bg-gray-50"
+              className="rounded-full border border-gray-300 p-1.5 transition-all duration-300 hover:border-gray-400 hover:bg-gray-50 sm:p-2"
               onClick={() => scrollCarousel(carouselRef, "left")}
             >
-              <ChevronLeft size={20} />
+              <ChevronLeft size={16} className="sm:h-5 sm:w-5" />
             </button>
             <button
-              className="rounded-full border border-gray-300 p-2 transition-all duration-300 hover:border-gray-400 hover:bg-gray-50"
+              className="rounded-full border border-gray-300 p-1.5 transition-all duration-300 hover:border-gray-400 hover:bg-gray-50 sm:p-2"
               onClick={() => scrollCarousel(carouselRef, "right")}
             >
-              <ChevronRight size={20} />
+              <ChevronRight size={16} className="sm:h-5 sm:w-5" />
             </button>
           </div>
         </div>
@@ -58,7 +58,7 @@ const ProductCarousel = ({ section, onAddToCart, onToggleWishlist, wishlist, sec
         <div className="relative overflow-hidden">
           <div
             ref={carouselRef}
-            className="scrollbar-hide flex gap-6 overflow-x-auto pb-4"
+            className="scrollbar-hide flex gap-3 overflow-x-auto pb-4 sm:gap-4 md:gap-6"
             style={{
               scrollBehavior: "smooth",
               WebkitOverflowScrolling: "touch",
