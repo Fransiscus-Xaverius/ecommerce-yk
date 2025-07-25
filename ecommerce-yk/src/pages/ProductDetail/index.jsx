@@ -284,6 +284,17 @@ export default function ProductDetail() {
                   </div>
                 </div>
               </div>
+
+              {/* Description - Only visible on desktop (xl and above) */}
+              <div className="mt-6 hidden border-t border-gray-200 pt-6 xl:block">
+                <h3 className="mb-4 text-lg font-bold text-gray-900">Deskripsi Produk</h3>
+                <div className="space-y-3">
+                  <p className="leading-relaxed text-gray-600">
+                    {product.description ||
+                      "Sepatu sneakers premium dengan desain modern dan kualitas terbaik. Terbuat dari bahan berkualitas tinggi yang memberikan kenyamanan maksimal untuk aktivitas sehari-hari."}
+                  </p>
+                </div>
+              </div>
             </div>
 
             {/* Right Side - Product Details */}
@@ -417,8 +428,8 @@ export default function ProductDetail() {
                 </div>
               </div>
 
-              {/* Description */}
-              <div className="mb-6 border-t border-gray-200 pt-4 md:mb-8">
+              {/* Description - Only visible on mobile and tablet (below xl) */}
+              <div className="mb-6 border-t border-gray-200 pt-4 md:mb-8 xl:hidden">
                 <button
                   className="flex w-full items-center justify-between text-sm font-bold tracking-wide text-gray-900"
                   onClick={() => setShowDescription(!showDescription)}
