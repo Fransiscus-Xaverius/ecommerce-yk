@@ -28,7 +28,7 @@ const ProductCard = ({ product, onAddToCart, onToggleWishlist, isInWishlist, onP
               NEW
             </span>
           )}
-          {product.discount && (
+          {product.discount && product.harga_diskon && product.harga_diskon > 0 && (
             <span className="rounded bg-red-500 px-2 py-1 text-xs font-semibold text-white sm:px-2.5 sm:py-1 sm:text-sm">
               {product.discount}% OFF
             </span>
@@ -96,13 +96,24 @@ const ProductCard = ({ product, onAddToCart, onToggleWishlist, isInWishlist, onP
 
           {/* Price */}
           <div className="mb-3 flex flex-1 flex-col justify-end sm:mb-4">
-            <h5 className="mb-1 text-base font-bold text-blue-600 sm:text-lg md:text-xl">
-              {formatPrice(product.harga_diskon)}
-            </h5>
-            {product.originalPrice && (
-              <span className="text-xs text-gray-500 line-through sm:text-sm md:text-base">
-                {formatPrice(product.originalPrice)}
-              </span>
+            {product.harga_diskon && product.harga_diskon > 0 ? (
+              <>
+                {/* Discounted Price */}
+                <h5 className="mb-1 text-base font-bold text-blue-600 sm:text-lg md:text-xl">
+                  {formatPrice(product.harga_diskon)}
+                </h5>
+                {/* Original Price (crossed out) */}
+                {product.originalPrice && (
+                  <span className="text-xs text-gray-500 line-through sm:text-sm md:text-base">
+                    {formatPrice(product.originalPrice)}
+                  </span>
+                )}
+              </>
+            ) : (
+              /* No discount - show original price only */
+              <h5 className="mb-1 text-base font-bold text-blue-600 sm:text-lg md:text-xl">
+                {formatPrice(product.originalPrice || product.harga)}
+              </h5>
             )}
           </div>
 
