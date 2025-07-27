@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Star, ChevronDown, ArrowLeft, Package, Truck } from "lucide-react";
+import { Star, ChevronDown, ArrowLeft, Package, Truck, X } from "lucide-react";
 import { formatPrice } from "../../utils/helpers";
 
 // Hooks
@@ -63,6 +63,7 @@ export default function ProductDetail() {
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedImage, setSelectedImage] = useState(0);
   const [showDescription, setShowDescription] = useState(false);
+  const [showSizeGuide, setShowSizeGuide] = useState(false);
   // const [quantity, setQuantity] = useState(1);
 
   if (loading) {
@@ -399,7 +400,10 @@ export default function ProductDetail() {
                   <h3 className="text-xs font-bold uppercase tracking-wider text-gray-900 md:text-sm">
                     Ukuran: {selectedSize}
                   </h3>
-                  <button className="text-xs font-medium text-blue-600 hover:text-blue-700 md:text-sm">
+                  <button 
+                    onClick={() => setShowSizeGuide(true)}
+                    className="text-xs font-medium text-blue-600 hover:text-blue-700 md:text-sm"
+                  >
                     Panduan Ukuran
                   </button>
                 </div>
@@ -499,6 +503,119 @@ export default function ProductDetail() {
             </div>
           </div>
         </div>
+
+        {/* Size Guide Popup Overlay */}
+        {showSizeGuide && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+            <div className="relative h-[90vh] w-[90vw] overflow-hidden rounded-lg bg-white shadow-2xl">
+              {/* Close Button */}
+              <button
+                onClick={() => setShowSizeGuide(false)}
+                className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-800 transition-colors"
+              >
+                <X size={20} />
+              </button>
+              
+              {/* Popup Content */}
+              <div className="h-full overflow-y-auto p-6 pt-16">
+                <div className="mx-auto max-w-4xl">
+                  <h2 className="mb-8 text-center text-2xl font-bold text-gray-900 md:text-3xl">
+                    Panduan Ukuran Sepatu
+                  </h2>
+                  
+                  {/* Size Chart Table */}
+                  <div className="mb-8 overflow-x-auto">
+                    <table className="w-full border-collapse border border-gray-300">
+                      <thead>
+                        <tr className="bg-gray-50">
+                          <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-900">
+                            EU Size
+                          </th>
+                          <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-900">
+                            US Size
+                          </th>
+                          <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-900">
+                            UK Size
+                          </th>
+                          <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-900">
+                            Panjang Kaki (cm)
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {[
+                          { eu: "36", us: "5", uk: "3.5", cm: "22.5" },
+                          { eu: "37", us: "5.5", uk: "4", cm: "23" },
+                          { eu: "38", us: "6", uk: "4.5", cm: "23.5" },
+                          { eu: "39", us: "7", uk: "5.5", cm: "24.5" },
+                          { eu: "40", us: "7.5", uk: "6", cm: "25" },
+                          { eu: "41", us: "8", uk: "7", cm: "25.5" },
+                          { eu: "42", us: "8.5", uk: "7.5", cm: "26" },
+                          { eu: "43", us: "9.5", uk: "8.5", cm: "27" },
+                          { eu: "44", us: "10", uk: "9", cm: "27.5" },
+                          { eu: "45", us: "11", uk: "10", cm: "28.5" },
+                        ].map((size, index) => (
+                          <tr key={index} className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
+                            <td className="border border-gray-300 px-4 py-3 font-medium">{size.eu}</td>
+                            <td className="border border-gray-300 px-4 py-3">{size.us}</td>
+                            <td className="border border-gray-300 px-4 py-3">{size.uk}</td>
+                            <td className="border border-gray-300 px-4 py-3">{size.cm}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* How to Measure Instructions */}
+                  <div className="mb-8">
+                    <h3 className="mb-4 text-xl font-semibold text-gray-900">
+                      Cara Mengukur Kaki Anda
+                    </h3>
+                    <div className="space-y-3 text-gray-600">
+                      <div className="flex items-start space-x-3">
+                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-600">
+                          1
+                        </span>
+                        <p>Letakkan kaki Anda di atas kertas dan tandai ujung jempol kaki dan tumit</p>
+                      </div>
+                      <div className="flex items-start space-x-3">
+                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-600">
+                          2
+                        </span>
+                        <p>Ukur jarak antara kedua titik tersebut menggunakan penggaris</p>
+                      </div>
+                      <div className="flex items-start space-x-3">
+                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-600">
+                          3
+                        </span>
+                        <p>Cocokkan hasil pengukuran dengan tabel ukuran di atas</p>
+                      </div>
+                      <div className="flex items-start space-x-3">
+                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-600">
+                          4
+                        </span>
+                        <p>Ukur kedua kaki dan gunakan ukuran yang lebih besar</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Tips */}
+                  <div className="rounded-lg bg-blue-50 p-6">
+                    <h3 className="mb-3 text-lg font-semibold text-blue-900">
+                      Tips Memilih Ukuran
+                    </h3>
+                    <ul className="space-y-2 text-blue-800">
+                      <li>• Ukur kaki di sore hari karena kaki cenderung sedikit membesar</li>
+                      <li>• Jika ragu antara dua ukuran, pilih yang lebih besar</li>
+                      <li>• Pertimbangkan ketebalan kaus kaki yang akan digunakan</li>
+                      <li>• Setiap merek sepatu mungkin memiliki sedikit perbedaan ukuran</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

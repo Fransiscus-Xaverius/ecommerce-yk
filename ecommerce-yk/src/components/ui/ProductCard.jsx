@@ -1,5 +1,4 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import { Heart, Star } from "lucide-react";
 import { formatPrice } from "../../utils/helpers";
 
@@ -20,10 +19,14 @@ const ProductCard = ({ product, onAddToCart, onToggleWishlist, isInWishlist, onP
         {/* Badges */}
         <div className="absolute left-2 top-2 z-10 flex flex-col gap-1 sm:left-3 sm:top-3">
           {product.isHot && (
-            <span className="rounded bg-red-500 px-2 py-1 text-xs font-semibold text-white sm:px-2.5 sm:py-1 sm:text-sm">HOT</span>
+            <span className="rounded bg-red-500 px-2 py-1 text-xs font-semibold text-white sm:px-2.5 sm:py-1 sm:text-sm">
+              HOT
+            </span>
           )}
           {product.isNew && (
-            <span className="rounded bg-green-500 px-2 py-1 text-xs font-semibold text-white sm:px-2.5 sm:py-1 sm:text-sm">NEW</span>
+            <span className="rounded bg-green-500 px-2 py-1 text-xs font-semibold text-white sm:px-2.5 sm:py-1 sm:text-sm">
+              NEW
+            </span>
           )}
           {product.discount && (
             <span className="rounded bg-red-500 px-2 py-1 text-xs font-semibold text-white sm:px-2.5 sm:py-1 sm:text-sm">
@@ -45,7 +48,10 @@ const ProductCard = ({ product, onAddToCart, onToggleWishlist, isInWishlist, onP
           }}
           className="absolute right-2 top-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-md transition-shadow hover:shadow-lg sm:right-3 sm:top-3 sm:h-9 sm:w-9 md:h-10 md:w-10"
         >
-          <Heart size={16} className={`sm:h-5 sm:w-5 md:h-6 md:w-6 ${isInWishlist ? "fill-red-500 text-red-500" : "text-gray-600"}`} />
+          <Heart
+            size={16}
+            className={`sm:h-5 sm:w-5 md:h-6 md:w-6 ${isInWishlist ? "fill-red-500 text-red-500" : "text-gray-600"}`}
+          />
         </button>
 
         {/* Product Image */}
@@ -70,7 +76,9 @@ const ProductCard = ({ product, onAddToCart, onToggleWishlist, isInWishlist, onP
 
         {/* Product Info - flex-1 to fill remaining space */}
         <div className="flex flex-1 flex-col p-3 sm:p-4 md:p-5">
-          <h5 className="mb-2 line-clamp-2 min-h-[2.5rem] text-sm font-bold text-gray-900 sm:mb-3 sm:min-h-[3rem] sm:text-base md:text-lg">{product.nama}</h5>
+          <h5 className="mb-2 line-clamp-2 min-h-[2.5rem] text-sm font-bold text-gray-900 sm:mb-3 sm:min-h-[3rem] sm:text-base md:text-lg">
+            {product.nama}
+          </h5>
 
           {/* Rating - Horizontal */}
           <div className="mb-2 flex items-center gap-1 sm:mb-3 sm:gap-2">
@@ -88,9 +96,13 @@ const ProductCard = ({ product, onAddToCart, onToggleWishlist, isInWishlist, onP
 
           {/* Price */}
           <div className="mb-3 flex flex-1 flex-col justify-end sm:mb-4">
-            <h5 className="mb-1 text-base font-bold text-blue-600 sm:text-lg md:text-xl">{formatPrice(product.harga_diskon)}</h5>
+            <h5 className="mb-1 text-base font-bold text-blue-600 sm:text-lg md:text-xl">
+              {formatPrice(product.harga_diskon)}
+            </h5>
             {product.originalPrice && (
-              <span className="text-xs text-gray-500 line-through sm:text-sm md:text-base">{formatPrice(product.originalPrice)}</span>
+              <span className="text-xs text-gray-500 line-through sm:text-sm md:text-base">
+                {formatPrice(product.originalPrice)}
+              </span>
             )}
           </div>
 
