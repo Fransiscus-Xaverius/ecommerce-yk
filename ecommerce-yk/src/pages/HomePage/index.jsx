@@ -54,13 +54,55 @@ export default function HomePage() {
         });
         setNewArrivals(newArrivalsData.map((product) => ({ ...product, isNew: true })));
 
-        // Fetch Offline Products (example: 10 products with 'Offline' status)
-        const offlineData = await fetchProductList({ limit: 10, filters: { status: "Offline" } });
-        setOfflineProducts(offlineData);
+        // Fetch all products to categorize into Offline and Online sections
+        const allProductsData = await fetchProductList({ limit: 100 });
+        
+        // Categorize products based on offline and marketplace fields
+        const offlineProducts = [];
+        const onlineProducts = [];
 
-        // Fetch Online Products (example: 10 products with 'Online' status)
-        const onlineData = await fetchProductList({ limit: 10, filters: { status: "Online" } });
-        setOnlineProducts(onlineData);
+        allProductsData.forEach((product) => {
+          // Check if offline field is NULL/empty (considering backend transformation)
+          const hasOfflineData = product.offline && 
+            Array.isArray(product.offline) && 
+            product.offline.length > 0;
+
+          // Check if marketplace field has valid data
+          const hasMarketplaceData = product.marketplace && 
+            typeof product.marketplace === 'object' &&
+            Object.keys(product.marketplace).length > 0 && 
+            Object.values(product.marketplace).some(value => 
+              value !== null && value !== undefined && value !== "" && value.trim() !== ""
+            );
+
+          // If offline field is NULL/empty, add to online section
+          if (!hasOfflineData) {
+            onlineProducts.push(product);
+          }
+
+          // If marketplace field is NULL/empty, add to offline section
+          if (!hasMarketplaceData) {
+            offlineProducts.push(product);
+          }
+
+          // If both fields have data, add to both sections
+          if (hasOfflineData && hasMarketplaceData) {
+            offlineProducts.push(product);
+            onlineProducts.push(product);
+          }
+        });
+
+        // Take only 10 products from each section
+        setOfflineProducts(offlineProducts.slice(0, 10));
+        setOnlineProducts(onlineProducts.slice(0, 10));
+
+        // Debug logging
+        console.log("Product categorization results:");
+        console.log(`Total products processed: ${allProductsData.length}`);
+        console.log(`Offline products: ${offlineProducts.length}`);
+        console.log(`Online products: ${onlineProducts.length}`);
+        console.log("Sample offline product:", offlineProducts[0]);
+        console.log("Sample online product:", onlineProducts[0]);
 
         setLoading(false);
       } catch (error) {
@@ -73,10 +115,10 @@ export default function HomePage() {
   }, []);
 
   const productSections = [
-    { title: "Hot", products: hotProducts },
-    { title: "New Arrivals", products: newArrivals },
-    { title: "Offline", products: offlineProducts },
-    { title: "Online", products: onlineProducts },
+    { title: "Hot", subtitle: "Produk dengan rating tertinggi", products: hotProducts },
+    { title: "New Arrivals", subtitle: "Produk terbaru yang baru masuk", products: newArrivals },
+    { title: "Offline", subtitle: "Tersedia di toko offline", products: offlineProducts },
+    { title: "Online", subtitle: "Tersedia di marketplace online", products: onlineProducts },
   ];
 
   // Load Bootstrap CSS
