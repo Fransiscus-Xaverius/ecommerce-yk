@@ -17,7 +17,17 @@ const transformProductData = (backendProduct) => {
     nama: backendProduct.nama,
     harga_diskon: parseFloat(backendProduct.harga_diskon) || 0,
     originalPrice: parseFloat(backendProduct.harga) || 0,
-    rating: parseFloat(backendProduct.rating) || 0,
+    rating:
+      backendProduct.rating && typeof backendProduct.rating === "object"
+        ? {
+            comfort: parseInt(backendProduct.rating.comfort) || 0,
+            style: parseInt(backendProduct.rating.style) || 0,
+            support: parseInt(backendProduct.rating.support) || 0,
+            purpose: Array.isArray(backendProduct.rating.purpose)
+              ? backendProduct.rating.purpose.filter((p) => p && p.trim() !== "")
+              : [],
+          }
+        : { comfort: 0, style: 0, support: 0, purpose: [] },
     gambar: gambar,
     colors: backendProduct.colors || [],
     size: backendProduct.size || "",
@@ -87,7 +97,6 @@ export const searchProducts = async (query, page = 1, limit = 12) => {
     const transformedResults = productsArray.map((product) => transformProductData(product));
     console.log("Transformed Search Results:", transformedResults);
     return { products: transformedResults, totalItems };
-
   } catch (error) {
     console.error("Error searching products:", error);
     return { products: [], totalItems: 0 };

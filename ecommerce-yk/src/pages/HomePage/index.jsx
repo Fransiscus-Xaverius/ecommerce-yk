@@ -30,9 +30,21 @@ export default function HomePage() {
   useEffect(() => {
     const fetchInitialProducts = async () => {
       try {
-        // Fetch Hot Products (example: 10 products with highest rating)
-        const hotData = await fetchProductList({ limit: 10, sortColumn: "rating", sortDirection: "desc" });
-        setHotProducts(hotData.map((product) => ({ ...product, isHot: true })));
+        // Fetch Hot Products (products with highest average rating: comfort+style+support)
+        const hotData = await fetchProductList({ limit: 50, sortColumn: "tanggal_terima", sortDirection: "desc" });
+
+        // Calculate average rating and sort by it
+        const productsWithAvgRating = hotData.map((product) => {
+          const avgRating = product.rating
+            ? (product.rating.comfort + product.rating.style + product.rating.support) / 3
+            : 0;
+          return { ...product, avgRating, isHot: true };
+        });
+
+        // Sort by average rating (highest first) and take top 10
+        const sortedHotProducts = productsWithAvgRating.sort((a, b) => b.avgRating - a.avgRating).slice(0, 10);
+
+        setHotProducts(sortedHotProducts);
 
         // Fetch New Arrivals (10 newest products by tanggal_terima)
         const newArrivalsData = await fetchProductList({

@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Star, ChevronDown, ArrowLeft, Package, Truck, X } from "lucide-react";
+import { ChevronDown, ArrowLeft, Package, Truck, X } from "lucide-react";
 import { formatPrice } from "../../utils/helpers";
 
 // Hooks
 // import { useCart } from "../../hooks/useCart";
 import { fetchProductByArtikel } from "../../services/productService"; // Import the service
+import SpecificationRating from "../../components/ui/SpecificationRating";
+import PurposeChips from "../../components/ui/PurposeChips";
 
 /**
  * Product Detail Page Component
@@ -321,20 +323,10 @@ export default function ProductDetail() {
               {/* Product Code */}
               <p className="mb-4 text-sm text-gray-500">Kode Produk: {product.artikel}</p>
 
-              {/* Star Rating */}
-              <div className="mb-4 flex items-center gap-2">
-                <div className="flex items-center gap-1">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <Star
-                      key={star}
-                      size={18}
-                      className={star <= (product.rating || 4) ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}
-                    />
-                  ))}
-                </div>
-                <span className="text-sm font-medium text-gray-600">({product.rating || 4.5})</span>
-                <span className="text-sm text-gray-400">•</span>
-                <span className="text-sm text-gray-600">{Math.floor(Math.random() * 100) + 50} ulasan</span>
+              {/* Product Specifications and Categories */}
+              <div className="mb-6 space-y-6">
+                <SpecificationRating rating={product.rating} displayType="star" />
+                <PurposeChips purposes={product.rating?.purpose} />
               </div>
 
               {/* Price */}
@@ -400,7 +392,7 @@ export default function ProductDetail() {
                   <h3 className="text-xs font-bold uppercase tracking-wider text-gray-900 md:text-sm">
                     Ukuran: {selectedSize}
                   </h3>
-                  <button 
+                  <button
                     onClick={() => setShowSizeGuide(true)}
                     className="text-xs font-medium text-blue-600 hover:text-blue-700 md:text-sm"
                   >
@@ -511,18 +503,18 @@ export default function ProductDetail() {
               {/* Close Button */}
               <button
                 onClick={() => setShowSizeGuide(false)}
-                className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-800 transition-colors"
+                className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-gray-600 transition-colors hover:bg-gray-200 hover:text-gray-800"
               >
                 <X size={20} />
               </button>
-              
+
               {/* Popup Content */}
               <div className="h-full overflow-y-auto p-6 pt-16">
                 <div className="mx-auto max-w-4xl">
                   <h2 className="mb-8 text-center text-2xl font-bold text-gray-900 md:text-3xl">
                     Panduan Ukuran Sepatu
                   </h2>
-                  
+
                   {/* Size Chart Table */}
                   <div className="mb-8 overflow-x-auto">
                     <table className="w-full border-collapse border border-gray-300">
@@ -568,9 +560,7 @@ export default function ProductDetail() {
 
                   {/* How to Measure Instructions */}
                   <div className="mb-8">
-                    <h3 className="mb-4 text-xl font-semibold text-gray-900">
-                      Cara Mengukur Kaki Anda
-                    </h3>
+                    <h3 className="mb-4 text-xl font-semibold text-gray-900">Cara Mengukur Kaki Anda</h3>
                     <div className="space-y-3 text-gray-600">
                       <div className="flex items-start space-x-3">
                         <span className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-600">
@@ -601,9 +591,7 @@ export default function ProductDetail() {
 
                   {/* Tips */}
                   <div className="rounded-lg bg-blue-50 p-6">
-                    <h3 className="mb-3 text-lg font-semibold text-blue-900">
-                      Tips Memilih Ukuran
-                    </h3>
+                    <h3 className="mb-3 text-lg font-semibold text-blue-900">Tips Memilih Ukuran</h3>
                     <ul className="space-y-2 text-blue-800">
                       <li>• Ukur kaki di sore hari karena kaki cenderung sedikit membesar</li>
                       <li>• Jika ragu antara dua ukuran, pilih yang lebih besar</li>
