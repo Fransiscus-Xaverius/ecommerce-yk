@@ -105,7 +105,7 @@ export const searchProducts = async (query, page = 1, limit = 12) => {
 };
 
 export const fetchProductList = async ({
-  limit = 10,
+  limit = 1000,
   offset = 0,
   sortColumn = "tanggal_terima",
   sortDirection = "desc",
