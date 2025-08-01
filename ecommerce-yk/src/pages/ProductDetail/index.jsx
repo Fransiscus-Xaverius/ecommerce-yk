@@ -1,16 +1,19 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Star, ChevronDown, ArrowLeft, Package, Truck } from "lucide-react";
+import { ChevronDown, ArrowLeft, Package, Truck, X } from "lucide-react";
 import { formatPrice } from "../../utils/helpers";
 
 // Hooks
-import { useCart } from "../../hooks/useCart";
+// import { useCart } from "../../hooks/useCart";
+import { fetchProductByArtikel } from "../../services/productService"; // Import the service
+import SpecificationRating from "../../components/ui/SpecificationRating";
+import PurposeChips from "../../components/ui/PurposeChips";
 
 /**
  * Product Detail Page Component
  */
 export default function ProductDetail() {
-  const { addToCart } = useCart();
+  // const { addToCart } = useCart();
   const { id: productArticle } = useParams();
   const navigate = useNavigate();
 
@@ -26,12 +29,40 @@ export default function ProductDetail() {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/api/products/${productArticle}`);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+        const fetchedProduct = await fetchProductByArtikel(productArticle);
+
+        if (!fetchedProduct) {
+          setError(new Error("Product not found"));
+          return;
         }
-        const responseData = await response.json();
-        setProduct(responseData.data);
+
+        // Transform marketplace object to array (if needed, otherwise remove)
+        const marketplaces = fetchedProduct.marketplace
+          ? Object.entries(fetchedProduct.marketplace).map(([name, link]) => ({
+              name: name.charAt(0).toUpperCase() + name.slice(1),
+              link,
+            }))
+          : [];
+
+        // Transform offline stores array and filter out inactive stores
+        const offlineStores = fetchedProduct.offline
+          ? fetchedProduct.offline
+              .filter((store) => store.is_active !== false) // Hide inactive stores
+              .map((store) => ({
+                name: store.name,
+                url: store.url,
+                address: store.address || null,
+              }))
+          : [];
+
+        const transformedProduct = {
+          ...fetchedProduct,
+          marketplaces,
+          offlineStores,
+        };
+
+        setProduct(transformedProduct);
+        console.log("Final Product Data for Rendering:", transformedProduct);
       } catch (error) {
         setError(error);
       } finally {
@@ -46,7 +77,8 @@ export default function ProductDetail() {
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedImage, setSelectedImage] = useState(0);
   const [showDescription, setShowDescription] = useState(false);
-  const [quantity, setQuantity] = useState(1);
+  const [showSizeGuide, setShowSizeGuide] = useState(false);
+  // const [quantity, setQuantity] = useState(1);
 
   if (loading) {
     return (
@@ -74,62 +106,176 @@ export default function ProductDetail() {
     );
   }
 
-  // Product images - using high-quality shoe/sneaker images
-  const productImages = [
-    "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=600&h=600&fit=crop&crop=center",
-    "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=600&h=600&fit=crop&crop=center",
-    "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=600&h=600&fit=crop&crop=center",
-    "https://images.unsplash.com/photo-1551107696-a4b0c5a0d9a2?w=600&h=600&fit=crop&crop=center",
-    "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=600&h=600&fit=crop&crop=center",
-    "https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=600&h=600&fit=crop&crop=center",
-  ];
+  const productImages = product.gambar && product.gambar.length > 0 ? product.gambar : []; // Removed static images fallback
 
-  // const colors = [
-  //   { name: "BLACK", color: "#1f2937", label: "Hitam" },
-  //   { name: "WHITE", color: "#f8fafc", label: "Putih", border: true },
-  //   { name: "BLUE", color: "#1e40af", label: "Biru" },
-  //   { name: "RED", color: "#dc2626", label: "Merah" },
-  // ];
+  const colors = product.colors
+    ? product.colors.map((color) => ({
+        id: color.id,
+        color: color.hex,
+        label: color.name,
+      }))
+    : [];
 
-  const colors = product.colors.map((color) => ({
-    id: color.id,
-    color: color.hex,
-    label: color.name,
-  }));
+  const sizes = product.size
+    ? product.size.split(",").map((size) => {
+        return {
+          size: size.trim(),
+          available: true,
+        };
+      })
+    : [];
 
-  // const sizes = [
-  //   { size: "36", available: true },
-  //   { size: "37", available: true },
-  //   { size: "38", available: false },
-  //   { size: "39", available: true },
-  //   { size: "40", available: true },
-  //   { size: "41", available: false },
-  //   { size: "42", available: true },
-  //   { size: "43", available: true },
-  // ];
+  // const handleAddToCart = () => {
+  //   addToCart({
+  //     ...product,
+  //     selectedColor,
+  //     selectedSize,
+  //     quantity,
+  //   });
+  // };
 
-  const sizes = product.size.split(",").map((size) => {
+  const handleMarketplaceClick = (url) => {
+    window.open(url, "_blank");
+  };
+
+  const handleOfflineStoreClick = (url) => {
+    window.open(url, "_blank");
+  };
+
+  const getMarketplaceLogo = (name) => {
+    const nameStr = name.toLowerCase();
+
+    if (nameStr.includes("tokopedia")) {
+      return (
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-green-600 md:h-10 md:w-10">
+          <svg className="h-5 w-5 text-white md:h-6 md:w-6" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2L2 7v10l10 5 10-5V7l-10-5z" />
+            <path d="M12 7L7 9.5v5l5 2.5 5-2.5v-5L12 7z" />
+          </svg>
+        </div>
+      );
+    } else if (nameStr.includes("shopee")) {
+      return (
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-500 md:h-10 md:w-10">
+          <svg className="h-5 w-5 text-white md:h-6 md:w-6" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
+          </svg>
+        </div>
+      );
+    } else if (nameStr.includes("lazada")) {
+      return (
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-500 md:h-10 md:w-10">
+          <svg className="h-5 w-5 text-white md:h-6 md:w-6" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M2 12L12 2l10 10-10 10L2 12z" />
+            <path d="M12 8l-4 4 4 4 4-4-4-4z" />
+          </svg>
+        </div>
+      );
+    } else if (nameStr.includes("bukalapak")) {
+      return (
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-red-500 md:h-10 md:w-10">
+          <svg className="h-5 w-5 text-white md:h-6 md:w-6" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" />
+            <path d="M8 8h8v2H8V8z" />
+            <path d="M8 11h8v2H8v-2z" />
+            <path d="M8 14h5v2H8v-2z" />
+          </svg>
+        </div>
+      );
+    } else if (nameStr.includes("tiktok") || nameStr.includes("tiktokshop")) {
+      return (
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-black md:h-10 md:w-10">
+          <svg className="h-5 w-5 text-white md:h-6 md:w-6" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-.88-.05A6.33 6.33 0 0 0 5.76 20.8a6.34 6.34 0 0 0 10.93-4.47V9.26a8.16 8.16 0 0 0 4.65 1.46V7.35a4.85 4.85 0 0 1-1.75-.66z" />
+          </svg>
+        </div>
+      );
+    } else if (nameStr.includes("blibli")) {
+      return (
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-400 md:h-10 md:w-10">
+          <svg className="h-5 w-5 text-white md:h-6 md:w-6" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2L3.09 8.26l2 1L12 4l6.91 5.26 2-1L12 2z" />
+            <path d="M3.09 15.74L12 22l8.91-6.26-2-1L12 20l-6.91-5.26-2 1z" />
+            <path d="M3.09 8.26v7.48l2-1V9.26l-2-1z" />
+            <path d="M18.91 8.26v7.48l2 1V9.26l-2-1z" />
+          </svg>
+        </div>
+      );
+    } else if (nameStr.includes("zalora")) {
+      return (
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-purple-500 md:h-10 md:w-10">
+          <svg className="h-5 w-5 text-white md:h-6 md:w-6" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z" />
+            <path d="M12 6a6 6 0 1 0 6 6 6 6 0 0 0-6-6zm0 10a4 4 0 1 1 4-4 4 4 0 0 1-4 4z" />
+          </svg>
+        </div>
+      );
+    } else {
+      return (
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-500 md:h-10 md:w-10">
+          <svg className="h-5 w-5 text-white md:h-6 md:w-6" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 7h-3V6a4 4 0 0 0-8 0v1H5a1 1 0 0 0-1 1v11a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V8a1 1 0 0 0-1-1zM10 6a2 2 0 0 1 4 0v1h-4V6zm8 13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V9h2v1a1 1 0 0 0 2 0V9h4v1a1 1 0 0 0 2 0V9h2v10z" />
+          </svg>
+        </div>
+      );
+    }
+  };
+
+  const getMarketplaceStyles = (name) => {
+    const nameStr = name.toLowerCase();
+    let borderColor = "border-gray-300";
+    let hoverBgColor = "hover:bg-gray-50";
+    let textColor = "text-gray-900";
+
+    if (nameStr.includes("tokopedia")) {
+      borderColor = "border-green-600";
+      hoverBgColor = "hover:bg-green-50";
+      textColor = "text-green-600";
+    } else if (nameStr.includes("shopee")) {
+      borderColor = "border-orange-500";
+      hoverBgColor = "hover:bg-orange-50";
+      textColor = "text-orange-500";
+    } else if (nameStr.includes("lazada")) {
+      borderColor = "border-blue-500";
+      hoverBgColor = "hover:bg-blue-50";
+      textColor = "text-blue-500";
+    } else if (nameStr.includes("bukalapak")) {
+      borderColor = "border-red-500";
+      hoverBgColor = "hover:bg-red-50";
+      textColor = "text-red-500";
+    } else if (nameStr.includes("tiktok") || nameStr.includes("tiktokshop")) {
+      borderColor = "border-black";
+      hoverBgColor = "hover:bg-gray-50";
+      textColor = "text-black";
+    } else if (nameStr.includes("blibli")) {
+      borderColor = "border-blue-400";
+      hoverBgColor = "hover:bg-blue-50";
+      textColor = "text-blue-400";
+    } else if (nameStr.includes("zalora")) {
+      borderColor = "border-purple-500";
+      hoverBgColor = "hover:bg-purple-50";
+      textColor = "text-purple-500";
+    }
+
+    return { borderColor, hoverBgColor, textColor };
+  };
+
+  const getOfflineStoreLogo = () => {
+    return (
+      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-green-600 md:h-10 md:w-10">
+        <svg className="h-5 w-5 text-white md:h-6 md:w-6" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+        </svg>
+      </div>
+    );
+  };
+
+  const getOfflineStoreStyles = () => {
     return {
-      size,
-      available: true,
+      borderColor: "border-green-600",
+      hoverBgColor: "hover:bg-green-50",
+      textColor: "text-green-600",
     };
-  });
-
-  const handleAddToCart = () => {
-    addToCart({
-      ...product,
-      selectedColor,
-      selectedSize,
-      quantity,
-    });
-  };
-
-  const handleTokopediaClick = () => {
-    window.open(`https://tokopedia.com/search?st=product&q=${encodeURIComponent(product.model)}`, "_blank");
-  };
-
-  const handleShopeeClick = () => {
-    window.open(`https://shopee.co.id/search?keyword=${encodeURIComponent(product.model)}`, "_blank");
   };
 
   return (
@@ -149,7 +295,7 @@ export default function ProductDetail() {
             {/* Left Side - Product Images */}
             <div className="p-3 md:p-6 lg:p-8">
               <div className="flex flex-col gap-3 md:flex-row md:gap-4">
-                {/* Image Thumbnails - horizontal on mobile, vertical on desktop */}
+                {/* Image Thumbnails */}
                 <div className="order-2 flex gap-2 overflow-x-auto md:order-1 md:flex-col md:gap-3 md:overflow-visible">
                   {productImages.slice(0, 5).map((img, index) => (
                     <button
@@ -159,7 +305,7 @@ export default function ProductDetail() {
                       }`}
                       onClick={() => setSelectedImage(index)}
                     >
-                      <img src={img} alt={`${product.model} ${index + 1}`} className="h-full w-full object-cover" />
+                      <img src={img} alt={`${product.artikel} ${index + 1}`} className="h-full w-full object-cover" />
                     </button>
                   ))}
                 </div>
@@ -169,10 +315,21 @@ export default function ProductDetail() {
                   <div className="h-64 overflow-hidden rounded-xl bg-gray-50 sm:h-80 md:h-96 lg:h-[500px]">
                     <img
                       src={productImages[selectedImage]}
-                      alt={product.model}
+                      alt={product.artikel}
                       className="h-full w-full object-cover"
                     />
                   </div>
+                </div>
+              </div>
+
+              {/* Description - Only visible on desktop (xl and above) */}
+              <div className="mt-6 hidden border-t border-gray-200 pt-6 xl:block">
+                <h3 className="mb-4 text-lg font-bold text-gray-900">Deskripsi Produk</h3>
+                <div className="space-y-3">
+                  <p className="leading-relaxed text-gray-600">
+                    {product.description ||
+                      "Sepatu sneakers premium dengan desain modern dan kualitas terbaik. Terbuat dari bahan berkualitas tinggi yang memberikan kenyamanan maksimal untuk aktivitas sehari-hari."}
+                  </p>
                 </div>
               </div>
             </div>
@@ -200,56 +357,23 @@ export default function ProductDetail() {
               {/* Product Code */}
               <p className="mb-4 text-sm text-gray-500">Kode Produk: {product.artikel}</p>
 
-              {/* Star Rating */}
-              <div className="mb-4 flex items-center gap-2">
-                <div className="flex items-center gap-1">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <Star
-                      key={star}
-                      size={18}
-                      className={star <= (product.rating || 4) ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}
-                    />
-                  ))}
-                </div>
-                <span className="text-sm font-medium text-gray-600">({product.rating || 4.5})</span>
-                <span className="text-sm text-gray-400">•</span>
-                <span className="text-sm text-gray-600">{Math.floor(Math.random() * 100) + 50} ulasan</span>
-              </div>
-
-              {/* Available on Platforms */}
-              <div className="mb-4 md:mb-6">
-                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
-                  <span className="text-xs font-medium text-gray-500">Available on:</span>
-                  <div className="flex items-center gap-2 md:gap-3">
-                    <button
-                      onClick={handleTokopediaClick}
-                      className="flex items-center gap-1 rounded-lg border-2 border-green-600 px-2 py-1 transition-all duration-200 hover:bg-green-50 md:gap-2"
-                    >
-                      <div className="flex h-4 w-4 items-center justify-center rounded-sm bg-green-600 md:h-5 md:w-5">
-                        <span className="text-xs font-bold text-white">T</span>
-                      </div>
-                      <span className="text-xs font-medium text-green-600">Tokopedia</span>
-                    </button>
-                    <button
-                      onClick={handleShopeeClick}
-                      className="flex items-center gap-1 rounded-lg border-2 border-orange-500 px-2 py-1 transition-all duration-200 hover:bg-orange-50 md:gap-2"
-                    >
-                      <div className="flex h-4 w-4 items-center justify-center rounded-full bg-orange-500 md:h-5 md:w-5">
-                        <span className="text-xs font-bold text-white">S</span>
-                      </div>
-                      <span className="text-xs font-medium text-orange-500">Shopee</span>
-                    </button>
-                  </div>
-                </div>
+              {/* Product Specifications and Categories */}
+              <div className="mb-6 space-y-6">
+                <SpecificationRating rating={product.rating} displayType="star" />
+                <PurposeChips purposes={product.rating?.purpose} />
               </div>
 
               {/* Price */}
               <div className="mb-6 md:mb-8">
                 <div className="mb-1 flex items-baseline gap-2 md:gap-3">
-                  <h2 className="text-2xl font-bold text-gray-900 md:text-3xl">{formatPrice(product.harga)}</h2>
-
-                  {/* Display discounted price if available */}
-                  {product.originalPrice && (
+                  <h2 className="text-2xl font-bold text-gray-900 md:text-3xl">
+                    {formatPrice(
+                      product.harga_diskon > 0 && product.harga_diskon < product.originalPrice
+                        ? product.harga_diskon
+                        : product.originalPrice
+                    )}
+                  </h2>
+                  {product.harga_diskon > 0 && product.harga_diskon < product.originalPrice && (
                     <span className="text-base text-gray-500 line-through md:text-lg">
                       {formatPrice(product.originalPrice)}
                     </span>
@@ -275,9 +399,7 @@ export default function ProductDetail() {
                           ? "ring-4 ring-gray-300 ring-offset-2"
                           : "hover:ring-2 hover:ring-gray-200 hover:ring-offset-1"
                       } ${color.border ? "border-2 border-gray-300" : ""}`}
-                      style={{
-                        backgroundColor: color.color,
-                      }}
+                      style={{ backgroundColor: color.color }}
                       title={color.label}
                     >
                       {selectedColor === color.id && (
@@ -304,7 +426,10 @@ export default function ProductDetail() {
                   <h3 className="text-xs font-bold uppercase tracking-wider text-gray-900 md:text-sm">
                     Ukuran: {selectedSize}
                   </h3>
-                  <button className="text-xs font-medium text-blue-600 hover:text-blue-700 md:text-sm">
+                  <button
+                    onClick={() => setShowSizeGuide(true)}
+                    className="text-xs font-medium text-blue-600 hover:text-blue-700 md:text-sm"
+                  >
                     Panduan Ukuran
                   </button>
                 </div>
@@ -333,54 +458,8 @@ export default function ProductDetail() {
                 </div>
               </div>
 
-              {/* Quantity Selection */}
-              <div className="mb-6 md:mb-8">
-                <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-gray-900 md:mb-4 md:text-sm">
-                  Jumlah: {quantity}
-                </h3>
-                <div className="flex max-w-28 items-center gap-0 md:max-w-32">
-                  <button
-                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="h-10 w-10 rounded-l-lg border-2 border-r-0 border-gray-300 text-base font-bold text-gray-600 transition-colors hover:bg-gray-50 md:h-12 md:w-12 md:text-lg"
-                  >
-                    −
-                  </button>
-                  <div className="flex h-10 w-12 items-center justify-center border-2 border-gray-300 bg-white text-sm font-semibold text-gray-900 md:h-12 md:w-16 md:text-base">
-                    {quantity}
-                  </div>
-                  <button
-                    onClick={() => setQuantity(Math.min(10, quantity + 1))}
-                    className="h-10 w-10 rounded-r-lg border-2 border-l-0 border-gray-300 text-base font-bold text-gray-600 transition-colors hover:bg-gray-50 md:h-12 md:w-12 md:text-lg"
-                  >
-                    +
-                  </button>
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="mb-6 space-y-3 md:mb-8">
-                <button
-                  onClick={handleAddToCart}
-                  className="w-full rounded-xl border-2 border-gray-900 py-3 text-xs font-bold tracking-wide text-gray-900 transition-all duration-200 hover:bg-gray-900 hover:text-white md:py-4 md:text-sm"
-                >
-                  <span className="flex items-center justify-center gap-2">
-                    <Package size={18} className="md:hidden" />
-                    <Package size={20} className="hidden md:block" />
-                    TAMBAHKAN KE KERANJANG
-                  </span>
-                </button>
-
-                <button className="w-full rounded-xl bg-gray-900 py-3 text-xs font-bold tracking-wide text-white transition-all duration-200 hover:bg-gray-800 md:py-4 md:text-sm">
-                  <span className="flex items-center justify-center gap-2">
-                    <Truck size={18} className="md:hidden" />
-                    <Truck size={20} className="hidden md:block" />
-                    BELI SEKARANG
-                  </span>
-                </button>
-              </div>
-
-              {/* Description */}
-              <div className="border-t border-gray-200 pt-6">
+              {/* Description - Only visible on mobile and tablet (below xl) */}
+              <div className="mb-6 border-t border-gray-200 pt-4 md:mb-8 xl:hidden">
                 <button
                   className="flex w-full items-center justify-between text-sm font-bold tracking-wide text-gray-900"
                   onClick={() => setShowDescription(!showDescription)}
@@ -388,28 +467,230 @@ export default function ProductDetail() {
                   <span>DESKRIPSI PRODUK</span>
                   <ChevronDown size={20} className={`transition-transform ${showDescription ? "rotate-180" : ""}`} />
                 </button>
-
                 {showDescription && (
                   <div className="mt-4 space-y-3">
                     <p className="leading-relaxed text-gray-600">
-                      {product.deskripsi ||
+                      {product.description ||
                         "Sepatu sneakers premium dengan desain modern dan kualitas terbaik. Terbuat dari bahan berkualitas tinggi yang memberikan kenyamanan maksimal untuk aktivitas sehari-hari."}
                     </p>
-                    <div className="text-sm text-gray-500">
-                      <p className="mb-2 font-medium">Spesifikasi:</p>
-                      <ul className="space-y-1">
-                        <li>• Bahan: Canvas Premium & Synthetic Leather</li>
-                        <li>• Sol: Rubber Outsole</li>
-                        <li>• Tinggi Sol: 3cm</li>
-                        <li>• Berat: ±350 gram</li>
-                      </ul>
-                    </div>
                   </div>
                 )}
               </div>
+
+              {/* Available on E-commerce Platforms */}
+              {product.marketplaces && product.marketplaces.length > 0 && (
+                <div className="mb-6 rounded-2xl bg-gradient-to-br from-blue-50 to-purple-50 p-6 md:mb-8 md:p-8">
+                  <div className="mb-6 text-center">
+                    <h3 className="mb-2 text-lg font-bold text-gray-900 md:text-xl">🛒 Tersedia di Marketplace</h3>
+                    <p className="text-sm text-gray-600">Pilih platform belanja favorit Anda</p>
+                  </div>
+
+                  {/* Grid Layout for Marketplaces */}
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    {product.marketplaces.map((marketplace) => {
+                      const { borderColor, hoverBgColor, textColor } = getMarketplaceStyles(marketplace.name);
+                      return (
+                        <button
+                          key={marketplace.name}
+                          onClick={() => handleMarketplaceClick(marketplace.link)}
+                          className={`group relative flex flex-col items-center rounded-xl border-2 ${borderColor} bg-white p-4 shadow-sm transition-all duration-300 ${hoverBgColor} hover:scale-105 hover:shadow-lg`}
+                        >
+                          <div className="mb-3">{getMarketplaceLogo(marketplace.name)}</div>
+
+                          <div className="text-center">
+                            <div className={`text-sm font-bold ${textColor} md:text-base`}>{marketplace.name}</div>
+                            <div className="text-xs text-gray-500">Beli Sekarang</div>
+                          </div>
+
+                          {/* Hover Arrow */}
+                          <div className="absolute right-2 top-2 opacity-0 transition-opacity group-hover:opacity-100">
+                            <svg
+                              className={`h-4 w-4 ${textColor}`}
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* If there are many marketplaces, show popular ones first */}
+                  {product.marketplaces.length > 6 && (
+                    <div className="mt-4 text-center">
+                      <button className="text-sm text-blue-600 hover:text-blue-800">Lihat semua marketplace →</button>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Available at Offline Stores */}
+              {product.offlineStores && product.offlineStores.length > 0 && (
+                <div className="mb-6 rounded-2xl bg-gradient-to-br from-green-50 to-emerald-50 p-6 md:mb-8 md:p-8">
+                  <div className="mb-6 text-center">
+                    <h3 className="mb-2 text-lg font-bold text-gray-900 md:text-xl">📍 Tersedia di Toko Offline</h3>
+                    <p className="text-sm text-gray-600">Kunjungi lokasi toko terdekat</p>
+                  </div>
+
+                  {/* Grid Layout for Offline Stores */}
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    {product.offlineStores.map((store) => {
+                      const { borderColor, hoverBgColor, textColor } = getOfflineStoreStyles();
+                      return (
+                        <button
+                          key={store.name}
+                          onClick={() => handleOfflineStoreClick(store.url)}
+                          className={`group relative flex flex-col items-center rounded-xl border-2 ${borderColor} bg-white p-4 shadow-sm transition-all duration-300 ${hoverBgColor} hover:scale-105 hover:shadow-lg`}
+                        >
+                          <div className="mb-3">{getOfflineStoreLogo()}</div>
+
+                          <div className="text-center">
+                            <div className={`text-sm font-bold ${textColor} md:text-base`}>{store.name}</div>
+                            {store.address && (
+                              <div className="mt-1 line-clamp-2 text-xs text-gray-500">{store.address}</div>
+                            )}
+                            <div className="text-xs text-gray-500">Visit Location</div>
+                          </div>
+
+                          {/* Hover Arrow */}
+                          <div className="absolute right-2 top-2 opacity-0 transition-opacity group-hover:opacity-100">
+                            <svg
+                              className={`h-4 w-4 ${textColor}`}
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* If there are many offline stores, show popular ones first */}
+                  {product.offlineStores.length > 6 && (
+                    <div className="mt-4 text-center">
+                      <button className="text-sm text-green-600 hover:text-green-800">Lihat semua toko →</button>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>
+
+        {/* Size Guide Popup Overlay */}
+        {showSizeGuide && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+            <div className="relative h-[90vh] w-[90vw] overflow-hidden rounded-lg bg-white shadow-2xl">
+              {/* Close Button */}
+              <button
+                onClick={() => setShowSizeGuide(false)}
+                className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-gray-600 transition-colors hover:bg-gray-200 hover:text-gray-800"
+              >
+                <X size={20} />
+              </button>
+
+              {/* Popup Content */}
+              <div className="h-full overflow-y-auto p-6 pt-16">
+                <div className="mx-auto max-w-4xl">
+                  <h2 className="mb-8 text-center text-2xl font-bold text-gray-900 md:text-3xl">
+                    Panduan Ukuran Sepatu
+                  </h2>
+
+                  {/* Size Chart Table */}
+                  <div className="mb-8 overflow-x-auto">
+                    <table className="w-full border-collapse border border-gray-300">
+                      <thead>
+                        <tr className="bg-gray-50">
+                          <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-900">
+                            EU Size
+                          </th>
+                          <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-900">
+                            US Size
+                          </th>
+                          <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-900">
+                            UK Size
+                          </th>
+                          <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-900">
+                            Panjang Kaki (cm)
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {[
+                          { eu: "36", us: "5", uk: "3.5", cm: "22.5" },
+                          { eu: "37", us: "5.5", uk: "4", cm: "23" },
+                          { eu: "38", us: "6", uk: "4.5", cm: "23.5" },
+                          { eu: "39", us: "7", uk: "5.5", cm: "24.5" },
+                          { eu: "40", us: "7.5", uk: "6", cm: "25" },
+                          { eu: "41", us: "8", uk: "7", cm: "25.5" },
+                          { eu: "42", us: "8.5", uk: "7.5", cm: "26" },
+                          { eu: "43", us: "9.5", uk: "8.5", cm: "27" },
+                          { eu: "44", us: "10", uk: "9", cm: "27.5" },
+                          { eu: "45", us: "11", uk: "10", cm: "28.5" },
+                        ].map((size, index) => (
+                          <tr key={index} className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
+                            <td className="border border-gray-300 px-4 py-3 font-medium">{size.eu}</td>
+                            <td className="border border-gray-300 px-4 py-3">{size.us}</td>
+                            <td className="border border-gray-300 px-4 py-3">{size.uk}</td>
+                            <td className="border border-gray-300 px-4 py-3">{size.cm}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* How to Measure Instructions */}
+                  <div className="mb-8">
+                    <h3 className="mb-4 text-xl font-semibold text-gray-900">Cara Mengukur Kaki Anda</h3>
+                    <div className="space-y-3 text-gray-600">
+                      <div className="flex items-start space-x-3">
+                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-600">
+                          1
+                        </span>
+                        <p>Letakkan kaki Anda di atas kertas dan tandai ujung jempol kaki dan tumit</p>
+                      </div>
+                      <div className="flex items-start space-x-3">
+                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-600">
+                          2
+                        </span>
+                        <p>Ukur jarak antara kedua titik tersebut menggunakan penggaris</p>
+                      </div>
+                      <div className="flex items-start space-x-3">
+                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-600">
+                          3
+                        </span>
+                        <p>Cocokkan hasil pengukuran dengan tabel ukuran di atas</p>
+                      </div>
+                      <div className="flex items-start space-x-3">
+                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-600">
+                          4
+                        </span>
+                        <p>Ukur kedua kaki dan gunakan ukuran yang lebih besar</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Tips */}
+                  <div className="rounded-lg bg-blue-50 p-6">
+                    <h3 className="mb-3 text-lg font-semibold text-blue-900">Tips Memilih Ukuran</h3>
+                    <ul className="space-y-2 text-blue-800">
+                      <li>• Ukur kaki di sore hari karena kaki cenderung sedikit membesar</li>
+                      <li>• Jika ragu antara dua ukuran, pilih yang lebih besar</li>
+                      <li>• Pertimbangkan ketebalan kaus kaki yang akan digunakan</li>
+                      <li>• Setiap merek sepatu mungkin memiliki sedikit perbedaan ukuran</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

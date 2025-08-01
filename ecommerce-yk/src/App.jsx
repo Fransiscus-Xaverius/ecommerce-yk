@@ -1,5 +1,5 @@
-import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import React, { useState } from "react";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 // Layout Components
@@ -10,6 +10,7 @@ import Footer from "./components/layout/Footer";
 // Pages
 import HomePage from "./pages/HomePage";
 import ProductDetail from "./pages/ProductDetail";
+import SearchResults from "./pages/SearchResults";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -21,6 +22,37 @@ const queryClient = new QueryClient({
   },
 });
 
+const MainAppContent = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
+
+  const handleSearchSubmit = (query) => {
+    setSearchQuery(query);
+    navigate(`/search?q=${query}`);
+  };
+
+  return (
+    <div className="min-h-screen overflow-x-hidden bg-gray-50">
+      {/* Top Announcement Bar */}
+      <AnnouncementBar />
+
+      {/* Header */}
+      <Header onSearchSubmit={handleSearchSubmit} />
+
+      {/* Main Content */}
+      <Routes>
+        <Route path="/" element={<HomePage searchQuery={searchQuery} setSearchQuery={setSearchQuery} />} />
+        <Route path="/product/:id" element={<ProductDetail />} />
+        <Route path="/search" element={<SearchResults searchQuery={searchQuery} />} />
+        <Route path="/products" element={<SearchResults />} />
+      </Routes>
+
+      {/* Footer */}
+      <Footer />
+    </div>
+  );
+};
+
 /**
  * Main Application Component - Yongki Komaladi E-commerce Website
  */
@@ -28,22 +60,7 @@ const YongkiKomaladiWebsite = () => {
   return (
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
-        <div className="min-h-screen overflow-x-hidden bg-gray-50">
-          {/* Top Announcement Bar */}
-          <AnnouncementBar />
-
-          {/* Header */}
-          <Header />
-
-          {/* Main Content */}
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/product/:id" element={<ProductDetail />} />
-          </Routes>
-
-          {/* Footer */}
-          <Footer />
-        </div>
+        <MainAppContent />
       </QueryClientProvider>
     </BrowserRouter>
   );

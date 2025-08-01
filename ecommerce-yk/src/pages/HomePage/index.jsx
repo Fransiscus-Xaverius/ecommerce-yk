@@ -8,122 +8,75 @@ import Newsletter from "../../components/sections/Newsletter";
 // UI Components
 import ProductCarousel from "../../components/ui/ProductCarousel";
 
-import { useHeroSlider } from "../../hooks/useHeroSlider";
+// import { useHeroSlider } from "../../hooks/useHeroSlider";
 import { loadBootstrapCSS } from "../../utils/helpers";
 
 // Hooks
 import { useWishlist } from "../../hooks/useWishlist";
 import { useCart } from "../../hooks/useCart";
+import { fetchProductList } from "../../services/productService"; // Import fetchProductList
 
 export default function HomePage() {
   const { wishlist, toggleWishlist } = useWishlist();
-  const { cartItems, addToCart } = useCart();
+  const { addToCart } = useCart();
 
-  const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
-  const [loadingSearch, setLoadingSearch] = useState(false);
-  const [errorSearch, setErrorSearch] = useState(null);
-
+  const [hotProducts, setHotProducts] = useState([]);
   const [newArrivals, setNewArrivals] = useState([]);
-  const [loadingNewArrivals, setLoadingNewArrivals] = useState(true);
-  const [errorNewArrivals, setErrorNewArrivals] = useState(null);
-
-  const [bestSellers, setBestSellers] = useState([]);
-  const [loadingBestSellers, setLoadingBestSellers] = useState(true);
-  const [errorBestSellers, setErrorBestSellers] = useState(null);
-
-  const [specialDeals, setSpecialDeals] = useState([]);
-  const [loadingSpecialDeals, setLoadingSpecialDeals] = useState(true);
-  const [errorSpecialDeals, setErrorSpecialDeals] = useState(null);
+  const [offlineProducts, setOfflineProducts] = useState([]);
+  const [onlineProducts, setOnlineProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchNewArrivals = async () => {
+    const fetchInitialProducts = async () => {
       try {
-        const fetchedProducts = [];
-        for (let i = 1; i <= 10; i++) {
-          const artikel = `ART-${String(i).padStart(6, "0")}`;
-          const response = await fetch(`http://localhost:8080/api/products/${artikel}`);
-          if (!response.ok) {
-            console.error(`Error fetching New Arrival ${artikel}: HTTP error! status: ${response.status}`);
-            continue;
-          }
-          const responseData = await response.json();
-          if (responseData.data) {
-            fetchedProducts.push(responseData.data);
-          }
-        }
-        setNewArrivals(fetchedProducts);
-        console.log("Fetched New Arrivals:", fetchedProducts);
+        // Fetch Hot Products (products with highest average rating: comfort+style+support)
+        const hotData = await fetchProductList({ limit: 50, sortColumn: "tanggal_terima", sortDirection: "desc" });
+
+        // Calculate average rating and sort by it
+        const productsWithAvgRating = hotData.map((product) => {
+          const avgRating = product.rating
+            ? (product.rating.comfort + product.rating.style + product.rating.support) / 3
+            : 0;
+          return { ...product, avgRating, isHot: true };
+        });
+
+        // Sort by average rating (highest first) and take top 10
+        const sortedHotProducts = productsWithAvgRating.sort((a, b) => b.avgRating - a.avgRating).slice(0, 10);
+
+        setHotProducts(sortedHotProducts);
+
+        // Fetch New Arrivals (10 newest products by tanggal_terima)
+        const newArrivalsData = await fetchProductList({
+          limit: 10,
+          sortColumn: "tanggal_terima",
+          sortDirection: "desc",
+        });
+        setNewArrivals(newArrivalsData.map((product) => ({ ...product, isNew: true })));
+
+        // Fetch Offline Products (example: 10 products with 'Offline' status)
+        const offlineData = await fetchProductList({ limit: 10, filters: { status: "Offline" } });
+        setOfflineProducts(offlineData);
+
+        // Fetch Online Products (example: 10 products with 'Online' status)
+        const onlineData = await fetchProductList({ limit: 10, filters: { status: "Online" } });
+        setOnlineProducts(onlineData);
+
+        setLoading(false);
       } catch (error) {
-        setErrorNewArrivals(error);
-      } finally {
-        setLoadingNewArrivals(false);
+        setError(error);
+        setLoading(false);
       }
     };
 
-    fetchNewArrivals();
-  }, []);
-
-  useEffect(() => {
-    const fetchBestSellers = async () => {
-      try {
-        const fetchedProducts = [];
-        for (let i = 11; i <= 20; i++) {
-          const artikel = `ART-${String(i).padStart(6, "0")}`;
-          const response = await fetch(`http://localhost:8080/api/products/${artikel}`);
-          if (!response.ok) {
-            console.error(`Error fetching Best Seller ${artikel}: HTTP error! status: ${response.status}`);
-            continue;
-          }
-          const responseData = await response.json();
-          if (responseData.data) {
-            fetchedProducts.push(responseData.data);
-          }
-        }
-        setBestSellers(fetchedProducts);
-        console.log("Fetched Best Sellers:", fetchedProducts);
-      } catch (error) {
-        setErrorBestSellers(error);
-      } finally {
-        setLoadingBestSellers(false);
-      }
-    };
-
-    fetchBestSellers();
-  }, []);
-
-  useEffect(() => {
-    const fetchSpecialDeals = async () => {
-      try {
-        const fetchedProducts = [];
-        for (let i = 21; i <= 30; i++) {
-          const artikel = `ART-${String(i).padStart(6, "0")}`;
-          const response = await fetch(`http://localhost:8080/api/products/${artikel}`);
-          if (!response.ok) {
-            console.error(`Error fetching Special Deal ${artikel}: HTTP error! status: ${response.status}`);
-            continue;
-          }
-          const responseData = await response.json();
-          if (responseData.data) {
-            fetchedProducts.push(responseData.data);
-          }
-        }
-        setSpecialDeals(fetchedProducts);
-        console.log("Fetched Special Deals:", fetchedProducts);
-      } catch (error) {
-        setErrorSpecialDeals(error);
-      } finally {
-        setLoadingSpecialDeals(false);
-      }
-    };
-
-    fetchSpecialDeals();
+    fetchInitialProducts();
   }, []);
 
   const productSections = [
+    { title: "Hot", products: hotProducts },
     { title: "New Arrivals", products: newArrivals },
-    { title: "Best Seller", products: bestSellers },
-    { title: "Special Deal", products: specialDeals },
+    { title: "Offline", products: offlineProducts },
+    { title: "Online", products: onlineProducts },
   ];
 
   // Load Bootstrap CSS
@@ -141,32 +94,11 @@ export default function HomePage() {
       <FeaturesSection />
 
       {/* Product Sections */}
-      {searchQuery ? (
-        loadingSearch ? (
-          <div>Searching products...</div>
-        ) : errorSearch ? (
-          <div>Error searching products: {errorSearch.message}</div>
-        ) : searchResults.length > 0 ? (
-          <ProductCarousel
-            section={{
-              title: `Search Results for "${searchQuery}"`,
-              products: searchResults,
-            }}
-            sectionIndex={-1} // Use a unique index for search results
-            onAddToCart={addToCart}
-            onToggleWishlist={toggleWishlist}
-            wishlist={wishlist}
-          />
-        ) : (
-          <div>No products found for "{searchQuery}".</div>
-        )
-      ) : loadingNewArrivals || loadingBestSellers || loadingSpecialDeals ? (
+      {loading ? (
         <div>Loading products...</div>
-      ) : errorNewArrivals || errorBestSellers || errorSpecialDeals ? (
-        <div>
-          Error loading products: {errorNewArrivals?.message || errorBestSellers?.message || errorSpecialDeals?.message}
-        </div>
-      ) : newArrivals.length > 0 || bestSellers.length > 0 || specialDeals.length > 0 ? (
+      ) : error ? (
+        <div>Error loading products: {error.message}</div>
+      ) : (
         productSections.map((section, sectionIndex) => (
           <ProductCarousel
             key={sectionIndex}
@@ -177,8 +109,6 @@ export default function HomePage() {
             wishlist={wishlist}
           />
         ))
-      ) : (
-        <div>No products found.</div>
       )}
 
       {/* Newsletter Section */}
