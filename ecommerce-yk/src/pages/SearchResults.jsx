@@ -90,12 +90,18 @@ const SearchResults = () => {
                 onClick={() => setPage((p) => Math.max(p - 1, 1))}
                 disabled={page === 1}
                 className={`flex h-7 w-7 items-center justify-center rounded sm:h-8 sm:w-8 md:h-9 md:w-9 lg:h-10 lg:w-10 ${
-                  page === 1
-                    ? 'cursor-not-allowed bg-gray-100 text-gray-400'
-                    : 'bg-black text-white hover:bg-gray-800'
+                  page === 1 ? "cursor-not-allowed bg-gray-100 text-gray-400" : "bg-black text-white hover:bg-gray-800"
                 }`}
               >
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="sm:h-3 sm:w-3 md:h-3.5 md:w-3.5 lg:h-4 lg:w-4">
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  className="sm:h-3 sm:w-3 md:h-3.5 md:w-3.5 lg:h-4 lg:w-4"
+                >
                   <polyline points="15,18 9,12 15,6"></polyline>
                 </svg>
               </button>
@@ -104,7 +110,7 @@ const SearchResults = () => {
               {(() => {
                 const pageNumbers = [];
                 const maxVisiblePages = 5;
-                
+
                 if (totalPages <= maxVisiblePages) {
                   // Show all pages if total is small
                   for (let i = 1; i <= totalPages; i++) {
@@ -113,44 +119,44 @@ const SearchResults = () => {
                 } else {
                   // Always show first page
                   pageNumbers.push(1);
-                  
+
                   if (page <= 3) {
                     // Show pages 2, 3, 4 and last page
                     for (let i = 2; i <= 4; i++) {
                       pageNumbers.push(i);
                     }
                     if (totalPages > 4) {
-                      pageNumbers.push('...', totalPages);
+                      pageNumbers.push("...", totalPages);
                     }
                   } else if (page >= totalPages - 2) {
                     // Show last few pages
                     if (totalPages > 4) {
-                      pageNumbers.push('...');
+                      pageNumbers.push("...");
                     }
                     for (let i = totalPages - 3; i <= totalPages; i++) {
                       if (i > 1) pageNumbers.push(i);
                     }
                   } else {
                     // Show current page and neighbors
-                    pageNumbers.push('...');
+                    pageNumbers.push("...");
                     for (let i = page - 1; i <= page + 1; i++) {
                       pageNumbers.push(i);
                     }
-                    pageNumbers.push('...', totalPages);
+                    pageNumbers.push("...", totalPages);
                   }
                 }
-                
+
                 return pageNumbers.map((pageNum, index) => (
                   <React.Fragment key={index}>
-                    {pageNum === '...' ? (
-                      <span className="flex h-7 w-7 items-center justify-center text-xs text-gray-500 sm:h-8 sm:w-8 md:h-9 md:w-9 lg:h-10 lg:w-10 lg:text-sm">...</span>
+                    {pageNum === "..." ? (
+                      <span className="flex h-7 w-7 items-center justify-center text-xs text-gray-500 sm:h-8 sm:w-8 md:h-9 md:w-9 lg:h-10 lg:w-10 lg:text-sm">
+                        ...
+                      </span>
                     ) : (
                       <button
                         onClick={() => setPage(pageNum)}
                         className={`h-7 min-w-[1.75rem] rounded px-1.5 text-xs font-medium sm:h-8 sm:min-w-[2rem] sm:px-2 md:h-9 md:min-w-[2.25rem] md:text-sm lg:h-10 lg:min-w-[2.5rem] lg:px-3 ${
-                          page === pageNum
-                            ? 'bg-black text-white'
-                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                          page === pageNum ? "bg-black text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                         }`}
                       >
                         {pageNum}
@@ -166,11 +172,19 @@ const SearchResults = () => {
                 disabled={page >= totalPages}
                 className={`flex h-7 w-7 items-center justify-center rounded sm:h-8 sm:w-8 md:h-9 md:w-9 lg:h-10 lg:w-10 ${
                   page >= totalPages
-                    ? 'cursor-not-allowed bg-gray-100 text-gray-400'
-                    : 'bg-black text-white hover:bg-gray-800'
+                    ? "cursor-not-allowed bg-gray-100 text-gray-400"
+                    : "bg-black text-white hover:bg-gray-800"
                 }`}
               >
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="sm:h-3 sm:w-3 md:h-3.5 md:w-3.5 lg:h-4 lg:w-4">
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  className="sm:h-3 sm:w-3 md:h-3.5 md:w-3.5 lg:h-4 lg:w-4"
+                >
                   <polyline points="9,18 15,12 9,6"></polyline>
                 </svg>
               </button>
@@ -180,7 +194,12 @@ const SearchResults = () => {
       ) : (
         <div className="py-8 text-center sm:py-12">
           <div className="mb-3 text-gray-500 sm:mb-4">
-            <svg className="mx-auto h-10 w-10 text-gray-400 sm:h-12 sm:w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg
+              className="mx-auto h-10 w-10 text-gray-400 sm:h-12 sm:w-12"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -190,7 +209,9 @@ const SearchResults = () => {
             </svg>
           </div>
           <h3 className="text-base font-medium text-gray-900 sm:text-lg">Tidak ada produk ditemukan</h3>
-          <p className="mt-1 text-sm text-gray-500 sm:mt-2 sm:text-base">Coba gunakan kata kunci yang berbeda untuk pencarian Anda.</p>
+          <p className="mt-1 text-sm text-gray-500 sm:mt-2 sm:text-base">
+            Coba gunakan kata kunci yang berbeda untuk pencarian Anda.
+          </p>
         </div>
       )}
     </div>
