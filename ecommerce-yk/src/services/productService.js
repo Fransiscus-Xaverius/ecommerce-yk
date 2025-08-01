@@ -48,6 +48,7 @@ const transformProductData = (backendProduct) => {
       `Premium ${backendProduct.nama} dengan kualitas terbaik dari ${backendProduct.supplier || "supplier terpercaya"}.`,
     isSale: false,
     marketplace: backendProduct.marketplace || {},
+    offline: backendProduct.offline || [],
   };
 };
 

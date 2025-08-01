@@ -44,9 +44,21 @@ export default function ProductDetail() {
             }))
           : [];
 
+        // Transform offline stores array and filter out inactive stores
+        const offlineStores = fetchedProduct.offline
+          ? fetchedProduct.offline
+              .filter((store) => store.is_active !== false) // Hide inactive stores
+              .map((store) => ({
+                name: store.name,
+                url: store.url,
+                address: store.address || null,
+              }))
+          : [];
+
         const transformedProduct = {
           ...fetchedProduct,
           marketplaces,
+          offlineStores,
         };
 
         setProduct(transformedProduct);
@@ -123,6 +135,10 @@ export default function ProductDetail() {
   // };
 
   const handleMarketplaceClick = (url) => {
+    window.open(url, "_blank");
+  };
+
+  const handleOfflineStoreClick = (url) => {
     window.open(url, "_blank");
   };
 
@@ -242,6 +258,24 @@ export default function ProductDetail() {
     }
 
     return { borderColor, hoverBgColor, textColor };
+  };
+
+  const getOfflineStoreLogo = () => {
+    return (
+      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-green-600 md:h-10 md:w-10">
+        <svg className="h-5 w-5 text-white md:h-6 md:w-6" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+        </svg>
+      </div>
+    );
+  };
+
+  const getOfflineStoreStyles = () => {
+    return {
+      borderColor: "border-green-600",
+      hoverBgColor: "hover:bg-green-50",
+      textColor: "text-green-600",
+    };
   };
 
   return (
@@ -488,6 +522,59 @@ export default function ProductDetail() {
                   {product.marketplaces.length > 6 && (
                     <div className="mt-4 text-center">
                       <button className="text-sm text-blue-600 hover:text-blue-800">Lihat semua marketplace →</button>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Available at Offline Stores */}
+              {product.offlineStores && product.offlineStores.length > 0 && (
+                <div className="mb-6 rounded-2xl bg-gradient-to-br from-green-50 to-emerald-50 p-6 md:mb-8 md:p-8">
+                  <div className="mb-6 text-center">
+                    <h3 className="mb-2 text-lg font-bold text-gray-900 md:text-xl">📍 Tersedia di Toko Offline</h3>
+                    <p className="text-sm text-gray-600">Kunjungi lokasi toko terdekat</p>
+                  </div>
+
+                  {/* Grid Layout for Offline Stores */}
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    {product.offlineStores.map((store) => {
+                      const { borderColor, hoverBgColor, textColor } = getOfflineStoreStyles();
+                      return (
+                        <button
+                          key={store.name}
+                          onClick={() => handleOfflineStoreClick(store.url)}
+                          className={`group relative flex flex-col items-center rounded-xl border-2 ${borderColor} bg-white p-4 shadow-sm transition-all duration-300 ${hoverBgColor} hover:scale-105 hover:shadow-lg`}
+                        >
+                          <div className="mb-3">{getOfflineStoreLogo()}</div>
+
+                          <div className="text-center">
+                            <div className={`text-sm font-bold ${textColor} md:text-base`}>{store.name}</div>
+                            {store.address && (
+                              <div className="mt-1 line-clamp-2 text-xs text-gray-500">{store.address}</div>
+                            )}
+                            <div className="text-xs text-gray-500">Visit Location</div>
+                          </div>
+
+                          {/* Hover Arrow */}
+                          <div className="absolute right-2 top-2 opacity-0 transition-opacity group-hover:opacity-100">
+                            <svg
+                              className={`h-4 w-4 ${textColor}`}
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* If there are many offline stores, show popular ones first */}
+                  {product.offlineStores.length > 6 && (
+                    <div className="mt-4 text-center">
+                      <button className="text-sm text-green-600 hover:text-green-800">Lihat semua toko →</button>
                     </div>
                   )}
                 </div>
