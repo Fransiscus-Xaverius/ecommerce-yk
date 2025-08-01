@@ -54,13 +54,30 @@ export default function HomePage() {
         });
         setNewArrivals(newArrivalsData.map((product) => ({ ...product, isNew: true })));
 
-        // Fetch Offline Products (example: 10 products with 'Offline' status)
-        const offlineData = await fetchProductList({ limit: 10, filters: { status: "Offline" } });
-        setOfflineProducts(offlineData);
+        // Fetch all products to filter for Offline and Online sections
+        const allProducts = await fetchProductList({});
 
-        // Fetch Online Products (example: 10 products with 'Online' status)
-        const onlineData = await fetchProductList({ limit: 10, filters: { status: "Online" } });
-        setOnlineProducts(onlineData);
+        const offline = [];
+        const online = [];
+
+        allProducts.forEach(product => {
+          const isOfflineNull = product.offline === null || product.offline === undefined;
+          const isMarketplaceNull = product.marketplace === null || product.marketplace === undefined || Object.keys(product.marketplace).length === 0;
+
+          if (isOfflineNull) {
+            online.push(product);
+          }
+          if (isMarketplaceNull) {
+            offline.push(product);
+          }
+          if (!isOfflineNull && !isMarketplaceNull) {
+            offline.push(product);
+            online.push(product);
+          }
+        });
+
+        setOfflineProducts(offline);
+        setOnlineProducts(online);
 
         setLoading(false);
       } catch (error) {
