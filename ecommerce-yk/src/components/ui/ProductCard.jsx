@@ -1,5 +1,5 @@
 import React from "react";
-import { Heart, Star } from "lucide-react";
+import { Heart } from "lucide-react";
 import { formatPrice } from "../../utils/helpers";
 
 /**
@@ -79,20 +79,6 @@ const ProductCard = ({ product, onAddToCart, onToggleWishlist, isInWishlist, onP
           <h5 className="mb-2 line-clamp-2 min-h-[2.5rem] text-sm font-bold text-gray-900 sm:mb-3 sm:min-h-[3rem] sm:text-base md:text-lg">
             {product.nama}
           </h5>
-
-          {/* Rating - Horizontal */}
-          <div className="mb-2 flex items-center gap-1 sm:mb-3 sm:gap-2">
-            <div className="flex items-center gap-0.5 sm:gap-1">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <Star
-                  key={star}
-                  size={14}
-                  className={`sm:h-4 sm:w-4 ${star <= Math.floor(product.rating) ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}`}
-                />
-              ))}
-            </div>
-            <span className="text-xs text-gray-500 sm:text-sm">({product.rating})</span>
-          </div>
 
           {/* Price */}
           <div className="mb-3 flex flex-1 flex-col justify-end sm:mb-4">

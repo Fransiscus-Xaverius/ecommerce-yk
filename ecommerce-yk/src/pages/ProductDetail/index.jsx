@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Star, ChevronDown, ArrowLeft, Package, Truck, X } from "lucide-react";
+import { ChevronDown, ArrowLeft, Package, Truck, X } from "lucide-react";
 import { formatPrice } from "../../utils/helpers";
 
 // Hooks
 // import { useCart } from "../../hooks/useCart";
 import { fetchProductByArtikel } from "../../services/productService"; // Import the service
+import SpecificationRating from "../../components/ui/SpecificationRating";
+import PurposeChips from "../../components/ui/PurposeChips";
 
 /**
  * Product Detail Page Component
@@ -42,9 +44,21 @@ export default function ProductDetail() {
             }))
           : [];
 
+        // Transform offline stores array and filter out inactive stores
+        const offlineStores = fetchedProduct.offline
+          ? fetchedProduct.offline
+              .filter((store) => store.is_active !== false) // Hide inactive stores
+              .map((store) => ({
+                name: store.name,
+                url: store.url,
+                address: store.address || null,
+              }))
+          : [];
+
         const transformedProduct = {
           ...fetchedProduct,
           marketplaces,
+          offlineStores,
         };
 
         setProduct(transformedProduct);
@@ -121,6 +135,10 @@ export default function ProductDetail() {
   // };
 
   const handleMarketplaceClick = (url) => {
+    window.open(url, "_blank");
+  };
+
+  const handleOfflineStoreClick = (url) => {
     window.open(url, "_blank");
   };
 
@@ -242,6 +260,24 @@ export default function ProductDetail() {
     return { borderColor, hoverBgColor, textColor };
   };
 
+  const getOfflineStoreLogo = () => {
+    return (
+      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-green-600 md:h-10 md:w-10">
+        <svg className="h-5 w-5 text-white md:h-6 md:w-6" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+        </svg>
+      </div>
+    );
+  };
+
+  const getOfflineStoreStyles = () => {
+    return {
+      borderColor: "border-green-600",
+      hoverBgColor: "hover:bg-green-50",
+      textColor: "text-green-600",
+    };
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="mx-auto max-w-7xl px-3 py-4 md:px-4 md:py-6 lg:px-6">
@@ -321,20 +357,10 @@ export default function ProductDetail() {
               {/* Product Code */}
               <p className="mb-4 text-sm text-gray-500">Kode Produk: {product.artikel}</p>
 
-              {/* Star Rating */}
-              <div className="mb-4 flex items-center gap-2">
-                <div className="flex items-center gap-1">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <Star
-                      key={star}
-                      size={18}
-                      className={star <= (product.rating || 4) ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}
-                    />
-                  ))}
-                </div>
-                <span className="text-sm font-medium text-gray-600">({product.rating || 4.5})</span>
-                <span className="text-sm text-gray-400">•</span>
-                <span className="text-sm text-gray-600">{Math.floor(Math.random() * 100) + 50} ulasan</span>
+              {/* Product Specifications and Categories */}
+              <div className="mb-6 space-y-6">
+                <SpecificationRating rating={product.rating} displayType="star" />
+                <PurposeChips purposes={product.rating?.purpose} />
               </div>
 
               {/* Price */}
@@ -400,7 +426,7 @@ export default function ProductDetail() {
                   <h3 className="text-xs font-bold uppercase tracking-wider text-gray-900 md:text-sm">
                     Ukuran: {selectedSize}
                   </h3>
-                  <button 
+                  <button
                     onClick={() => setShowSizeGuide(true)}
                     className="text-xs font-medium text-blue-600 hover:text-blue-700 md:text-sm"
                   >
@@ -500,6 +526,59 @@ export default function ProductDetail() {
                   )}
                 </div>
               )}
+
+              {/* Available at Offline Stores */}
+              {product.offlineStores && product.offlineStores.length > 0 && (
+                <div className="mb-6 rounded-2xl bg-gradient-to-br from-green-50 to-emerald-50 p-6 md:mb-8 md:p-8">
+                  <div className="mb-6 text-center">
+                    <h3 className="mb-2 text-lg font-bold text-gray-900 md:text-xl">📍 Tersedia di Toko Offline</h3>
+                    <p className="text-sm text-gray-600">Kunjungi lokasi toko terdekat</p>
+                  </div>
+
+                  {/* Grid Layout for Offline Stores */}
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    {product.offlineStores.map((store) => {
+                      const { borderColor, hoverBgColor, textColor } = getOfflineStoreStyles();
+                      return (
+                        <button
+                          key={store.name}
+                          onClick={() => handleOfflineStoreClick(store.url)}
+                          className={`group relative flex flex-col items-center rounded-xl border-2 ${borderColor} bg-white p-4 shadow-sm transition-all duration-300 ${hoverBgColor} hover:scale-105 hover:shadow-lg`}
+                        >
+                          <div className="mb-3">{getOfflineStoreLogo()}</div>
+
+                          <div className="text-center">
+                            <div className={`text-sm font-bold ${textColor} md:text-base`}>{store.name}</div>
+                            {store.address && (
+                              <div className="mt-1 line-clamp-2 text-xs text-gray-500">{store.address}</div>
+                            )}
+                            <div className="text-xs text-gray-500">Visit Location</div>
+                          </div>
+
+                          {/* Hover Arrow */}
+                          <div className="absolute right-2 top-2 opacity-0 transition-opacity group-hover:opacity-100">
+                            <svg
+                              className={`h-4 w-4 ${textColor}`}
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* If there are many offline stores, show popular ones first */}
+                  {product.offlineStores.length > 6 && (
+                    <div className="mt-4 text-center">
+                      <button className="text-sm text-green-600 hover:text-green-800">Lihat semua toko →</button>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -511,18 +590,18 @@ export default function ProductDetail() {
               {/* Close Button */}
               <button
                 onClick={() => setShowSizeGuide(false)}
-                className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-800 transition-colors"
+                className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-gray-600 transition-colors hover:bg-gray-200 hover:text-gray-800"
               >
                 <X size={20} />
               </button>
-              
+
               {/* Popup Content */}
               <div className="h-full overflow-y-auto p-6 pt-16">
                 <div className="mx-auto max-w-4xl">
                   <h2 className="mb-8 text-center text-2xl font-bold text-gray-900 md:text-3xl">
                     Panduan Ukuran Sepatu
                   </h2>
-                  
+
                   {/* Size Chart Table */}
                   <div className="mb-8 overflow-x-auto">
                     <table className="w-full border-collapse border border-gray-300">
@@ -568,9 +647,7 @@ export default function ProductDetail() {
 
                   {/* How to Measure Instructions */}
                   <div className="mb-8">
-                    <h3 className="mb-4 text-xl font-semibold text-gray-900">
-                      Cara Mengukur Kaki Anda
-                    </h3>
+                    <h3 className="mb-4 text-xl font-semibold text-gray-900">Cara Mengukur Kaki Anda</h3>
                     <div className="space-y-3 text-gray-600">
                       <div className="flex items-start space-x-3">
                         <span className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-600">
@@ -601,9 +678,7 @@ export default function ProductDetail() {
 
                   {/* Tips */}
                   <div className="rounded-lg bg-blue-50 p-6">
-                    <h3 className="mb-3 text-lg font-semibold text-blue-900">
-                      Tips Memilih Ukuran
-                    </h3>
+                    <h3 className="mb-3 text-lg font-semibold text-blue-900">Tips Memilih Ukuran</h3>
                     <ul className="space-y-2 text-blue-800">
                       <li>• Ukur kaki di sore hari karena kaki cenderung sedikit membesar</li>
                       <li>• Jika ragu antara dua ukuran, pilih yang lebih besar</li>
