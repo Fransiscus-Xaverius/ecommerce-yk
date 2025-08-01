@@ -38,7 +38,7 @@ const ProductCarousel = ({ section, onAddToCart, onToggleWishlist, wishlist, sec
             <h2 className="mb-1 text-xl font-bold text-gray-900 sm:mb-2 sm:text-2xl md:text-3xl">{section.title}</h2>
             <p className="text-sm text-gray-600 sm:text-base">{section.subtitle}</p>
           </div>
-          <div className="hidden gap-2 md:flex">
+          <div className={`${section.products.length > 4 ? 'hidden gap-2 md:flex' : 'hidden'}`}>
             <button
               className="rounded-full border border-gray-300 p-1.5 transition-all duration-300 hover:border-gray-400 hover:bg-gray-50 sm:p-2"
               onClick={() => scrollCarousel(carouselRef, "left")}
@@ -58,7 +58,11 @@ const ProductCarousel = ({ section, onAddToCart, onToggleWishlist, wishlist, sec
         <div className="relative overflow-hidden">
           <div
             ref={carouselRef}
-            className="scrollbar-hide flex gap-3 overflow-x-auto pb-4 sm:gap-4 md:gap-6"
+            className={`scrollbar-hide pb-4 ${
+              section.products.length < 5 
+                ? 'flex justify-start gap-2 sm:gap-3 md:gap-4 lg:gap-6' 
+                : 'flex gap-2 overflow-x-auto sm:gap-3 md:gap-4 lg:gap-6'
+            }`}
             style={{
               scrollBehavior: "smooth",
               WebkitOverflowScrolling: "touch",
@@ -81,6 +85,7 @@ const ProductCarousel = ({ section, onAddToCart, onToggleWishlist, wishlist, sec
                 onAddToCart={onAddToCart}
                 onToggleWishlist={onToggleWishlist}
                 isInWishlist={wishlist.includes(product.id)}
+                isSingleCard={true}
               />
             ))}
           </div>

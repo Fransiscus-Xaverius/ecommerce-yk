@@ -55,7 +55,7 @@ export default function HomePage() {
         setNewArrivals(newArrivalsData.map((product) => ({ ...product, isNew: true })));
 
         // Fetch all products to categorize into Offline and Online sections
-        const allProductsData = await fetchProductList({ limit: 100 });
+        const allProductsData = await fetchProductList({});
         
         // Categorize products based on offline and marketplace fields
         const offlineProducts = [];

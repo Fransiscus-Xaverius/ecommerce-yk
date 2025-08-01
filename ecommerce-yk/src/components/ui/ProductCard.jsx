@@ -9,9 +9,13 @@ import { formatPrice } from "../../utils/helpers";
  * @param {Function} onToggleWishlist - Wishlist toggle handler
  * @param {boolean} isInWishlist - Whether product is in wishlist
  */
-const ProductCard = ({ product, onAddToCart, onToggleWishlist, isInWishlist, onProductClick }) => {
+const ProductCard = ({ product, onAddToCart, onToggleWishlist, isInWishlist, onProductClick, isSingleCard, alignImageLeft }) => {
   return (
-    <div className="w-full min-w-[200px] sm:min-w-[220px] md:min-w-[240px] lg:min-w-[260px]">
+    <div className={`${
+      isSingleCard 
+        ? 'w-40 sm:w-[200px] md:w-[220px] lg:w-[240px] xl:w-[260px] flex-shrink-0' 
+        : 'w-full'
+    } min-w-[160px] sm:min-w-[200px] md:min-w-[220px] lg:min-w-[240px] xl:min-w-[260px]`}>
       <div
         className="relative flex h-full cursor-pointer flex-col overflow-hidden rounded-lg bg-white shadow-sm transition-transform hover:scale-[1.02]"
         onClick={() => onProductClick(product.artikel)}
