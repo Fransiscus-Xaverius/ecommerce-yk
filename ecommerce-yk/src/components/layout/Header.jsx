@@ -39,12 +39,10 @@ const Header = () => {
     { label: "About", href: "#" },
   ];
 
-  // Remove handleSearchSubmit as it's no longer needed for on-change search
-
   return (
     <header className="sticky top-0 z-50 bg-white shadow-lg">
       <div className="mx-auto max-w-7xl px-4">
-        {/* Top Bar: Logo, Search, Actions */}
+        {/* Top Bar: Mobile Menu, Search/Logo, Actions */}
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4 py-4">
             {/* Mobile menu button */}
@@ -56,9 +54,37 @@ const Header = () => {
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
 
-            {/* Logo */}
+            {/* Mobile Search Bar / Logo Toggle */}
+            {!isMobileSearchOpen ? (
+              <a
+                className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-2xl font-bold text-transparent transition-transform duration-200 hover:scale-105 lg:hidden"
+                href="/"
+              >
+                YONGKI KOMALADI
+              </a>
+            ) : (
+              <div className="flex-1 lg:hidden"> {/* Mobile: Search bar takes space */}
+                <form className="w-full">
+                  <div className="relative">
+                    <input
+                      type="text"
+                      placeholder="Search products..."
+                      className="w-full rounded-full border border-gray-300 bg-gray-100 py-2 pl-10 pr-4 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      autoFocus
+                    />
+                    <div className="absolute inset-y-0 left-0 flex items-center pl-3">
+                      <Search className="text-gray-400" size={20} />
+                    </div>
+                  </div>
+                </form>
+              </div>
+            )}
+
+            {/* Logo (hidden on mobile, visible on large screens) */}
             <a
-              className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-2xl font-bold text-transparent transition-transform duration-200 hover:scale-105"
+              className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-2xl font-bold text-transparent transition-transform duration-200 hover:scale-105 hidden lg:block"
               href="/"
             >
               YONGKI KOMALADI
@@ -67,7 +93,7 @@ const Header = () => {
 
           {/* Desktop Search Bar */}
           <div className="hidden flex-1 justify-center px-8 lg:flex">
-            <form className="w-full max-w-2xl"> {/* Removed onSubmit */}
+            <form className="w-full max-w-2xl">
               <div className="relative">
                 <input
                   type="text"
@@ -87,9 +113,9 @@ const Header = () => {
           <div className="flex items-center justify-end space-x-2">
             <button
               className="rounded-lg p-2 transition-colors duration-200 hover:bg-gray-100 lg:hidden"
-              onClick={() => setIsMobileSearchOpen(true)}
+              onClick={() => setIsMobileSearchOpen(!isMobileSearchOpen)} // Toggle mobile search
             >
-              <Search size={20} />
+              {isMobileSearchOpen ? <X size={20} /> : <Search size={20} />}
             </button>
             <button className="hidden rounded-lg p-2 transition-colors duration-200 hover:bg-gray-100 md:block">
               <User size={20} />
@@ -132,7 +158,7 @@ const Header = () => {
         </div>
       </nav>
 
-      {/* Mobile Navigation & Search */}
+      {/* Mobile Navigation */}
       <div
         className={`border-t bg-white transition-all duration-300 lg:hidden ${
           isMenuOpen ? "max-h-96 opacity-100" : "max-h-0 overflow-hidden opacity-0"
@@ -153,34 +179,6 @@ const Header = () => {
           </ul>
         </div>
       </div>
-
-      {isMobileSearchOpen && (
-        <div className="fixed inset-0 z-50 bg-black bg-opacity-50 lg:hidden">
-          <div className="absolute top-0 w-full bg-white p-4 shadow-lg">
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold">Search</h2>
-              <button onClick={() => setIsMobileSearchOpen(false)}>
-                <X size={24} />
-              </button>
-            </div>
-            <form className="mt-4"> {/* Removed onSubmit */}
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Search products..."
-                  className="w-full rounded-full border border-gray-300 bg-gray-100 py-2 pl-10 pr-4 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  autoFocus
-                />
-                <div className="absolute inset-y-0 left-0 flex items-center pl-3">
-                  <Search className="text-gray-400" size={20} />
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </header>
   );
 };
