@@ -3,8 +3,8 @@ import { Star } from "lucide-react";
 
 /**
  * Specification Rating Component
- * Displays comfort, style, and support ratings on a 10-point scale
- * @param {Object} rating - Rating object with comfort, style, support values (0-10)
+ * Displays comfort, style, and support ratings on a 5-point scale
+ * @param {Object} rating - Rating object with comfort, style, support values (0-5)
  * @param {string} displayType - "star", "stars", or "progress" (default: "progress")
  */
 const SpecificationRating = ({ rating, displayType = "progress" }) => {
@@ -17,7 +17,7 @@ const SpecificationRating = ({ rating, displayType = "progress" }) => {
   const renderStars = (value) => {
     return (
       <div className="flex items-center gap-1">
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((star) => (
+        {[1, 2, 3, 4, 5].map((star) => (
           <Star
             key={star}
             size={16}
@@ -34,10 +34,10 @@ const SpecificationRating = ({ rating, displayType = "progress" }) => {
         <div className="h-2 flex-1 overflow-hidden rounded-full bg-gray-200">
           <div
             className="h-full bg-gradient-to-r from-yellow-400 to-yellow-500 transition-all duration-300"
-            style={{ width: `${(value / 10) * 100}%` }}
+            style={{ width: `${(value / 5) * 100}%` }}
           />
         </div>
-        <span className="min-w-[2rem] text-sm font-medium text-gray-600">{value}/10</span>
+        <span className="min-w-[2rem] text-sm font-medium text-gray-600">{value}/5</span>
       </div>
     );
   };
@@ -51,7 +51,7 @@ const SpecificationRating = ({ rating, displayType = "progress" }) => {
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium capitalize text-gray-700">{spec.label}</span>
               {(displayType === "stars" || displayType === "star") && (
-                <span className="text-sm text-gray-500">{spec.value}/10</span>
+                <span className="text-sm text-gray-500">{spec.value}/5</span>
               )}
             </div>
             {displayType === "stars" || displayType === "star"
