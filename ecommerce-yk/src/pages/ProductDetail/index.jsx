@@ -37,12 +37,13 @@ export default function ProductDetail() {
         }
 
         // Transform marketplace object to array (if needed, otherwise remove)
-        const marketplaces = fetchedProduct.marketplace
-          ? Object.entries(fetchedProduct.marketplace).map(([name, link]) => ({
-              name: name.charAt(0).toUpperCase() + name.slice(1),
-              link,
-            }))
-          : [];
+        const marketplaces =
+          fetchedProduct.marketplace && Object.keys(fetchedProduct.marketplace).length > 0
+            ? Object.entries(fetchedProduct.marketplace).map(([name, link]) => ({
+                name: name.charAt(0).toUpperCase() + name.slice(1),
+                link,
+              }))
+            : [];
 
         // Transform offline stores array and filter out inactive stores
         const offlineStores = fetchedProduct.offline
@@ -488,6 +489,10 @@ export default function ProductDetail() {
                   {/* Grid Layout for Marketplaces */}
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                     {product.marketplaces.map((marketplace) => {
+                      console.log(marketplace);
+                      if (marketplace.link === null || marketplace.link === undefined) {
+                        return null;
+                      }
                       const { borderColor, hoverBgColor, textColor } = getMarketplaceStyles(marketplace.name);
                       return (
                         <button
@@ -648,32 +653,7 @@ export default function ProductDetail() {
                   {/* How to Measure Instructions */}
                   <div className="mb-8">
                     <h3 className="mb-4 text-xl font-semibold text-gray-900">Cara Mengukur Kaki Anda</h3>
-                    <div className="space-y-3 text-gray-600">
-                      <div className="flex items-start space-x-3">
-                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-600">
-                          1
-                        </span>
-                        <p>Letakkan kaki Anda di atas kertas dan tandai ujung jempol kaki dan tumit</p>
-                      </div>
-                      <div className="flex items-start space-x-3">
-                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-600">
-                          2
-                        </span>
-                        <p>Ukur jarak antara kedua titik tersebut menggunakan penggaris</p>
-                      </div>
-                      <div className="flex items-start space-x-3">
-                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-600">
-                          3
-                        </span>
-                        <p>Cocokkan hasil pengukuran dengan tabel ukuran di atas</p>
-                      </div>
-                      <div className="flex items-start space-x-3">
-                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-600">
-                          4
-                        </span>
-                        <p>Ukur kedua kaki dan gunakan ukuran yang lebih besar</p>
-                      </div>
-                    </div>
+                    <img src="http://localhost:8080/uploads/panduan/1.png" alt="Panduan Ukuran" />
                   </div>
 
                   {/* Tips */}

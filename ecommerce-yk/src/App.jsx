@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 // Layout Components
@@ -24,12 +24,6 @@ const queryClient = new QueryClient({
 
 const MainAppContent = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const navigate = useNavigate();
-
-  const handleSearchSubmit = (query) => {
-    setSearchQuery(query);
-    navigate(`/search?q=${query}`);
-  };
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-gray-50">
@@ -37,7 +31,7 @@ const MainAppContent = () => {
       <AnnouncementBar />
 
       {/* Header */}
-      <Header onSearchSubmit={handleSearchSubmit} />
+      <Header />
 
       {/* Main Content */}
       <Routes>

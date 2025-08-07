@@ -16,6 +16,8 @@ const Header = () => {
 
   // Debounce search query
   useEffect(() => {
+    console.log(searchQuery);
+    if (!searchQuery.trim()) return;
     const handler = setTimeout(() => {
       if (searchQuery.trim()) {
         navigate(`/products?q=${searchQuery}`);
@@ -63,7 +65,9 @@ const Header = () => {
                 YONGKI KOMALADI
               </a>
             ) : (
-              <div className="flex-1 lg:hidden"> {/* Mobile: Search bar takes space */}
+              <div className="flex-1 lg:hidden">
+                {" "}
+                {/* Mobile: Search bar takes space */}
                 <form className="w-full">
                   <div className="relative">
                     <input
@@ -84,7 +88,7 @@ const Header = () => {
 
             {/* Logo (hidden on mobile, visible on large screens) */}
             <a
-              className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-2xl font-bold text-transparent transition-transform duration-200 hover:scale-105 hidden lg:block"
+              className="hidden bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-2xl font-bold text-transparent transition-transform duration-200 hover:scale-105 lg:block"
               href="/"
             >
               YONGKI KOMALADI
@@ -184,4 +188,3 @@ const Header = () => {
 };
 
 export default Header;
-

@@ -108,11 +108,19 @@ export const fetchProductList = async ({
   sortColumn = "tanggal_terima",
   sortDirection = "desc",
   query = "",
+  online = false,
+  offline = false,
 }) => {
   try {
     let url = `/api/products?sort=${sortColumn}&order=${sortDirection}`;
     if (query) {
       url += `&q=${query}`;
+    }
+    if (online) {
+      url += `&online`;
+    }
+    if (offline) {
+      url += `&offline`;
     }
     const response = await fetch(url);
 

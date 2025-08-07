@@ -56,45 +56,54 @@ export default function HomePage() {
 
         // Fetch all products to categorize into Offline and Online sections
         const allProductsData = await fetchProductList({});
-        
+
         // Categorize products based on offline and marketplace fields
-        const offlineProducts = [];
-        const onlineProducts = [];
-
-        allProductsData.forEach((product) => {
-          // Check if offline field is NULL/empty (considering backend transformation)
-          const hasOfflineData = product.offline && 
-            Array.isArray(product.offline) && 
-            product.offline.length > 0;
-
-          // Check if marketplace field has valid data
-          const hasMarketplaceData = product.marketplace && 
-            typeof product.marketplace === 'object' &&
-            Object.keys(product.marketplace).length > 0 && 
-            Object.values(product.marketplace).some(value => 
-              value !== null && value !== undefined && value !== "" && value.trim() !== ""
-            );
-
-          // If offline field is NULL/empty, add to online section
-          if (!hasOfflineData) {
-            onlineProducts.push(product);
-          }
-
-          // If marketplace field is NULL/empty, add to offline section
-          if (!hasMarketplaceData) {
-            offlineProducts.push(product);
-          }
-
-          // If both fields have data, add to both sections
-          if (hasOfflineData && hasMarketplaceData) {
-            offlineProducts.push(product);
-            onlineProducts.push(product);
-          }
+        const offlineProducts = await fetchProductList({
+          limit: 50,
+          sortColumn: "tanggal_terima",
+          sortDirection: "desc",
+          offline: true,
+        });
+        const onlineProducts = await fetchProductList({
+          limit: 50,
+          sortColumn: "tanggal_terima",
+          sortDirection: "desc",
+          online: true,
         });
 
+        // allProductsData.forEach((product) => {
+        //   // Check if offline field is NULL/empty (considering backend transformation)
+        //   const hasOfflineData = product.offline && Array.isArray(product.offline) && product.offline.length > 0;
+
+        //   // Check if marketplace field has valid data
+        //   const hasMarketplaceData =
+        //     product.marketplace &&
+        //     typeof product.marketplace === "object" &&
+        //     Object.keys(product.marketplace).length > 0 &&
+        //     Object.values(product.marketplace).some(
+        //       (value) => value !== null && value !== undefined && value !== "" && value.trim() !== ""
+        //     );
+
+        //   // If offline field is NULL/empty, add to online section
+        //   if (!hasOfflineData) {
+        //     onlineProducts.push(product);
+        //   }
+
+        //   // If marketplace field is NULL/empty, add to offline section
+        //   if (!hasMarketplaceData) {
+        //     offlineProducts.push(product);
+        //   }
+
+        //   // If both fields have data, add to both sections
+        //   if (hasOfflineData && hasMarketplaceData) {
+        //     offlineProducts.push(product);
+        //     onlineProducts.push(product);
+        //   }
+        // });
+
         // Take only 10 products from each section
-        setOfflineProducts(offlineProducts.slice(0, 10));
-        setOnlineProducts(onlineProducts.slice(0, 10));
+        setOfflineProducts(offlineProducts);
+        setOnlineProducts(onlineProducts);
 
         // Debug logging
         console.log("Product categorization results:");
