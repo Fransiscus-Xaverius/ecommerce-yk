@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ShoppingCart, Menu, X, Search, User, Heart } from "lucide-react";
 import { useWishlist } from "../../hooks/useWishlist";
 import { useCart } from "../../hooks/useCart";
@@ -14,6 +14,22 @@ const Header = () => {
 
   const [searchQuery, setSearchQuery] = useState("");
 
+  // Debounce search query
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      if (searchQuery.trim()) {
+        navigate(`/products?q=${searchQuery}`);
+      } else if (location.pathname.startsWith("/products")) {
+        // If search query is empty and we are on products page, navigate to products without query
+        navigate("/products");
+      }
+    }, 500); // 500ms debounce time
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchQuery, navigate]);
+
   const navigationItems = [
     { label: "New Arrivals", href: "#" },
     { label: "Men", href: "#" },
@@ -23,13 +39,7 @@ const Header = () => {
     { label: "About", href: "#" },
   ];
 
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      navigate(`/products?q=${searchQuery}`);
-      setIsMobileSearchOpen(false);
-    }
-  };
+  // Remove handleSearchSubmit as it's no longer needed for on-change search
 
   return (
     <header className="sticky top-0 z-50 bg-white shadow-lg">
@@ -57,7 +67,7 @@ const Header = () => {
 
           {/* Desktop Search Bar */}
           <div className="hidden flex-1 justify-center px-8 lg:flex">
-            <form onSubmit={handleSearchSubmit} className="w-full max-w-2xl">
+            <form className="w-full max-w-2xl"> {/* Removed onSubmit */}
               <div className="relative">
                 <input
                   type="text"
@@ -153,7 +163,7 @@ const Header = () => {
                 <X size={24} />
               </button>
             </div>
-            <form onSubmit={handleSearchSubmit} className="mt-4">
+            <form className="mt-4"> {/* Removed onSubmit */}
               <div className="relative">
                 <input
                   type="text"
@@ -176,3 +186,4 @@ const Header = () => {
 };
 
 export default Header;
+

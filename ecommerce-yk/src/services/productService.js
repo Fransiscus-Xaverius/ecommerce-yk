@@ -105,14 +105,12 @@ export const searchProducts = async (query, page = 1, limit = 12) => {
 };
 
 export const fetchProductList = async ({
-  limit = 1000,
-  offset = 0,
   sortColumn = "tanggal_terima",
   sortDirection = "desc",
   query = "",
 }) => {
   try {
-    let url = `/api/products?limit=${limit}&offset=${offset}&sort=${sortColumn}&order=${sortDirection}`;
+    let url = `/api/products?sort=${sortColumn}&order=${sortDirection}`;
     if (query) {
       url += `&q=${query}`;
     }
