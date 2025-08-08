@@ -29,7 +29,7 @@ const HeroSection = () => {
       subtitle: banner.subtitle,
       description: banner.description,
       cta: banner.cta_text,
-      image: `${import.meta.env.VITE_BACKEND_URL}${banner.image_url}`,
+      image: `${banner.image_url}`,
     }));
     console.log(mappedSlides);
     setHeroSlides(mappedSlides);
