@@ -710,7 +710,7 @@ export default function ProductDetail() {
                   {/* How to Measure Instructions */}
                   <div className="mb-8">
                     <h3 className="mb-4 text-xl font-semibold text-gray-900">Cara Mengukur Kaki Anda</h3>
-                    <img src="http://localhost:8080/uploads/panduan/1.png" alt="Panduan Ukuran" />
+                    <img src="/uploads/panduan/1.png" alt="Panduan Ukuran" />
                   </div>
 
                   {/* Tips */}

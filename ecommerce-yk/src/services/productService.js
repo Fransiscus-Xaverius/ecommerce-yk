@@ -1,5 +1,3 @@
-const BACKEND_URL = "http://localhost:8080";
-
 /**
  * Transform backend product data to frontend format
  */
@@ -8,7 +6,7 @@ const transformProductData = (backendProduct) => {
 
   const gambar =
     backendProduct.gambar && Array.isArray(backendProduct.gambar)
-      ? backendProduct.gambar.map((g) => `${BACKEND_URL}${g}`)
+      ? backendProduct.gambar.map((g) => `${g}`)
       : [];
 
   return {
