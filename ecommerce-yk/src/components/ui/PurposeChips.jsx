@@ -17,7 +17,7 @@ const PurposeChips = ({ purposes = [], size = "large" }) => {
   };
 
   return (
-    <div className="w-1/2 space-y-4">
+    <div className="space-y-4 md:w-1/2">
       <h3 className="text-lg font-bold text-gray-900">Categories</h3>
       <div className="flex flex-wrap gap-2">
         {purposes.map((purpose, index) => (

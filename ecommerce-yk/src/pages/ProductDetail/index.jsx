@@ -364,7 +364,7 @@ export default function ProductDetail() {
               <p className="mb-4 text-sm text-gray-500">Kode Produk: {product.artikel}</p>
 
               {/* Product Specifications and Categories */}
-              <div className="mb-6 flex justify-between">
+              <div className="mb-6 flex flex-col gap-y-6 md:flex-row md:justify-between">
                 <SpecificationRating rating={product.rating} displayType="star" />
                 <PurposeChips purposes={product.rating?.purpose} />
               </div>
