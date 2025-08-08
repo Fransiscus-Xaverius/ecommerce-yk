@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { ShoppingCart, Menu, X, Search, User, Heart } from "lucide-react";
 import { useWishlist } from "../../hooks/useWishlist";
 import { useCart } from "../../hooks/useCart";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -11,13 +11,26 @@ const Header = () => {
   const { cartItems } = useCart();
   const wishlistCount = wishlist ? wishlist.length : 0;
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Debounce search query
+  // Clear search query when navigating to product detail page
   useEffect(() => {
-    console.log(searchQuery);
-    if (!searchQuery.trim()) return;
+    if (location.pathname.startsWith("/product/")) {
+      setSearchQuery("");
+    }
+  }, [location.pathname]);
+
+  // Debounce search query - only navigate if not on product detail page
+  useEffect(() => {
+    if (searchQuery.trim() === "" || searchQuery.trim() === null) return;
+
+    // Don't navigate if we're on a product detail page
+    if (location.pathname.startsWith("/product/")) {
+      return;
+    }
+
     const handler = setTimeout(() => {
       if (searchQuery.trim()) {
         navigate(`/products?q=${searchQuery}`);
@@ -30,7 +43,7 @@ const Header = () => {
     return () => {
       clearTimeout(handler);
     };
-  }, [searchQuery, navigate]);
+  }, [searchQuery, navigate, location.pathname]);
 
   const navigationItems = [
     { label: "New Arrivals", href: "#" },
