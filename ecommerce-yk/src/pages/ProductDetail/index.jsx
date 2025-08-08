@@ -99,7 +99,7 @@ export default function ProductDetail() {
           <h2 className="mb-4 text-2xl font-bold text-gray-900">Product not found</h2>
           <button
             onClick={() => navigate("/")}
-            className="rounded-lg bg-blue-600 px-6 py-2 text-white transition-colors hover:bg-blue-700"
+            className="rounded-lg bg-milky-blue px-6 py-2 text-white transition-colors hover:bg-milky-blue/90"
           >
             Back to Home
           </button>
@@ -166,7 +166,7 @@ export default function ProductDetail() {
       );
     } else if (nameStr.includes("lazada")) {
       return (
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-500 md:h-10 md:w-10">
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-milky-blue md:h-10 md:w-10">
           <svg className="h-5 w-5 text-white md:h-6 md:w-6" viewBox="0 0 24 24" fill="currentColor">
             <path d="M2 12L12 2l10 10-10 10L2 12z" />
             <path d="M12 8l-4 4 4 4 4-4-4-4z" />
@@ -239,8 +239,8 @@ export default function ProductDetail() {
       textColor = "text-orange-500";
     } else if (nameStr.includes("lazada")) {
       borderColor = "border-blue-500";
-      hoverBgColor = "hover:bg-blue-50";
-      textColor = "text-blue-500";
+      hoverBgColor = "hover:bg-milky-blue/10";
+      textColor = "text-milky-blue";
     } else if (nameStr.includes("bukalapak")) {
       borderColor = "border-red-500";
       hoverBgColor = "hover:bg-red-50";
@@ -434,7 +434,7 @@ export default function ProductDetail() {
                   </h3>
                   <button
                     onClick={() => setShowSizeGuide(true)}
-                    className="text-xs font-medium text-blue-600 hover:text-blue-700 md:text-sm"
+                    className="text-xs font-medium text-milky-blue hover:text-milky-blue/80 md:text-sm"
                   >
                     Panduan Ukuran
                   </button>
@@ -485,7 +485,7 @@ export default function ProductDetail() {
 
               {/* Available on E-commerce Platforms */}
               {product.marketplaces && product.marketplaces.length > 0 && (
-                <div className="mb-6 rounded-2xl bg-gradient-to-br from-blue-50 to-purple-50 p-6 md:mb-8 md:p-8">
+                <div className="mb-6 rounded-2xl bg-gradient-to-br from-milky-blue/5 to-purple-50 p-6 md:mb-8 md:p-8">
                   <div className="mb-6 text-center">
                     <h3 className="mb-2 text-lg font-bold text-gray-900 md:text-xl">🛒 Tersedia di Marketplace</h3>
                     <p className="text-sm text-gray-600">Pilih platform belanja favorit Anda</p>
@@ -531,7 +531,7 @@ export default function ProductDetail() {
                   {/* If there are many marketplaces, show popular ones first */}
                   {product.marketplaces.length > 6 && (
                     <div className="mt-4 text-center">
-                      <button className="text-sm text-blue-600 hover:text-blue-800">Lihat semua marketplace →</button>
+                      <button className="text-sm text-milky-blue hover:text-milky-blue/80">Lihat semua marketplace →</button>
                     </div>
                   )}
                 </div>
@@ -628,8 +628,8 @@ export default function ProductDetail() {
                     key={index}
                     className={`h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg border-2 transition-all duration-200 md:h-20 md:w-20 ${
                       selectedImage === index
-                        ? "border-blue-500 shadow-md"
-                        : "border-transparent opacity-60 hover:border-blue-400 hover:opacity-100"
+                        ? "border-milky-blue shadow-md"
+                        : "border-transparent opacity-60 hover:border-milky-blue hover:opacity-100"
                     }`}
                     onClick={() => setSelectedImage(index)}
                   >
@@ -714,9 +714,9 @@ export default function ProductDetail() {
                   </div>
 
                   {/* Tips */}
-                  <div className="rounded-lg bg-blue-50 p-6">
-                    <h3 className="mb-3 text-lg font-semibold text-blue-900">Tips Memilih Ukuran</h3>
-                    <ul className="space-y-2 text-blue-800">
+                  <div className="rounded-lg bg-milky-blue/10 p-6">
+                    <h3 className="mb-3 text-lg font-semibold text-milky-blue">Tips Memilih Ukuran</h3>
+                    <ul className="space-y-2 text-milky-blue">
                       <li>• Ukur kaki di sore hari karena kaki cenderung sedikit membesar</li>
                       <li>• Jika ragu antara dua ukuran, pilih yang lebih besar</li>
                       <li>• Pertimbangkan ketebalan kaus kaki yang akan digunakan</li>

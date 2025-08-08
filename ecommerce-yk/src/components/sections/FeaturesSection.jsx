@@ -4,10 +4,10 @@ import { Truck, Shield, RefreshCw, Phone } from "lucide-react";
 const FeaturesSection = () => {
   const features = [
     {
-      icon: <Truck className="text-blue-600 h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7" />,
+      icon: <Truck className="text-milky-blue h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7" />,
       title: "Free Shipping",
       description: "Orders above Rp 500k",
-      bgColor: "bg-blue-50",
+      bgColor: "bg-milky-blue/10",
     },
     {
       icon: <Shield className="text-green-600 h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7" />,

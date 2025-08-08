@@ -89,7 +89,7 @@ const ProductCard = ({ product, onAddToCart, onToggleWishlist, isInWishlist, onP
             {product.harga_diskon && product.harga_diskon > 0 ? (
               <>
                 {/* Discounted Price */}
-                <h5 className="mb-1 text-base font-bold text-blue-600 sm:text-lg md:text-xl">
+                <h5 className="mb-1 text-base font-bold text-milky-blue sm:text-lg md:text-xl">
                   {formatPrice(product.harga_diskon)}
                 </h5>
                 {/* Original Price (crossed out) */}
@@ -101,7 +101,7 @@ const ProductCard = ({ product, onAddToCart, onToggleWishlist, isInWishlist, onP
               </>
             ) : (
               /* No discount - show original price only */
-              <h5 className="mb-1 text-base font-bold text-blue-600 sm:text-lg md:text-xl">
+              <h5 className="mb-1 text-base font-bold text-milky-blue sm:text-lg md:text-xl">
                 {formatPrice(product.originalPrice || product.harga)}
               </h5>
             )}
@@ -113,7 +113,7 @@ const ProductCard = ({ product, onAddToCart, onToggleWishlist, isInWishlist, onP
               e.stopPropagation();
               onAddToCart(product);
             }}
-            className="mt-auto w-full rounded-full bg-blue-600 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-700 sm:py-3 sm:text-base md:text-lg"
+            className="mt-auto w-full rounded-full bg-milky-blue py-2.5 text-sm font-semibold text-white transition-colors hover:bg-milky-blue/90 sm:py-3 sm:text-base md:text-lg"
           >
             Add to Cart
           </button>
