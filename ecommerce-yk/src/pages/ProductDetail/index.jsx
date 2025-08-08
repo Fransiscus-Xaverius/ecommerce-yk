@@ -316,7 +316,7 @@ export default function ProductDetail() {
                 <div className="order-1 flex-1 md:order-2">
                   <button
                     onClick={() => setIsLightboxOpen(true)}
-                    className="group relative h-full w-full cursor-pointer overflow-hidden rounded-xl bg-gray-50"
+                    className="group relative w-full cursor-pointer overflow-hidden rounded-xl bg-gray-50"
                   >
                     <img
                       src={productImages[selectedImage]}
@@ -531,7 +531,9 @@ export default function ProductDetail() {
                   {/* If there are many marketplaces, show popular ones first */}
                   {product.marketplaces.length > 6 && (
                     <div className="mt-4 text-center">
-                      <button className="text-sm text-milky-blue hover:text-milky-blue/80">Lihat semua marketplace →</button>
+                      <button className="text-sm text-milky-blue hover:text-milky-blue/80">
+                        Lihat semua marketplace →
+                      </button>
                     </div>
                   )}
                 </div>
@@ -596,7 +598,7 @@ export default function ProductDetail() {
         {/* Lightbox Popup Overlay */}
         {isLightboxOpen && (
           <div
-            className="animate-fade-in-fast fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80 p-4"
+            className="fixed inset-0 z-50 flex animate-fade-in-fast items-center justify-center bg-black bg-opacity-80 p-4"
             onClick={() => setIsLightboxOpen(false)}
           >
             {/* Card Container */}
