@@ -11,17 +11,23 @@ export default {
       "2xl": "1536px", // Large Desktop
     },
     extend: {
+      colors: {
+        'milky-blue': '#00A0E9',
+        'light-gray': '#D6D6D6',
+      },
       spacing: {
         18: "4.5rem",
         88: "22rem",
       },
-      "fade-in-fast": {
-        "0%": { opacity: 0 },
-        "100%": { opacity: 1 },
+      keyframes: {
+        "fade-in-fast": {
+          "0%": { opacity: 0 },
+          "100%": { opacity: 1 },
+        },
       },
-    },
-    animation: {
-      "fade-in-fast": "fade-in-fast 0.2s ease-in-out",
+      animation: {
+        "fade-in-fast": "fade-in-fast 0.2s ease-in-out",
+      },
     },
   },
 

@@ -74,7 +74,7 @@ const Header = () => {
   ];
 
   return (
-    <header className="sticky top-0 z-50 bg-white shadow-lg">
+    <header className="sticky top-0 z-50 bg-gradient-to-r from-white via-slate-50 to-white shadow-lg">
       <div className="mx-auto max-w-7xl px-4">
         {/* Top Bar: Mobile Menu, Search/Logo, Actions */}
         <div className="flex items-center justify-between">
@@ -91,7 +91,7 @@ const Header = () => {
             {/* Mobile Search Bar / Logo Toggle */}
             {!isMobileSearchOpen ? (
               <a
-                className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-2xl font-bold text-transparent transition-transform duration-200 hover:scale-105 lg:hidden"
+                className="from-milky-blue to-light-gray bg-gradient-to-r bg-clip-text text-2xl font-bold text-transparent transition-transform duration-200 hover:scale-105 lg:hidden"
                 href="/"
               >
                 YONGKI KOMALADI
@@ -105,7 +105,7 @@ const Header = () => {
                     <input
                       type="text"
                       placeholder="Search products..."
-                      className="w-full rounded-full border border-gray-300 bg-gray-100 py-2 pl-10 pr-4 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
+                      className="focus:border-milky-blue focus:ring-milky-blue w-full rounded-full border border-gray-300 bg-gray-100 py-2 pl-10 pr-4 focus:outline-none focus:ring-1"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       autoFocus
@@ -120,7 +120,7 @@ const Header = () => {
 
             {/* Logo (hidden on mobile, visible on large screens) */}
             <a
-              className="hidden bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-2xl font-bold text-transparent transition-transform duration-200 hover:scale-105 lg:block"
+              className="bg-milky-blue hidden bg-clip-text text-2xl font-bold text-transparent transition-transform duration-200 hover:scale-105 lg:block"
               href="/"
             >
               YONGKI KOMALADI
@@ -134,7 +134,7 @@ const Header = () => {
                 <input
                   type="text"
                   placeholder="Search products..."
-                  className="w-full rounded-full border border-gray-300 bg-gray-100 py-2 pl-10 pr-4 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
+                  className="focus:border-milky-blue focus:ring-milky-blue w-full rounded-full border border-gray-300 bg-gray-100 py-2 pl-10 pr-4 focus:outline-none focus:ring-1"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
@@ -183,7 +183,7 @@ const Header = () => {
             {navigationItems.map((item, index) => (
               <li key={index}>
                 <a
-                  className="font-medium text-gray-700 transition-colors duration-200 hover:text-purple-600"
+                  className="hover:text-milky-blue font-medium text-gray-700 transition-colors duration-200"
                   href={item.href}
                 >
                   {item.label}
@@ -206,7 +206,7 @@ const Header = () => {
               <li key={index}>
                 <a
                   href={item.href}
-                  className="block py-3 text-gray-700 transition-colors duration-200 hover:text-purple-600"
+                  className="hover:text-milky-blue block py-3 text-gray-700 transition-colors duration-200"
                 >
                   {item.label}
                 </a>

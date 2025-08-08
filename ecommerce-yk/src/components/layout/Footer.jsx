@@ -27,12 +27,12 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-gray-900 py-12 text-white">
+    <footer className="bg-gradient-to-b from-gray-800 via-gray-700 to-gray-900 py-12 text-white">
       <div className="mx-auto max-w-7xl px-4">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           {/* Brand Section */}
           <div className="md:col-span-1">
-            <h3 className="mb-4 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-xl font-bold text-transparent">
+            <h3 className="mb-4 text-xl font-bold text-milky-blue">
               YONGKI KOMALADI
             </h3>
             <p className="mb-4 text-gray-400">
