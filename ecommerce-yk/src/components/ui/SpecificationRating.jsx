@@ -43,20 +43,23 @@ const SpecificationRating = ({ rating, displayType = "progress" }) => {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="w-1/2 space-y-4">
       <h3 className="text-lg font-bold text-gray-900">Product Specifications</h3>
       <div className="space-y-3">
         {specifications.map((spec) => (
-          <div key={spec.key} className="space-y-2">
-            <div className="flex items-center justify-between">
+          <div key={spec.key} className="flex items-center gap-y-2">
+            <div className="flex w-20">
               <span className="text-sm font-medium capitalize text-gray-700">{spec.label}</span>
+            </div>
+
+            <div className="flex grow items-center gap-2">
+              {displayType === "stars" || displayType === "star"
+                ? renderStars(spec.value)
+                : renderProgressBar(spec.value)}
               {(displayType === "stars" || displayType === "star") && (
                 <span className="text-sm text-gray-500">{spec.value}/5</span>
               )}
             </div>
-            {displayType === "stars" || displayType === "star"
-              ? renderStars(spec.value)
-              : renderProgressBar(spec.value)}
           </div>
         ))}
       </div>

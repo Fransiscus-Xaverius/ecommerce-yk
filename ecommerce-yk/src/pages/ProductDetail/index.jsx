@@ -295,10 +295,10 @@ export default function ProductDetail() {
           <div className="grid grid-cols-1 gap-0 xl:grid-cols-2">
             {/* Left Side - Product Images */}
             <div className="p-3 md:p-6 lg:p-8">
-              <div className="flex flex-col gap-3 md:flex-row md:gap-4">
+              <div className="flex h-64 flex-col gap-3 sm:h-80 md:h-96 md:flex-row md:gap-4 lg:h-[500px]">
                 {/* Image Thumbnails */}
-                <div className="order-2 flex gap-2 overflow-x-auto md:order-1 md:flex-col md:gap-3 md:overflow-visible">
-                  {productImages.slice(0, 5).map((img, index) => (
+                <div className="order-2 flex gap-2 overflow-x-auto overflow-y-hidden md:order-1 md:h-full md:flex-col md:gap-3 md:overflow-y-auto md:overflow-x-hidden">
+                  {productImages.map((img, index) => (
                     <button
                       key={index}
                       className={`h-12 w-12 flex-shrink-0 overflow-hidden rounded-lg border-2 transition-all md:h-16 md:w-16 ${
@@ -313,7 +313,7 @@ export default function ProductDetail() {
 
                 {/* Main Image */}
                 <div className="order-1 flex-1 md:order-2">
-                  <div className="h-64 overflow-hidden rounded-xl bg-gray-50 sm:h-80 md:h-96 lg:h-[500px]">
+                  <div className="h-full overflow-hidden rounded-xl bg-gray-50">
                     <img
                       src={productImages[selectedImage]}
                       alt={product.artikel}
@@ -359,7 +359,7 @@ export default function ProductDetail() {
               <p className="mb-4 text-sm text-gray-500">Kode Produk: {product.artikel}</p>
 
               {/* Product Specifications and Categories */}
-              <div className="mb-6 space-y-6">
+              <div className="mb-6 flex justify-between">
                 <SpecificationRating rating={product.rating} displayType="star" />
                 <PurposeChips purposes={product.rating?.purpose} />
               </div>
