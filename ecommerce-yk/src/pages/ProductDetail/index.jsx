@@ -79,6 +79,7 @@ export default function ProductDetail() {
   const [selectedImage, setSelectedImage] = useState(0);
   const [showDescription, setShowDescription] = useState(false);
   const [showSizeGuide, setShowSizeGuide] = useState(false);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   // const [quantity, setQuantity] = useState(1);
 
   if (loading) {
@@ -313,13 +314,17 @@ export default function ProductDetail() {
 
                 {/* Main Image */}
                 <div className="order-1 flex-1 md:order-2">
-                  <div className="h-full overflow-hidden rounded-xl bg-gray-50">
+                  <button
+                    onClick={() => setIsLightboxOpen(true)}
+                    className="group relative h-full w-full cursor-pointer overflow-hidden rounded-xl bg-gray-50"
+                  >
                     <img
                       src={productImages[selectedImage]}
                       alt={product.artikel}
-                      className="h-full w-full object-cover"
+                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />
-                  </div>
+                    <div className="absolute inset-0 bg-black bg-opacity-0 transition-all group-hover:bg-opacity-20"></div>
+                  </button>
                 </div>
               </div>
 
@@ -587,6 +592,58 @@ export default function ProductDetail() {
             </div>
           </div>
         </div>
+
+        {/* Lightbox Popup Overlay */}
+        {isLightboxOpen && (
+          <div
+            className="animate-fade-in-fast fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80 p-4"
+            onClick={() => setIsLightboxOpen(false)}
+          >
+            {/* Card Container */}
+            <div
+              className="relative w-full max-w-4xl rounded-xl bg-white p-4 shadow-2xl lg:p-6"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Close Button */}
+              <button
+                onClick={() => setIsLightboxOpen(false)}
+                className="absolute -right-3 -top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-gray-800 text-white transition-transform hover:scale-110 hover:bg-gray-600"
+              >
+                <X size={22} />
+              </button>
+
+              {/* Main Image Display */}
+              <div className="mb-4 h-[60vh] w-full overflow-hidden rounded-lg bg-gray-100 md:h-[70vh]">
+                <img
+                  src={productImages[selectedImage]}
+                  alt={product.artikel}
+                  className="h-full w-full object-contain"
+                />
+              </div>
+
+              {/* Thumbnails */}
+              <div className="flex justify-center gap-3 overflow-x-auto p-2 md:gap-4">
+                {productImages.map((img, index) => (
+                  <button
+                    key={index}
+                    className={`h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg border-2 transition-all duration-200 md:h-20 md:w-20 ${
+                      selectedImage === index
+                        ? "border-blue-500 shadow-md"
+                        : "border-transparent opacity-60 hover:border-blue-400 hover:opacity-100"
+                    }`}
+                    onClick={() => setSelectedImage(index)}
+                  >
+                    <img
+                      src={img}
+                      alt={`${product.artikel} thumbnail ${index + 1}`}
+                      className="h-full w-full object-cover"
+                    />
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Size Guide Popup Overlay */}
         {showSizeGuide && (

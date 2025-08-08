@@ -15,7 +15,15 @@ export default {
         18: "4.5rem",
         88: "22rem",
       },
+      "fade-in-fast": {
+        "0%": { opacity: 0 },
+        "100%": { opacity: 1 },
+      },
+    },
+    animation: {
+      "fade-in-fast": "fade-in-fast 0.2s ease-in-out",
     },
   },
+
   plugins: [],
 };
