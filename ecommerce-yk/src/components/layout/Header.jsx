@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { ShoppingCart, Menu, X, Search, User, Heart } from "lucide-react";
 import { useWishlist } from "../../hooks/useWishlist";
 import { useCart } from "../../hooks/useCart";
@@ -12,22 +12,33 @@ const Header = () => {
   const wishlistCount = wishlist ? wishlist.length : 0;
   const navigate = useNavigate();
   const location = useLocation();
+  const previousPathname = useRef(location.pathname);
+  const isNavigatingToProduct = useRef(false);
 
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Clear search query when navigating to product detail page
+  // Track navigation to product detail pages
   useEffect(() => {
-    if (location.pathname.startsWith("/product/")) {
+    // If we're navigating from a search page to a product detail page
+    if (previousPathname.current.startsWith("/products") && location.pathname.startsWith("/product/")) {
+      isNavigatingToProduct.current = true;
+      // Clear the search query when navigating to product detail page
       setSearchQuery("");
+    } else if (location.pathname.startsWith("/product/")) {
+      // If we're already on a product detail page, reset the flag
+      isNavigatingToProduct.current = false;
     }
+
+    previousPathname.current = location.pathname;
   }, [location.pathname]);
 
-  // Debounce search query - only navigate if not on product detail page
+  // Debounce search query - allow searching from product detail pages
   useEffect(() => {
     if (searchQuery.trim() === "" || searchQuery.trim() === null) return;
 
-    // Don't navigate if we're on a product detail page
-    if (location.pathname.startsWith("/product/")) {
+    // Don't navigate if we just navigated to a product detail page
+    if (isNavigatingToProduct.current) {
+      isNavigatingToProduct.current = false;
       return;
     }
 
@@ -44,6 +55,14 @@ const Header = () => {
       clearTimeout(handler);
     };
   }, [searchQuery, navigate, location.pathname]);
+
+  // Handle search form submission
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/products?q=${searchQuery.trim()}`);
+    }
+  };
 
   const navigationItems = [
     { label: "New Arrivals", href: "#" },
@@ -81,7 +100,7 @@ const Header = () => {
               <div className="flex-1 lg:hidden">
                 {" "}
                 {/* Mobile: Search bar takes space */}
-                <form className="w-full">
+                <form className="w-full" onSubmit={handleSearchSubmit}>
                   <div className="relative">
                     <input
                       type="text"
@@ -110,7 +129,7 @@ const Header = () => {
 
           {/* Desktop Search Bar */}
           <div className="hidden flex-1 justify-center px-8 lg:flex">
-            <form className="w-full max-w-2xl">
+            <form className="w-full max-w-2xl" onSubmit={handleSearchSubmit}>
               <div className="relative">
                 <input
                   type="text"
