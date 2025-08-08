@@ -38,20 +38,7 @@ const ProductCarousel = ({ section, onAddToCart, onToggleWishlist, wishlist, sec
             <h2 className="mb-1 text-xl font-bold text-gray-900 sm:mb-2 sm:text-2xl md:text-3xl">{section.title}</h2>
             <p className="text-sm text-gray-600 sm:text-base">{section.subtitle}</p>
           </div>
-          <div className={`${section.products.length > 4 ? 'hidden gap-2 md:flex' : 'hidden'}`}>
-            <button
-              className="rounded-full border border-gray-300 p-1.5 transition-all duration-300 hover:border-gray-400 hover:bg-gray-50 sm:p-2"
-              onClick={() => scrollCarousel(carouselRef, "left")}
-            >
-              <ChevronLeft size={16} className="sm:h-5 sm:w-5" />
-            </button>
-            <button
-              className="rounded-full border border-gray-300 p-1.5 transition-all duration-300 hover:border-gray-400 hover:bg-gray-50 sm:p-2"
-              onClick={() => scrollCarousel(carouselRef, "right")}
-            >
-              <ChevronRight size={16} className="sm:h-5 sm:w-5" />
-            </button>
-          </div>
+          {/* Removed top-right nav buttons */}
         </div>
 
         {/* Draggable Product Carousel */}
@@ -59,8 +46,8 @@ const ProductCarousel = ({ section, onAddToCart, onToggleWishlist, wishlist, sec
           <div
             ref={carouselRef}
             className={`scrollbar-hide pb-4 ${
-              section.products.length < 5 
-                ? 'flex justify-start gap-2 sm:gap-3 md:gap-4 lg:gap-6' 
+              section.products.length < 5
+                ? 'flex justify-start gap-2 sm:gap-3 md:gap-4 lg:gap-6'
                 : 'flex gap-2 overflow-x-auto sm:gap-3 md:gap-4 lg:gap-6'
             }`}
             style={{
@@ -90,6 +77,28 @@ const ProductCarousel = ({ section, onAddToCart, onToggleWishlist, wishlist, sec
             ))}
           </div>
         </div>
+
+        {/* Bottom centered navigation buttons (no overlap) */}
+        {section.products.length > 4 && (
+          <div className="mt-2 flex justify-center">
+            <div className="flex gap-2 rounded-full bg-white p-1 shadow">
+              <button
+                aria-label="Scroll left"
+                className="rounded-full border border-gray-300 p-2 transition-colors duration-300 hover:border-gray-400 hover:bg-gray-50"
+                onClick={() => scrollCarousel(carouselRef, 'left')}
+              >
+                <ChevronLeft size={18} />
+              </button>
+              <button
+                aria-label="Scroll right"
+                className="rounded-full border border-gray-300 p-2 transition-colors duration-300 hover:border-gray-400 hover:bg-gray-50"
+                onClick={() => scrollCarousel(carouselRef, 'right')}
+              >
+                <ChevronRight size={18} />
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );

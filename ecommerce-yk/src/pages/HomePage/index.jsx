@@ -150,16 +150,18 @@ export default function HomePage() {
       ) : error ? (
         <div>Error loading products: {error.message}</div>
       ) : (
-        productSections.map((section, sectionIndex) => (
-          <ProductCarousel
-            key={sectionIndex}
-            section={section}
-            sectionIndex={sectionIndex}
-            onAddToCart={addToCart}
-            onToggleWishlist={toggleWishlist}
-            wishlist={wishlist}
-          />
-        ))
+        productSections
+          .filter(section => section.title !== "Hot") // Hide HOT section
+          .map((section, sectionIndex) => (
+            <ProductCarousel
+              key={sectionIndex}
+              section={section}
+              sectionIndex={sectionIndex}
+              onAddToCart={addToCart}
+              onToggleWishlist={toggleWishlist}
+              wishlist={wishlist}
+            />
+          ))
       )}
 
       {/* Newsletter Section */}
