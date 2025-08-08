@@ -38,7 +38,12 @@ const ProductCarousel = ({ section, onAddToCart, onToggleWishlist, wishlist, sec
             <h2 className="mb-1 text-xl font-bold text-gray-900 sm:mb-2 sm:text-2xl md:text-3xl">{section.title}</h2>
             <p className="text-sm text-gray-600 sm:text-base">{section.subtitle}</p>
           </div>
-          {/* Removed top-right nav buttons */}
+          <button
+            onClick={() => navigate(`/all-products`)}
+            className="hidden text-sm font-medium text-milky-blue underline underline-offset-4 hover:text-milky-blue/80 md:block"
+          >
+            See more
+          </button>
         </div>
 
         {/* Draggable Product Carousel */}
