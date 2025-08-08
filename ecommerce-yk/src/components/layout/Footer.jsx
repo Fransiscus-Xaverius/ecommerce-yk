@@ -27,7 +27,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-gradient-to-b from-gray-800 via-gray-700 to-gray-900 py-12 text-white">
+    <footer className="bg-gray-800 py-12 text-white border-t border-light-gray">
       <div className="mx-auto max-w-7xl px-4">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           {/* Brand Section */}
@@ -43,7 +43,7 @@ const Footer = () => {
                 <a
                   key={index}
                   href={social.href}
-                  className="text-gray-400 transition-colors duration-200 hover:text-white"
+                  className="text-gray-400 transition-colors duration-200 hover:text-milky-blue"
                   aria-label={social.platform}
                 >
                   {social.icon}
@@ -54,11 +54,11 @@ const Footer = () => {
 
           {/* Shop Links */}
           <div>
-            <h5 className="mb-4 font-bold">Shop</h5>
+            <h5 className="mb-4 font-bold text-light-gray">Shop</h5>
             <ul className="space-y-2">
               {shopLinks.map((link, index) => (
                 <li key={index}>
-                  <a href={link.href} className="text-gray-400 transition-colors duration-200 hover:text-white">
+                  <a href={link.href} className="text-gray-400 transition-colors duration-200 hover:text-milky-blue">
                     {link.label}
                   </a>
                 </li>
@@ -68,11 +68,11 @@ const Footer = () => {
 
           {/* Help Links */}
           <div>
-            <h5 className="mb-4 font-bold">Help</h5>
+            <h5 className="mb-4 font-bold text-light-gray">Help</h5>
             <ul className="space-y-2">
               {helpLinks.map((link, index) => (
                 <li key={index}>
-                  <a href={link.href} className="text-gray-400 transition-colors duration-200 hover:text-white">
+                  <a href={link.href} className="text-gray-400 transition-colors duration-200 hover:text-milky-blue">
                     {link.label}
                   </a>
                 </li>
@@ -82,7 +82,7 @@ const Footer = () => {
 
           {/* Store Info */}
           <div>
-            <h5 className="mb-4 font-bold">Visit Our Store</h5>
+            <h5 className="mb-4 font-bold text-light-gray">Visit Our Store</h5>
             <div className="space-y-3 text-gray-400">
               <p className="flex items-center">
                 <MapPin className="mr-2" size={16} />

@@ -2,7 +2,7 @@ import React from "react";
 
 const AnnouncementBar = () => {
   return (
-    <div className="bg-gradient-to-r from-milky-blue to-light-gray py-2 text-white">
+    <div className="bg-milky-blue py-2 text-white">
       <div className="mx-auto max-w-7xl px-4">
         <div className="text-center">
           <p className="animate-pulse font-bold">

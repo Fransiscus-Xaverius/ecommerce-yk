@@ -74,7 +74,7 @@ const Header = () => {
   ];
 
   return (
-    <header className="sticky top-0 z-50 bg-gradient-to-r from-white via-slate-50 to-white shadow-lg">
+    <header className="sticky top-0 z-50 bg-white shadow-lg border-b border-light-gray">
       <div className="mx-auto max-w-7xl px-4">
         {/* Top Bar: Mobile Menu, Search/Logo, Actions */}
         <div className="flex items-center justify-between">
@@ -91,7 +91,7 @@ const Header = () => {
             {/* Mobile Search Bar / Logo Toggle */}
             {!isMobileSearchOpen ? (
               <a
-                className="from-milky-blue to-light-gray bg-gradient-to-r bg-clip-text text-2xl font-bold text-transparent transition-transform duration-200 hover:scale-105 lg:hidden"
+                className="text-2xl font-bold text-milky-blue transition-transform duration-200 hover:scale-105 lg:hidden"
                 href="/"
               >
                 YONGKI KOMALADI
@@ -120,7 +120,7 @@ const Header = () => {
 
             {/* Logo (hidden on mobile, visible on large screens) */}
             <a
-              className="bg-milky-blue hidden bg-clip-text text-2xl font-bold text-transparent transition-transform duration-200 hover:scale-105 lg:block"
+              className="hidden text-2xl font-bold text-milky-blue transition-transform duration-200 hover:scale-105 lg:block"
               href="/"
             >
               YONGKI KOMALADI
