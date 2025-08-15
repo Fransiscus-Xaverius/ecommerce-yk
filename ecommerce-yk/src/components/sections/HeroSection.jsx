@@ -73,7 +73,7 @@ const HeroSection = () => {
                 <div
                   className="position-absolute w-100 h-100"
                   style={{
-                    background: `url(${import.meta.env.VITE_BACKEND_URL}${slide.image})`,
+                    background: `url(${slide.image})`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                     backgroundRepeat: "no-repeat",

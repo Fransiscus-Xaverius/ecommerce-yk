@@ -313,15 +313,15 @@ export default function ProductDetail() {
                 </div>
 
                 {/* Main Image */}
-                <div className="order-1 flex-1 md:order-2">
+                <div className="order-1 h-full flex-1 md:order-2">
                   <button
                     onClick={() => setIsLightboxOpen(true)}
-                    className="group relative w-full cursor-pointer overflow-hidden rounded-xl bg-gray-50"
+                    className="group relative h-full w-full cursor-pointer overflow-hidden rounded-xl bg-gray-50"
                   >
                     <img
                       src={productImages[selectedImage]}
                       alt={product.artikel}
-                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      className="h-full w-full object-scale-down transition-transform duration-300 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-black bg-opacity-0 transition-all group-hover:bg-opacity-20"></div>
                   </button>

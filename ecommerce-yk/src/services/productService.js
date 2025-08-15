@@ -5,9 +5,7 @@ const transformProductData = (backendProduct) => {
   if (!backendProduct) return null;
 
   const gambar =
-    backendProduct.gambar && Array.isArray(backendProduct.gambar)
-      ? backendProduct.gambar.map((g) => `${import.meta.env.VITE_BACKEND_URL}${g}`)
-      : [];
+    backendProduct.gambar && Array.isArray(backendProduct.gambar) ? backendProduct.gambar.map((g) => g) : [];
 
   return {
     id: backendProduct.no || backendProduct.artikel,
