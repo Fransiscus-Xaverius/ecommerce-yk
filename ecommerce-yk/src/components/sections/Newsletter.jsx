@@ -4,13 +4,29 @@ import React, { useState } from "react";
  * Newsletter Subscription Component
  */
 const Newsletter = () => {
-  const [email, setEmail] = useState("");
+  const [formData, setFormData] = useState({
+    email: "",
+    whatsapp: "",
+    message: ""
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle newsletter subscription
-    console.log("Newsletter subscription:", email);
-    setEmail("");
+    // Handle form submission
+    console.log("Contact form submission:", formData);
+    setFormData({
+      email: "",
+      whatsapp: "",
+      message: ""
+    });
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
   return (
@@ -20,21 +36,42 @@ const Newsletter = () => {
         <p className="mb-6 text-base opacity-90 sm:mb-8 sm:text-lg md:text-xl">Get exclusive offers and be the first to know about new arrivals!</p>
         <form
           onSubmit={handleSubmit}
-          className="mx-auto flex max-w-md flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4"
+          className="mx-auto max-w-lg space-y-4"
         >
-          <input
-            type="email"
-            className="w-full rounded-full px-4 py-3 text-base text-gray-900 focus:outline-none focus:ring-4 focus:ring-light-gray/50 sm:flex-1 sm:px-6 sm:py-4 sm:text-lg"
-            placeholder="Your email address"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <input
+              type="email"
+              name="email"
+              className="w-full rounded-lg px-4 py-3 text-base text-gray-900 focus:outline-none focus:ring-4 focus:ring-light-gray/50"
+              placeholder="Email address"
+              value={formData.email}
+              onChange={handleInputChange}
+              required
+            />
+            <input
+              type="tel"
+              name="whatsapp"
+              className="w-full rounded-lg px-4 py-3 text-base text-gray-900 focus:outline-none focus:ring-4 focus:ring-light-gray/50"
+              placeholder="WhatsApp number"
+              value={formData.whatsapp}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+          <textarea
+            name="message"
+            rows="4"
+            className="w-full rounded-lg px-4 py-3 text-base text-gray-900 focus:outline-none focus:ring-4 focus:ring-light-gray/50"
+            placeholder="Your message"
+            value={formData.message}
+            onChange={handleInputChange}
             required
-          />
+          ></textarea>
           <button
             type="submit"
-            className="w-full rounded-full bg-white px-6 py-3 text-base font-bold text-milky-blue transition-all duration-300 hover:scale-105 hover:bg-light-gray sm:w-auto sm:px-8 sm:py-4 sm:text-lg"
+            className="w-full rounded-lg bg-white px-6 py-3 text-base font-bold text-milky-blue transition-all duration-300 hover:scale-105 hover:bg-light-gray"
           >
-            Subscribe
+            Send Message
           </button>
         </form>
       </div>
