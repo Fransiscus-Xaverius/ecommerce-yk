@@ -40,7 +40,7 @@ const ProductCarousel = ({ section, onAddToCart, onToggleWishlist, wishlist, sec
           </div>
           <button
             onClick={() => navigate(`/all-products`)}
-            className="hidden font-bold text-base sm:text-lg md:text-xl text-milky-blue underline underline-offset-4 hover:text-milky-blue/80 md:block"
+            className="font-bold text-sm sm:text-base md:text-lg lg:text-xl text-milky-blue underline underline-offset-4 hover:text-milky-blue/80"
           >
             See more
           </button>
