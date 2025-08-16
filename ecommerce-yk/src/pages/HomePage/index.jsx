@@ -8,9 +8,6 @@ import Newsletter from "../../components/sections/Newsletter";
 // UI Components
 import ProductCarousel from "../../components/ui/ProductCarousel";
 
-// import { useHeroSlider } from "../../hooks/useHeroSlider";
-import { loadBootstrapCSS } from "../../utils/helpers";
-
 // Hooks
 import { useWishlist } from "../../hooks/useWishlist";
 import { useCart } from "../../hooks/useCart";
@@ -106,12 +103,6 @@ export default function HomePage() {
         setOnlineProducts(onlineProducts);
 
         // Debug logging
-        console.log("Product categorization results:");
-        console.log(`Total products processed: ${allProductsData.length}`);
-        console.log(`Offline products: ${offlineProducts.length}`);
-        console.log(`Online products: ${onlineProducts.length}`);
-        console.log("Sample offline product:", offlineProducts[0]);
-        console.log("Sample online product:", onlineProducts[0]);
 
         setLoading(false);
       } catch (error) {
@@ -130,12 +121,6 @@ export default function HomePage() {
     { title: "Online", subtitle: "Tersedia di marketplace online", products: onlineProducts },
   ];
 
-  // Load Bootstrap CSS
-  useEffect(() => {
-    const cleanup = loadBootstrapCSS();
-    return cleanup;
-  }, []);
-
   return (
     <>
       {/* Hero Section */}
@@ -151,7 +136,7 @@ export default function HomePage() {
         <div>Error loading products: {error.message}</div>
       ) : (
         productSections
-          .filter(section => section.title !== "Hot") // Hide HOT section
+          .filter((section) => section.title !== "Hot") // Hide HOT section
           .map((section, sectionIndex) => (
             <ProductCarousel
               key={sectionIndex}

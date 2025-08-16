@@ -66,8 +66,6 @@ export const fetchProductByArtikel = async (artikel) => {
 
     // Transform backend data to frontend format
     const transformedData = transformProductData(data.data);
-    console.log("Backend Product Data:", data);
-    console.log("Transformed Product Data:", transformedData);
     return transformedData;
   } catch (error) {
     console.error("Error fetching product:", error);
@@ -85,14 +83,12 @@ export const searchProducts = async (query, page = 1, limit = 12) => {
     }
 
     const data = await response.json();
-    console.log("Backend Search Data:", data);
 
     const responseData = data.data || {};
     const productsArray = responseData.items || [];
     const totalItems = responseData.total_items || 0;
 
     const transformedResults = productsArray.map((product) => transformProductData(product));
-    console.log("Transformed Search Results:", transformedResults);
     return { products: transformedResults, totalItems };
   } catch (error) {
     console.error("Error searching products:", error);
@@ -125,7 +121,6 @@ export const fetchProductList = async ({
     }
 
     const data = await response.json();
-    console.log("Backend Product List Data:", data);
 
     let productsArray = [];
     if (data.data && Array.isArray(data.data)) {
@@ -137,7 +132,6 @@ export const fetchProductList = async ({
     }
 
     const transformedResults = productsArray.map((product) => transformProductData(product));
-    console.log("Transformed Product List Results:", transformedResults);
     return transformedResults;
   } catch (error) {
     console.error("Error fetching product list:", error);
