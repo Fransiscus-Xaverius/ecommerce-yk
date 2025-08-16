@@ -4,6 +4,8 @@ import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import useApiRequest from "../../hooks/useApiRequest";
 import { useHeroSlider } from "../../hooks/useHeroSlider";
 
+import { loadScopedCSS } from "../../utils/helpers";
+
 const HeroSection = () => {
   const [heroSlides, setHeroSlides] = useState([]);
 
@@ -17,6 +19,16 @@ const HeroSection = () => {
     url: "/api/banners/active",
     method: "GET",
   });
+
+  useEffect(() => {
+    const clean = loadScopedCSS(
+      "https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css",
+      ".hero-section-scoped"
+    );
+    return () => {
+      clean();
+    };
+  }, []);
 
   // Fetch banners from backend
   useEffect(() => {
@@ -44,7 +56,7 @@ const HeroSection = () => {
   }
 
   return (
-    <section className="position-relative">
+    <section className="position-relative hero-section-scoped">
       <div id="heroCarousel" className="carousel slide carousel-fade" data-bs-ride="carousel">
         <div className="carousel-indicators">
           {heroSlides.map((_, index) => (
