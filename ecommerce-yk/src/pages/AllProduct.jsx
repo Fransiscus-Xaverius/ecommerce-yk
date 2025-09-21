@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-import ProductCard from '../components/ui/ProductCard';
-import { searchProducts } from '../services/productService';
-import { useWishlist } from '../hooks/useWishlist';
-import { useCart } from '../hooks/useCart';
-import LoadingSpinner from '../components/common/LoadingSpinner';
-import EmptyState from '../components/common/EmptyState';
-import Pagination from '../components/common/Pagination';
-import { PAGE_SIZE } from '../constants/pagination';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import ProductCard from "../components/ui/ProductCard";
+import { searchProducts } from "../services/productService";
+import { useWishlist } from "../hooks/useWishlist";
+import { useCart } from "../hooks/useCart";
+import LoadingSpinner from "../components/common/LoadingSpinner";
+import EmptyState from "../components/common/EmptyState";
+import Pagination from "../components/common/Pagination";
+import { PAGE_SIZE } from "../constants/pagination";
 
 // All products page with pagination (shares styling with SearchResults)
 const AllProduct = () => {
@@ -20,10 +20,10 @@ const AllProduct = () => {
   const { addToCart } = useCart();
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ['allProducts', page],
+    queryKey: ["allProducts", page],
     queryFn: async () => {
       // For simplicity reuse searchProducts with empty query + pagination by passing ?q=
-      const result = await searchProducts('', page, limit);
+      const result = await searchProducts("", page, limit);
       return result;
     },
     keepPreviousData: true,
@@ -62,7 +62,12 @@ const AllProduct = () => {
               </div>
             ))}
           </div>
-          <Pagination page={page} setPage={setPage} totalPages={totalPages} className="mt-6 sm:mt-8 md:mt-10 lg:mt-12" />
+          <Pagination
+            page={page}
+            setPage={setPage}
+            totalPages={totalPages}
+            className="mt-6 sm:mt-8 md:mt-10 lg:mt-12"
+          />
         </>
       )}
     </div>

@@ -52,15 +52,11 @@ const SearchResults = () => {
 
   return (
     <div className="mx-auto max-w-7xl px-3 py-4 xs:px-4 sm:px-6 md:px-8 lg:px-4 xl:py-8">
-      <h1 className="mb-3 text-lg font-bold xs:text-xl sm:mb-4 md:text-2xl">
-        Hasil Pencarian untuk "{query}"
-      </h1>
+      <h1 className="mb-3 text-lg font-bold xs:text-xl sm:mb-4 md:text-2xl">Hasil Pencarian untuk "{query}"</h1>
 
       {products.length > 0 ? (
         <div>
-          <p className="mb-4 text-sm text-gray-600 sm:mb-6 md:text-base">
-            Ditemukan {totalItems} produk
-          </p>
+          <p className="mb-4 text-sm text-gray-600 sm:mb-6 md:text-base">Ditemukan {totalItems} produk</p>
           {/* 
             Mobile (< 475px): 2 columns, tight spacing
             Large Mobile (475px - 640px): 2 columns, more spacing

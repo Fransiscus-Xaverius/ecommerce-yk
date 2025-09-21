@@ -1,17 +1,17 @@
 /**
  * Simple API client wrapper around fetch for consistent error handling
  */
-export async function apiClient(path, { method = 'GET', headers = {}, body, ...rest } = {}) {
+export async function apiClient(path, { method = "GET", headers = {}, body, ...rest } = {}) {
   const options = {
     method,
     headers: {
-      'Content-Type': 'application/json',
-      ...headers
+      "Content-Type": "application/json",
+      ...headers,
     },
-    ...rest
+    ...rest,
   };
   if (body) {
-    options.body = typeof body === 'string' ? body : JSON.stringify(body);
+    options.body = typeof body === "string" ? body : JSON.stringify(body);
   }
 
   const res = await fetch(path, options);
@@ -31,5 +31,5 @@ export async function apiClient(path, { method = 'GET', headers = {}, body, ...r
   return json;
 }
 
-export const get = (path, opts) => apiClient(path, { ...opts, method: 'GET' });
-export const post = (path, body, opts) => apiClient(path, { ...opts, method: 'POST', body });
+export const get = (path, opts) => apiClient(path, { ...opts, method: "GET" });
+export const post = (path, body, opts) => apiClient(path, { ...opts, method: "POST", body });

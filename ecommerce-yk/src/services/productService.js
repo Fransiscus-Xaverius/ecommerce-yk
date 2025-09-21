@@ -1,5 +1,5 @@
-import { get } from './apiClient';
-import { transformProductData } from './transformers/productTransformer';
+import { get } from "./apiClient";
+import { transformProductData } from "./transformers/productTransformer";
 
 export const fetchProductByArtikel = async (artikel) => {
   try {
@@ -7,7 +7,7 @@ export const fetchProductByArtikel = async (artikel) => {
     return transformProductData(data.data);
   } catch (err) {
     if (err.status === 404) return null;
-    console.error('Error fetching product:', err);
+    console.error("Error fetching product:", err);
     return null;
   }
 };
@@ -21,15 +21,15 @@ export const searchProducts = async (query, page = 1, limit = 12) => {
     const totalItems = responseData.total_items || 0;
     return { products: productsArray.map(transformProductData), totalItems };
   } catch (err) {
-    console.error('Error searching products:', err);
+    console.error("Error searching products:", err);
     return { products: [], totalItems: 0 };
   }
 };
 
 export const fetchProductList = async ({
-  sortColumn = 'tanggal_terima',
-  sortDirection = 'desc',
-  query = '',
+  sortColumn = "tanggal_terima",
+  sortDirection = "desc",
+  query = "",
   online = false,
   offline = false,
   limit,
@@ -53,7 +53,7 @@ export const fetchProductList = async ({
 
     return productsArray.map(transformProductData);
   } catch (err) {
-    console.error('Error fetching product list:', err);
+    console.error("Error fetching product list:", err);
     return [];
   }
 };
