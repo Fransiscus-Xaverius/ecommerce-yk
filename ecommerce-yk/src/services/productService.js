@@ -1,12 +1,15 @@
-import { get } from "./apiClient";
 import { transformProductData } from "./transformers/productTransformer";
 
 export const fetchProductByArtikel = async (artikel) => {
   try {
-    const data = await get(`/api/products/${artikel}`);
+    const response = await fetch(`/api/products/${artikel}`);
+    if (!response.ok) {
+      if (response.status === 404) return null;
+      throw new Error(`HTTP ${response.status}`);
+    }
+    const data = await response.json();
     return transformProductData(data.data);
   } catch (err) {
-    if (err.status === 404) return null;
     console.error("Error fetching product:", err);
     return null;
   }
@@ -15,7 +18,9 @@ export const fetchProductByArtikel = async (artikel) => {
 export const searchProducts = async (query, page = 1, limit = 12) => {
   try {
     const offset = (page - 1) * limit;
-    const data = await get(`/api/products?q=${query}&limit=${limit}&offset=${offset}`);
+    const response = await fetch(`/api/products?q=${query}&limit=${limit}&offset=${offset}`);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const data = await response.json();
     const responseData = data.data || {};
     const productsArray = responseData.items || [];
     const totalItems = responseData.total_items || 0;
@@ -40,7 +45,10 @@ export const fetchProductList = async ({
     if (online) url += `&online`;
     if (offline) url += `&offline`;
     if (limit) url += `&limit=${limit}`;
-    const data = await get(url);
+
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const data = await response.json();
 
     let productsArray = [];
     if (Array.isArray(data.data)) {

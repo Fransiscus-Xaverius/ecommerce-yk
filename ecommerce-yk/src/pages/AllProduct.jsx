@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+// import { useQuery } from "@tanstack/react-query"; // replaced by useAllProducts hook
 import ProductCard from "../components/ui/ProductCard";
-import { searchProducts } from "../services/productService";
+import useAllProducts from "../hooks/useAllProducts";
 import { useWishlist } from "../hooks/useWishlist";
 import { useCart } from "../hooks/useCart";
 import LoadingSpinner from "../components/common/LoadingSpinner";
@@ -19,18 +19,7 @@ const AllProduct = () => {
   const { wishlist, toggleWishlist } = useWishlist();
   const { addToCart } = useCart();
 
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["allProducts", page],
-    queryFn: async () => {
-      // For simplicity reuse searchProducts with empty query + pagination by passing ?q=
-      const result = await searchProducts("", page, limit);
-      return result;
-    },
-    keepPreviousData: true,
-  });
-
-  const products = data?.products || [];
-  const totalItems = data?.totalItems || 0;
+  const { products, totalItems, isLoading, error } = useAllProducts(page, limit, true);
   const totalPages = Math.ceil(totalItems / limit) || 1;
 
   return (

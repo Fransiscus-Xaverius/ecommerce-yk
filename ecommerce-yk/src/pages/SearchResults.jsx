@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+// import { useQuery } from "@tanstack/react-query"; // replaced by useSearchProducts hook
 import ProductCard from "../components/ui/ProductCard";
-import { searchProducts } from "../services/productService";
+import useSearchProducts from "../hooks/useSearchProducts";
 import { useWishlist } from "../hooks/useWishlist";
 import { useCart } from "../hooks/useCart";
 import LoadingSpinner from "../components/common/LoadingSpinner";
@@ -18,15 +18,7 @@ const SearchResults = () => {
   const { wishlist, toggleWishlist } = useWishlist();
   const { addToCart } = useCart();
 
-  const { data, error, isLoading } = useQuery({
-    queryKey: ["searchResults", query, page],
-    queryFn: () => searchProducts(query, page, 12),
-    enabled: !!query,
-    keepPreviousData: true, // Optional: to keep showing old data while new data is fetching
-  });
-
-  const products = data?.products || [];
-  const totalItems = data?.totalItems || 0;
+  const { products, totalItems, isLoading, error } = useSearchProducts(query, page, 12, !!query);
   const totalPages = Math.ceil(totalItems / 12);
 
   if (isLoading) {

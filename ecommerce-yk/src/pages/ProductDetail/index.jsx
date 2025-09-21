@@ -3,10 +3,11 @@ import { useParams, useNavigate } from "react-router-dom";
 import { ChevronDown, ArrowLeft, Package, Truck, X } from "lucide-react";
 // import { formatPrice } from "../../utils/helpers"; // replaced by <Price /> component
 import Price from "../../components/common/Price";
+import useProductDetail from "../../hooks/useProductDetail";
 
 // Hooks
 // import { useCart } from "../../hooks/useCart";
-import { fetchProductByArtikel } from "../../services/productService"; // Import the service
+// import { fetchProductByArtikel } from "../../services/productService"; // Import the service
 import SpecificationRating from "../../components/ui/SpecificationRating";
 import PurposeChips from "../../components/ui/PurposeChips";
 
@@ -23,57 +24,7 @@ export default function ProductDetail() {
     window.scrollTo(0, 0);
   }, [productArticle]);
 
-  const [product, setProduct] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        const fetchedProduct = await fetchProductByArtikel(productArticle);
-
-        if (!fetchedProduct) {
-          setError(new Error("Product not found"));
-          return;
-        }
-
-        // Transform marketplace object to array (if needed, otherwise remove)
-        const marketplaces =
-          fetchedProduct.marketplace && Object.keys(fetchedProduct.marketplace).length > 0
-            ? Object.entries(fetchedProduct.marketplace).map(([name, link]) => ({
-                name: name.charAt(0).toUpperCase() + name.slice(1),
-                link,
-              }))
-            : [];
-
-        // Transform offline stores array and filter out inactive stores
-        const offlineStores = fetchedProduct.offline
-          ? fetchedProduct.offline
-              .filter((store) => store.is_active !== false) // Hide inactive stores
-              .map((store) => ({
-                name: store.name,
-                url: store.url,
-                address: store.address || null,
-              }))
-          : [];
-
-        const transformedProduct = {
-          ...fetchedProduct,
-          marketplaces,
-          offlineStores,
-        };
-
-        setProduct(transformedProduct);
-        console.log("Final Product Data for Rendering:", transformedProduct);
-      } catch (error) {
-        setError(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProduct();
-  }, [productArticle]);
+  const { product, isLoading: loading, error } = useProductDetail(productArticle, !!productArticle);
 
   const [selectedColor, setSelectedColor] = useState("");
   const [selectedSize, setSelectedSize] = useState("");
