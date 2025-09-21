@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ChevronDown, ArrowLeft, Package, Truck, X } from "lucide-react";
-import { formatPrice } from "../../utils/helpers";
+// import { formatPrice } from "../../utils/helpers"; // replaced by <Price /> component
+import Price from "../../components/common/Price";
 
 // Hooks
 // import { useCart } from "../../hooks/useCart";
@@ -280,6 +281,8 @@ export default function ProductDetail() {
     };
   };
 
+  // Price displayed with shared Price component
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="mx-auto max-w-7xl px-3 py-4 md:px-4 md:py-6 lg:px-6">
@@ -371,21 +374,8 @@ export default function ProductDetail() {
 
               {/* Price */}
               <div className="mb-6 md:mb-8">
-                <div className="mb-1 flex items-baseline gap-2 md:gap-3">
-                  <h2 className="text-2xl font-bold text-gray-900 md:text-3xl">
-                    {formatPrice(
-                      product.harga_diskon > 0 && product.harga_diskon < product.originalPrice
-                        ? product.harga_diskon
-                        : product.originalPrice
-                    )}
-                  </h2>
-                  {product.harga_diskon > 0 && product.harga_diskon < product.originalPrice && (
-                    <span className="text-base text-gray-500 line-through md:text-lg">
-                      {formatPrice(product.originalPrice)}
-                    </span>
-                  )}
-                </div>
-                <p className="text-xs text-gray-500 md:text-sm">Harga sudah termasuk PPN</p>
+                <Price original={product.originalPrice} discount={product.harga_diskon} size="lg" />
+                <p className="mt-1 text-xs text-gray-500 md:text-sm">Harga sudah termasuk PPN</p>
               </div>
 
               {/* Color Selection */}

@@ -1,6 +1,6 @@
 import React from "react";
 import { Heart } from "lucide-react";
-import { formatPrice } from "../../utils/helpers";
+import Price from "../common/Price";
 
 /**
  * Product Card Component
@@ -86,25 +86,7 @@ const ProductCard = ({ product, onAddToCart, onToggleWishlist, isInWishlist, onP
 
           {/* Price */}
           <div className="mb-3 flex flex-1 flex-col justify-end sm:mb-4">
-            {product.harga_diskon && product.harga_diskon > 0 ? (
-              <>
-                {/* Discounted Price */}
-                <h5 className="mb-1 text-base font-bold text-milky-blue sm:text-lg md:text-xl">
-                  {formatPrice(product.harga_diskon)}
-                </h5>
-                {/* Original Price (crossed out) */}
-                {product.originalPrice && (
-                  <span className="text-xs text-gray-500 line-through sm:text-sm md:text-base">
-                    {formatPrice(product.originalPrice)}
-                  </span>
-                )}
-              </>
-            ) : (
-              /* No discount - show original price only */
-              <h5 className="mb-1 text-base font-bold text-milky-blue sm:text-lg md:text-xl">
-                {formatPrice(product.originalPrice || product.harga)}
-              </h5>
-            )}
+            <Price original={product.originalPrice || product.harga} discount={product.harga_diskon} size="md" />
           </div>
 
           {/* Add to Cart Button */}
