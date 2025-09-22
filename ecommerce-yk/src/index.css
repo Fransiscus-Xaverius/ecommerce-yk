@@ -1,3 +1,97 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Responsive Hero Section */
+@layer components {
+  .hero-responsive {
+    height: 50vh;
+    min-height: 300px;
+  }
+
+  @media (min-width: 640px) {
+    .hero-responsive {
+      height: 60vh;
+      min-height: 400px;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .hero-responsive {
+      height: 65vh;
+      min-height: 450px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hero-responsive {
+      height: 70vh;
+      min-height: 500px;
+    }
+  }
+}
+
+/* Custom animations */
+@layer utilities {
+  .animate-fade-in-down {
+    animation: fadeInDown 1s ease-out;
+  }
+
+  .animate-fade-in-up {
+    animation: fadeInUp 1s ease-out;
+  }
+
+  .animation-delay-1s {
+    animation-delay: 0.5s;
+    animation-fill-mode: both;
+  }
+
+  .animation-delay-2s {
+    animation-delay: 1s;
+    animation-fill-mode: both;
+  }
+
+  .animation-delay-3s {
+    animation-delay: 1.5s;
+    animation-fill-mode: both;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -30px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 30px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}

@@ -13,11 +13,7 @@ export const useCart = () => {
     setCartProducts((prev) => {
       const existingProduct = prev.find((item) => item.id === product.id);
       if (existingProduct) {
-        return prev.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
+        return prev.map((item) => (item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item));
       }
       return [...prev, { ...product, quantity: 1 }];
     });
@@ -42,9 +38,7 @@ export const useCart = () => {
       const quantityDiff = newQuantity - (oldProduct ? oldProduct.quantity : 0);
       setCartItems((prevCount) => prevCount + quantityDiff);
 
-      return prev.map((item) =>
-        item.id === productId ? { ...item, quantity: newQuantity } : item
-      );
+      return prev.map((item) => (item.id === productId ? { ...item, quantity: newQuantity } : item));
     });
   };
 
@@ -54,10 +48,7 @@ export const useCart = () => {
   };
 
   const getTotalPrice = () => {
-    return cartProducts.reduce(
-      (total, product) => total + product.price * product.quantity,
-      0
-    );
+    return cartProducts.reduce((total, product) => total + product.price * product.quantity, 0);
   };
 
   return {

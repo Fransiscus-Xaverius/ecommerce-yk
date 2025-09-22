@@ -1,94 +1,64 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 // Layout Components
 import AnnouncementBar from "./components/layout/AnnouncementBar";
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
 
-// Section Components
-import HeroSection from "./components/sections/HeroSection";
-import FeaturesSection from "./components/sections/FeaturesSection";
-import Newsletter from "./components/sections/Newsletter";
+// Pages
+import HomePage from "./pages/HomePage";
+import ProductDetail from "./pages/ProductDetail";
+import SearchResults from "./pages/SearchResults";
+import AllProduct from "./pages/AllProduct";
 
-// UI Components
-import ProductCarousel from "./components/ui/ProductCarousel";
-import GlobalStyles from "./components/ui/GlobalStyles";
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1,
+      cacheTime: 0,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
-// Data
-import { heroSlides } from "./data/heroSlides";
-import { productSections } from "./data/products";
+const MainAppContent = () => {
+  const [searchQuery, setSearchQuery] = useState("");
 
-// Hooks
-import { useHeroSlider } from "./hooks/useHeroSlider";
-import { useWishlist } from "./hooks/useWishlist";
-import { useCart } from "./hooks/useCart";
+  return (
+    <div className="min-h-screen overflow-x-hidden bg-gray-50">
+      {/* Top Announcement Bar */}
+      <AnnouncementBar />
 
-// Utils
-import { loadBootstrapCSS } from "./utils/helpers";
+      {/* Header */}
+      <Header />
+
+      {/* Main Content */}
+      <Routes>
+        <Route path="/" element={<HomePage searchQuery={searchQuery} setSearchQuery={setSearchQuery} />} />
+        <Route path="/product/:id" element={<ProductDetail />} />
+        <Route path="/search" element={<SearchResults searchQuery={searchQuery} />} />
+        <Route path="/products" element={<SearchResults />} />
+        <Route path="/all-products" element={<AllProduct />} />
+      </Routes>
+
+      {/* Footer */}
+      <Footer />
+    </div>
+  );
+};
 
 /**
  * Main Application Component - Yongki Komaladi E-commerce Website
  */
 const YongkiKomaladiWebsite = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  // Initialize custom hooks
-  const { currentSlide, setCurrentSlide } = useHeroSlider(heroSlides);
-  const { wishlist, toggleWishlist } = useWishlist();
-  const { cartItems, addToCart } = useCart();
-
-  // Load Bootstrap CSS
-  useEffect(() => {
-    const cleanup = loadBootstrapCSS();
-    return cleanup;
-  }, []);
-
   return (
-    <div
-      className="min-h-screen bg-light"
-      style={{ maxWidth: "100vw", overflowX: "hidden" }}
-    >
-      <GlobalStyles />
-
-      {/* Top Announcement Bar */}
-      <AnnouncementBar />
-
-      {/* Header */}
-      <Header
-        isMenuOpen={isMenuOpen}
-        setIsMenuOpen={setIsMenuOpen}
-        cartItems={cartItems}
-        wishlist={wishlist}
-      />
-
-      {/* Hero Section */}
-      <HeroSection
-        slides={heroSlides}
-        currentSlide={currentSlide}
-        setCurrentSlide={setCurrentSlide}
-      />
-
-      {/* Features Section */}
-      <FeaturesSection />
-
-      {/* Product Sections */}
-      {productSections.map((section, sectionIndex) => (
-        <ProductCarousel
-          key={sectionIndex}
-          section={section}
-          sectionIndex={sectionIndex}
-          onAddToCart={addToCart}
-          onToggleWishlist={toggleWishlist}
-          wishlist={wishlist}
-        />
-      ))}
-
-      {/* Newsletter Section */}
-      <Newsletter />
-
-      {/* Footer */}
-      <Footer />
-    </div>
+    <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <MainAppContent />
+      </QueryClientProvider>
+    </BrowserRouter>
   );
 };
 
