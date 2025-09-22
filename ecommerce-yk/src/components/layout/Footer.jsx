@@ -27,14 +27,12 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-gray-800 py-12 text-white border-t border-light-gray">
+    <footer className="border-t border-light-gray bg-gray-800 py-12 text-white">
       <div className="mx-auto max-w-7xl px-4">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           {/* Brand Section */}
           <div className="md:col-span-1">
-            <h3 className="mb-4 text-xl font-bold text-milky-blue">
-              YONGKI KOMALADI
-            </h3>
+            <h3 className="mb-4 text-xl font-bold text-milky-blue">YONGKI KOMALADI</h3>
             <p className="mb-4 text-gray-400">
               Premium footwear for the modern lifestyle. Quality, comfort, and style in every step.
             </p>

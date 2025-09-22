@@ -40,7 +40,7 @@ const ProductCarousel = ({ section, onAddToCart, onToggleWishlist, wishlist, sec
           </div>
           <button
             onClick={() => navigate(`/all-products`)}
-            className="font-bold text-sm sm:text-base md:text-lg lg:text-xl text-milky-blue underline underline-offset-4 hover:text-milky-blue/80"
+            className="text-sm font-bold text-milky-blue underline underline-offset-4 hover:text-milky-blue/80 sm:text-base md:text-lg lg:text-xl"
           >
             See more
           </button>
@@ -52,8 +52,8 @@ const ProductCarousel = ({ section, onAddToCart, onToggleWishlist, wishlist, sec
             ref={carouselRef}
             className={`scrollbar-hide pb-4 ${
               section.products.length < 5
-                ? 'flex justify-start gap-2 sm:gap-3 md:gap-4 lg:gap-6'
-                : 'flex gap-2 overflow-x-auto sm:gap-3 md:gap-4 lg:gap-6'
+                ? "flex justify-start gap-2 sm:gap-3 md:gap-4 lg:gap-6"
+                : "flex gap-2 overflow-x-auto sm:gap-3 md:gap-4 lg:gap-6"
             }`}
             style={{
               scrollBehavior: "smooth",
@@ -90,14 +90,14 @@ const ProductCarousel = ({ section, onAddToCart, onToggleWishlist, wishlist, sec
               <button
                 aria-label="Scroll left"
                 className="rounded-full border border-gray-300 p-2 transition-colors duration-300 hover:border-gray-400 hover:bg-gray-50"
-                onClick={() => scrollCarousel(carouselRef, 'left')}
+                onClick={() => scrollCarousel(carouselRef, "left")}
               >
                 <ChevronLeft size={18} />
               </button>
               <button
                 aria-label="Scroll right"
                 className="rounded-full border border-gray-300 p-2 transition-colors duration-300 hover:border-gray-400 hover:bg-gray-50"
-                onClick={() => scrollCarousel(carouselRef, 'right')}
+                onClick={() => scrollCarousel(carouselRef, "right")}
               >
                 <ChevronRight size={18} />
               </button>
