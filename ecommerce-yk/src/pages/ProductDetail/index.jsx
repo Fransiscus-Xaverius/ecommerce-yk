@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ChevronDown, ArrowLeft, Package, Truck, X } from "lucide-react";
-// import { formatPrice } from "../../utils/helpers"; // replaced by <Price /> component
+import { ChevronDown, ArrowLeft, X } from "lucide-react";
+
+// Components
+import SpecificationRating from "../../components/ui/SpecificationRating";
+import PurposeChips from "../../components/ui/PurposeChips";
 import Price from "../../components/common/Price";
-import useProductDetail from "../../hooks/useProductDetail";
 
 // Hooks
 // import { useCart } from "../../hooks/useCart";
-// import { fetchProductByArtikel } from "../../services/productService"; // Import the service
-import SpecificationRating from "../../components/ui/SpecificationRating";
-import PurposeChips from "../../components/ui/PurposeChips";
+import useProductDetail from "../../hooks/useProductDetail";
 
 /**
  * Product Detail Page Component

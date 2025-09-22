@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-// import { useQuery } from "@tanstack/react-query"; // replaced by useSearchProducts hook
-import ProductCard from "../components/ui/ProductCard";
-import useSearchProducts from "../hooks/useSearchProducts";
-import { useWishlist } from "../hooks/useWishlist";
-import { useCart } from "../hooks/useCart";
-import LoadingSpinner from "../components/common/LoadingSpinner";
+
+// Components
 import EmptyState from "../components/common/EmptyState";
+import LoadingSpinner from "../components/common/LoadingSpinner";
 import Pagination from "../components/common/Pagination";
+import ProductCard from "../components/ui/ProductCard";
+
+// Hooks
+import useSearchProducts from "../hooks/useSearchProducts";
+import { useCart } from "../hooks/useCart";
+import { useWishlist } from "../hooks/useWishlist";
 
 const SearchResults = () => {
   const location = useLocation();

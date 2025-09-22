@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { ShoppingCart, Menu, X, Search, User, Heart } from "lucide-react";
+
+// Hooks
 import { useWishlist } from "../../hooks/useWishlist";
 import { useCart } from "../../hooks/useCart";
-import { useNavigate, useLocation } from "react-router-dom";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -74,7 +76,7 @@ const Header = () => {
   ];
 
   return (
-    <header className="sticky top-0 z-50 bg-white shadow-lg border-b border-light-gray">
+    <header className="sticky top-0 z-50 border-b border-light-gray bg-white shadow-lg">
       <div className="mx-auto max-w-7xl px-4">
         {/* Top Bar: Mobile Menu, Search/Logo, Actions */}
         <div className="flex items-center justify-between">
@@ -105,7 +107,7 @@ const Header = () => {
                     <input
                       type="text"
                       placeholder="Search products..."
-                      className="focus:border-milky-blue focus:ring-milky-blue w-full rounded-full border border-gray-300 bg-gray-100 py-2 pl-10 pr-4 focus:outline-none focus:ring-1"
+                      className="w-full rounded-full border border-gray-300 bg-gray-100 py-2 pl-10 pr-4 focus:border-milky-blue focus:outline-none focus:ring-1 focus:ring-milky-blue"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       autoFocus
@@ -134,7 +136,7 @@ const Header = () => {
                 <input
                   type="text"
                   placeholder="Search products..."
-                  className="focus:border-milky-blue focus:ring-milky-blue w-full rounded-full border border-gray-300 bg-gray-100 py-2 pl-10 pr-4 focus:outline-none focus:ring-1"
+                  className="w-full rounded-full border border-gray-300 bg-gray-100 py-2 pl-10 pr-4 focus:border-milky-blue focus:outline-none focus:ring-1 focus:ring-milky-blue"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
@@ -183,7 +185,7 @@ const Header = () => {
             {navigationItems.map((item, index) => (
               <li key={index}>
                 <a
-                  className="hover:text-milky-blue font-medium text-gray-700 transition-colors duration-200"
+                  className="font-medium text-gray-700 transition-colors duration-200 hover:text-milky-blue"
                   href={item.href}
                 >
                   {item.label}
@@ -206,7 +208,7 @@ const Header = () => {
               <li key={index}>
                 <a
                   href={item.href}
-                  className="hover:text-milky-blue block py-3 text-gray-700 transition-colors duration-200"
+                  className="block py-3 text-gray-700 transition-colors duration-200 hover:text-milky-blue"
                 >
                   {item.label}
                 </a>

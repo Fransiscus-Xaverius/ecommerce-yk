@@ -1,5 +1,5 @@
 import useApiRequest from "./useApiRequest.jsx";
-import { transformProductData } from "../services/transformers/productTransformer";
+import { transformProductData } from "../services/productTransformer.js";
 
 export default function useProductDetail(artikel, enable = true) {
   const { response, isLoading, error, refetch } = useApiRequest({

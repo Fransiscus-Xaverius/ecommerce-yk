@@ -1,13 +1,18 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-// import { useQuery } from "@tanstack/react-query"; // replaced by useAllProducts hook
-import ProductCard from "../components/ui/ProductCard";
-import useAllProducts from "../hooks/useAllProducts";
-import { useWishlist } from "../hooks/useWishlist";
-import { useCart } from "../hooks/useCart";
-import LoadingSpinner from "../components/common/LoadingSpinner";
+
+// Components
 import EmptyState from "../components/common/EmptyState";
+import LoadingSpinner from "../components/common/LoadingSpinner";
 import Pagination from "../components/common/Pagination";
+import ProductCard from "../components/ui/ProductCard";
+
+// Hooks
+import useAllProducts from "../hooks/useAllProducts";
+import { useCart } from "../hooks/useCart";
+import { useWishlist } from "../hooks/useWishlist";
+
+// Constants
 import { PAGE_SIZE } from "../constants/pagination";
 
 // All products page with pagination (shares styling with SearchResults)
