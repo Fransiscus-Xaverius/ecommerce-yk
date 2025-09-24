@@ -11,7 +11,7 @@ import ProductCarousel from "../../components/ui/ProductCarousel";
 // Hooks
 import { useWishlist } from "../../hooks/useWishlist";
 import { useCart } from "../../hooks/useCart";
-import { fetchProductList } from "../../services/productService";
+import { fetchProductList } from "../../services/productService.js";
 
 export default function HomePage() {
   const { wishlist, toggleWishlist } = useWishlist();
