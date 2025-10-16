@@ -43,13 +43,35 @@ export default function HomePage() {
 
         setHotProducts(sortedHotProducts);
 
-        // Fetch New Arrivals (10 newest products by tanggal_terima)
-        const newArrivalsData = await fetchProductList({
-          limit: 10,
-          sortColumn: "tanggal_terima",
+        // Fetch New Arrivals robustly: get larger window and sort on client using best-available date
+        const rawNewArrivals = await fetchProductList({
+          limit: 100,
+          sortColumn: "tanggal_update",
           sortDirection: "desc",
         });
-        setNewArrivals(newArrivalsData.map((product) => ({ ...product, isNew: true })));
+
+        const parseDate = (d) => {
+          if (!d) return 0;
+          const t = Date.parse(d);
+          return Number.isNaN(t) ? 0 : t;
+        };
+
+        const pickNewestTimestamp = (p) => {
+          // Prefer tanggal_update, then tanggal_terima, then tanggal_produk
+          return Math.max(
+            parseDate(p.tanggal_update),
+            parseDate(p.tanggal_terima),
+            parseDate(p.tanggal_produk)
+          );
+        };
+
+        const sortedNewest = rawNewArrivals
+          .slice()
+          .sort((a, b) => pickNewestTimestamp(b) - pickNewestTimestamp(a))
+          .slice(0, 10)
+          .map((product) => ({ ...product, isNew: true }));
+
+        setNewArrivals(sortedNewest);
 
         // Fetch all products to categorize into Offline and Online sections
         // const allProductsData = await fetchProductList({});
