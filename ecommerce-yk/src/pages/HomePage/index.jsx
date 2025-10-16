@@ -45,7 +45,7 @@ export default function HomePage() {
 
         // Fetch New Arrivals robustly: get larger window and sort on client using best-available date
         const rawNewArrivals = await fetchProductList({
-          limit: 100,
+          limit: 10,
           sortColumn: "tanggal_update",
           sortDirection: "desc",
         });
@@ -58,11 +58,7 @@ export default function HomePage() {
 
         const pickNewestTimestamp = (p) => {
           // Prefer tanggal_update, then tanggal_terima, then tanggal_produk
-          return Math.max(
-            parseDate(p.tanggal_update),
-            parseDate(p.tanggal_terima),
-            parseDate(p.tanggal_produk)
-          );
+          return Math.max(parseDate(p.tanggal_update), parseDate(p.tanggal_terima), parseDate(p.tanggal_produk));
         };
 
         const sortedNewest = rawNewArrivals
