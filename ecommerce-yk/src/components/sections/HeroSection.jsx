@@ -4,7 +4,7 @@ import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import useApiRequest from "../../hooks/useApiRequest";
 import { useHeroSlider } from "../../hooks/useHeroSlider";
 
-import { loadScopedCSS } from "../../utils/helpers";
+import { loadScopedCSS, sanitizeImageUrl } from "../../utils/helpers";
 
 const HeroSection = () => {
   const [heroSlides, setHeroSlides] = useState([]);
@@ -34,14 +34,14 @@ const HeroSection = () => {
   useEffect(() => {
     if (!bannerResponse) return;
     const responseData = bannerResponse.data;
-    // Map backend banner data to existing hero slide structure
+    // Map backend banner data to existing hero slide structure and sanitize image URLs
     const mappedSlides = responseData.banners.map((banner) => ({
       id: banner.id,
       title: banner.title,
       subtitle: banner.subtitle,
       description: banner.description,
       cta: banner.cta_text,
-      image: `${banner.image_url}`,
+      image: sanitizeImageUrl(banner.image_url),
     }));
     console.log(mappedSlides);
     setHeroSlides(mappedSlides);
@@ -138,14 +138,16 @@ const HeroSection = () => {
         <button
           className="carousel-control-prev"
           type="button"
-          onClick={() => setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length)}
+          onClick={() =>
+            heroSlides.length > 0 && setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length)
+          }
         >
           <span className="carousel-control-prev-icon"></span>
         </button>
         <button
           className="carousel-control-next"
           type="button"
-          onClick={() => setCurrentSlide((prev) => (prev + 1) % heroSlides.length)}
+          onClick={() => heroSlides.length > 0 && setCurrentSlide((prev) => (prev + 1) % heroSlides.length)}
         >
           <span className="carousel-control-next-icon"></span>
         </button>

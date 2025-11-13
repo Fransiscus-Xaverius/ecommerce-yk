@@ -32,7 +32,18 @@ export default function ProductDetail() {
   const [showDescription, setShowDescription] = useState(false);
   const [showSizeGuide, setShowSizeGuide] = useState(false);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [hasSizeGuideImage, setHasSizeGuideImage] = useState(true);
+  const sizeGuideImageUrl = "/uploads/panduan/1.png";
   // const [quantity, setQuantity] = useState(1);
+
+  // Preload size guide image to determine availability
+  useEffect(() => {
+    if (!showSizeGuide) return;
+    const img = new Image();
+    img.onload = () => setHasSizeGuideImage(true);
+    img.onerror = () => setHasSizeGuideImage(false);
+    img.src = sizeGuideImageUrl;
+  }, [showSizeGuide]);
 
   if (loading) {
     return (
@@ -606,66 +617,67 @@ export default function ProductDetail() {
                   <h2 className="mb-8 text-center text-2xl font-bold text-gray-900 md:text-3xl">
                     Panduan Ukuran Sepatu
                   </h2>
+                  {hasSizeGuideImage ? (
+                    <div className="mb-8">
+                      <img src={sizeGuideImageUrl} alt="Panduan Ukuran" className="mx-auto h-auto max-w-full" />
+                    </div>
+                  ) : (
+                    <>
+                      {/* Size Chart Table */}
+                      <div className="mb-8 overflow-x-auto">
+                        <table className="w-full border-collapse border border-gray-300">
+                          <thead>
+                            <tr className="bg-gray-50">
+                              <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-900">
+                                EU Size
+                              </th>
+                              <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-900">
+                                US Size
+                              </th>
+                              <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-900">
+                                UK Size
+                              </th>
+                              <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-900">
+                                Panjang Kaki (cm)
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {[
+                              { eu: "36", us: "5", uk: "3.5", cm: "22.5" },
+                              { eu: "37", us: "5.5", uk: "4", cm: "23" },
+                              { eu: "38", us: "6", uk: "4.5", cm: "23.5" },
+                              { eu: "39", us: "7", uk: "5.5", cm: "24.5" },
+                              { eu: "40", us: "7.5", uk: "6", cm: "25" },
+                              { eu: "41", us: "8", uk: "7", cm: "25.5" },
+                              { eu: "42", us: "8.5", uk: "7.5", cm: "26" },
+                              { eu: "43", us: "9.5", uk: "8.5", cm: "27" },
+                              { eu: "44", us: "10", uk: "9", cm: "27.5" },
+                              { eu: "45", us: "11", uk: "10", cm: "28.5" },
+                            ].map((size, index) => (
+                              <tr key={index} className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
+                                <td className="border border-gray-300 px-4 py-3 font-medium">{size.eu}</td>
+                                <td className="border border-gray-300 px-4 py-3">{size.us}</td>
+                                <td className="border border-gray-300 px-4 py-3">{size.uk}</td>
+                                <td className="border border-gray-300 px-4 py-3">{size.cm}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
 
-                  {/* Size Chart Table */}
-                  <div className="mb-8 overflow-x-auto">
-                    <table className="w-full border-collapse border border-gray-300">
-                      <thead>
-                        <tr className="bg-gray-50">
-                          <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-900">
-                            EU Size
-                          </th>
-                          <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-900">
-                            US Size
-                          </th>
-                          <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-900">
-                            UK Size
-                          </th>
-                          <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-900">
-                            Panjang Kaki (cm)
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {[
-                          { eu: "36", us: "5", uk: "3.5", cm: "22.5" },
-                          { eu: "37", us: "5.5", uk: "4", cm: "23" },
-                          { eu: "38", us: "6", uk: "4.5", cm: "23.5" },
-                          { eu: "39", us: "7", uk: "5.5", cm: "24.5" },
-                          { eu: "40", us: "7.5", uk: "6", cm: "25" },
-                          { eu: "41", us: "8", uk: "7", cm: "25.5" },
-                          { eu: "42", us: "8.5", uk: "7.5", cm: "26" },
-                          { eu: "43", us: "9.5", uk: "8.5", cm: "27" },
-                          { eu: "44", us: "10", uk: "9", cm: "27.5" },
-                          { eu: "45", us: "11", uk: "10", cm: "28.5" },
-                        ].map((size, index) => (
-                          <tr key={index} className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
-                            <td className="border border-gray-300 px-4 py-3 font-medium">{size.eu}</td>
-                            <td className="border border-gray-300 px-4 py-3">{size.us}</td>
-                            <td className="border border-gray-300 px-4 py-3">{size.uk}</td>
-                            <td className="border border-gray-300 px-4 py-3">{size.cm}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-
-                  {/* How to Measure Instructions */}
-                  <div className="mb-8">
-                    <h3 className="mb-4 text-xl font-semibold text-gray-900">Cara Mengukur Kaki Anda</h3>
-                    <img src="/uploads/panduan/1.png" alt="Panduan Ukuran" />
-                  </div>
-
-                  {/* Tips */}
-                  <div className="rounded-lg bg-milky-blue/10 p-6">
-                    <h3 className="mb-3 text-lg font-semibold text-milky-blue">Tips Memilih Ukuran</h3>
-                    <ul className="space-y-2 text-milky-blue">
-                      <li>• Ukur kaki di sore hari karena kaki cenderung sedikit membesar</li>
-                      <li>• Jika ragu antara dua ukuran, pilih yang lebih besar</li>
-                      <li>• Pertimbangkan ketebalan kaus kaki yang akan digunakan</li>
-                      <li>• Setiap merek sepatu mungkin memiliki sedikit perbedaan ukuran</li>
-                    </ul>
-                  </div>
+                      {/* Tips */}
+                      <div className="rounded-lg bg-milky-blue/10 p-6">
+                        <h3 className="mb-3 text-lg font-semibold text-milky-blue">Tips Memilih Ukuran</h3>
+                        <ul className="space-y-2 text-milky-blue">
+                          <li>• Ukur kaki di sore hari karena kaki cenderung sedikit membesar</li>
+                          <li>• Jika ragu antara dua ukuran, pilih yang lebih besar</li>
+                          <li>• Pertimbangkan ketebalan kaus kaki yang akan digunakan</li>
+                          <li>• Setiap merek sepatu mungkin memiliki sedikit perbedaan ukuran</li>
+                        </ul>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
             </div>

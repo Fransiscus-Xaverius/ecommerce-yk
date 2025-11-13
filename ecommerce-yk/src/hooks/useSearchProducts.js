@@ -1,5 +1,5 @@
 import useApiRequest from "./useApiRequest.jsx";
-import { transformProductData } from "../services/transformers/productTransformer";
+import { transformProductData } from "../services/productTransformer";
 
 export default function useSearchProducts(query, page = 1, limit = 12, enable = true) {
   const offset = (page - 1) * limit;

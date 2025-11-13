@@ -84,3 +84,31 @@ export const loadScopedCSS = (cssUrl, scope) => {
     }
   };
 };
+
+/**
+ * Normalize/sanitize image URLs returned from backend.
+ * - Replaces backslashes with forward slashes
+ * - Removes ASCII control characters (which may appear if the backend sent escapes like "\b")
+ * - Ensures relative paths start with a leading slash
+ * - Leaves absolute URLs (http/https) untouched
+ *
+ * @param {string} url
+ * @returns {string}
+ */
+export const sanitizeImageUrl = (url) => {
+  if (!url) return url;
+  let s = String(url);
+
+  // Replace backslashes (\) with forward slashes (/)
+  s = s.replace(/\\+/g, "/");
+
+  // Remove ASCII control characters (0x00-0x1F and 0x7F), e.g. \b, \n, etc.
+  s = s.replace(/[\x00-\x1F\x7F]+/g, "");
+
+  // If it's not an absolute URL and doesn't start with a slash, add it
+  if (!/^https?:\/\//i.test(s) && !s.startsWith("/")) {
+    s = "/" + s;
+  }
+
+  return s;
+};
