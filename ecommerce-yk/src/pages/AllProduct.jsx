@@ -10,7 +10,6 @@ import ProductCard from "../components/ui/ProductCard";
 // Hooks
 import useAllProducts from "../hooks/useAllProducts";
 import { useCart } from "../hooks/useCart";
-import { useWishlist } from "../hooks/useWishlist";
 
 // Constants
 import { PAGE_SIZE } from "../constants/pagination";
@@ -78,7 +77,6 @@ const AllProduct = () => {
   const [page, setPage] = useState(1);
   const limit = PAGE_SIZE;
 
-  const { wishlist, toggleWishlist } = useWishlist();
   const { addToCart } = useCart();
 
   useEffect(() => {
@@ -146,8 +144,6 @@ const AllProduct = () => {
                 <ProductCard
                   product={product}
                   onAddToCart={addToCart}
-                  onToggleWishlist={toggleWishlist}
-                  isInWishlist={wishlist.includes(product.id)}
                   onProductClick={(artikel) => navigate(`/product/${artikel}`)}
                   isSingleCard
                 />

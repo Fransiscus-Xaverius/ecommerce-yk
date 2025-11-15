@@ -9,11 +9,9 @@ import { useCarouselDrag } from "../../hooks/useCarouselDrag";
  * Product Carousel Component with drag/swipe functionality
  * @param {Object} section - Section data with title, subtitle, and products
  * @param {Function} onAddToCart - Add to cart handler
- * @param {Function} onToggleWishlist - Wishlist toggle handler
- * @param {Array} wishlist - Array of wishlist product IDs
  * @param {number} sectionIndex - Section index for styling
  */
-const ProductCarousel = ({ section, onAddToCart, onToggleWishlist, wishlist, sectionIndex }) => {
+const ProductCarousel = ({ section, onAddToCart, sectionIndex }) => {
   const navigate = useNavigate();
 
   const handleProductClick = (artikel) => {
@@ -77,8 +75,6 @@ const ProductCarousel = ({ section, onAddToCart, onToggleWishlist, wishlist, sec
                 product={product}
                 onProductClick={handleProductClick}
                 onAddToCart={onAddToCart}
-                onToggleWishlist={onToggleWishlist}
-                isInWishlist={wishlist.includes(product.id)}
                 isSingleCard={true}
               />
             ))}

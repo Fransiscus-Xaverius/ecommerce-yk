@@ -9,12 +9,10 @@ import Newsletter from "../../components/sections/Newsletter";
 import ProductCarousel from "../../components/ui/ProductCarousel";
 
 // Hooks
-import { useWishlist } from "../../hooks/useWishlist";
 import { useCart } from "../../hooks/useCart";
 import { fetchProductList } from "../../services/productService.js";
 
 export default function HomePage() {
-  const { wishlist, toggleWishlist } = useWishlist();
   const { addToCart } = useCart();
 
   const [hotProducts, setHotProducts] = useState([]);
@@ -161,8 +159,6 @@ export default function HomePage() {
               section={section}
               sectionIndex={sectionIndex}
               onAddToCart={addToCart}
-              onToggleWishlist={toggleWishlist}
-              wishlist={wishlist}
             />
           ))
       )}

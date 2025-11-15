@@ -1,15 +1,12 @@
 import React from "react";
-import { Heart } from "lucide-react";
 import Price from "../common/Price";
 
 /**
  * Product Card Component
  * @param {Object} product - Product data
  * @param {Function} onAddToCart - Add to cart handler
- * @param {Function} onToggleWishlist - Wishlist toggle handler
- * @param {boolean} isInWishlist - Whether product is in wishlist
  */
-const ProductCard = ({ product, onAddToCart, onToggleWishlist, isInWishlist, onProductClick, isSingleCard }) => {
+const ProductCard = ({ product, onAddToCart, onProductClick, isSingleCard }) => {
   return (
     <div
       className={`${
@@ -43,20 +40,6 @@ const ProductCard = ({ product, onAddToCart, onToggleWishlist, isInWishlist, onP
             </span>
           )}
         </div>
-
-        {/* Wishlist Button */}
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onToggleWishlist(product.id);
-          }}
-          className="absolute right-2 top-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-md transition-shadow hover:shadow-lg sm:right-3 sm:top-3 sm:h-9 sm:w-9 md:h-10 md:w-10"
-        >
-          <Heart
-            size={16}
-            className={`sm:h-5 sm:w-5 md:h-6 md:w-6 ${isInWishlist ? "fill-red-500 text-red-500" : "text-gray-600"}`}
-          />
-        </button>
 
         {/* Product Image */}
         <div className="relative flex h-40 items-center justify-center overflow-hidden bg-gray-50 sm:h-44 md:h-52 lg:h-60">
