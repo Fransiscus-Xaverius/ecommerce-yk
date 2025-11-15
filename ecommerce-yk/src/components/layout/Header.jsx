@@ -3,15 +3,15 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { ShoppingCart, Menu, X, Search, User, Heart } from "lucide-react";
 
 // Hooks
-import { useWishlist } from "../../hooks/useWishlist";
-import { useCart } from "../../hooks/useCart";
+// import { useWishlist } from "../../hooks/useWishlist";
+// import { useCart } from "../../hooks/useCart";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
-  const { wishlist } = useWishlist();
-  const { cartItems } = useCart();
-  const wishlistCount = wishlist ? wishlist.length : 0;
+  // const { wishlist } = useWishlist();
+  // const { cartItems } = useCart();
+  // const wishlistCount = wishlist ? wishlist.length : 0;
   const navigate = useNavigate();
   const location = useLocation();
   const previousPathname = useRef(location.pathname);
@@ -155,7 +155,7 @@ const Header = () => {
             >
               {isMobileSearchOpen ? <X size={20} /> : <Search size={20} />}
             </button>
-            <button className="hidden rounded-lg p-2 transition-colors duration-200 hover:bg-gray-100 md:block">
+            {/* <button className="hidden rounded-lg p-2 transition-colors duration-200 hover:bg-gray-100 md:block">
               <User size={20} />
             </button>
             <button className="relative hidden rounded-lg p-2 transition-colors duration-200 hover:bg-gray-100 md:block">
@@ -173,7 +173,7 @@ const Header = () => {
                   {cartItems}
                 </span>
               )}
-            </button>
+            </button> */}
           </div>
         </div>
       </div>
