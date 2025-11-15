@@ -154,12 +154,7 @@ export default function HomePage() {
         productSections
           .filter((section) => section.title !== "Hot") // Hide HOT section
           .map((section, sectionIndex) => (
-            <ProductCarousel
-              key={sectionIndex}
-              section={section}
-              sectionIndex={sectionIndex}
-              onAddToCart={addToCart}
-            />
+            <ProductCarousel key={sectionIndex} section={section} sectionIndex={sectionIndex} onAddToCart={addToCart} />
           ))
       )}
 
