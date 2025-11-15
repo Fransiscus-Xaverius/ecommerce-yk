@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 // Section Components
 import HeroSection from "../../components/sections/HeroSection";
-import FeaturesSection from "../../components/sections/FeaturesSection";
+// import FeaturesSection from "../../components/sections/FeaturesSection";
 import Newsletter from "../../components/sections/Newsletter";
 
 // UI Components
@@ -143,7 +143,7 @@ export default function HomePage() {
       <HeroSection />
 
       {/* Features Section */}
-      <FeaturesSection />
+      {/* <FeaturesSection /> */}
 
       {/* Product Sections */}
       {loading ? (
