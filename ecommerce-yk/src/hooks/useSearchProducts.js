@@ -27,9 +27,11 @@ export default function useSearchProducts(query, page = 1, limit = 12, enable = 
   const data = response?.data || {};
   const items = data.items || [];
   const totalItems = data.total_items || 0;
+  const totalPages = data.total_pages || 0;
   return {
     products: items.map(transformProductData),
     totalItems,
+    totalPages,
     isLoading,
     error,
     refetch,

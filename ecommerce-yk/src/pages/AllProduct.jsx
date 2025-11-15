@@ -18,7 +18,7 @@ import { PAGE_SIZE } from "../constants/pagination";
 const hasMarketplaceData = (marketplace) => {
   if (!marketplace || typeof marketplace !== "object") return false;
   return Object.values(marketplace).some((value) => {
-    if (typeof value === "string") return value.trim() !== "";
+    if (typeof value === "string") return value.trim() !== "" && !["-", "#", "NA", "N/A"].includes(value.trim().toUpperCase());
     if (Array.isArray(value)) return value.length > 0;
     if (value && typeof value === "object") return Object.values(value).some(Boolean);
     return Boolean(value);
@@ -29,10 +29,9 @@ const hasOfflineData = (offline) => {
   if (!Array.isArray(offline)) return false;
   return offline.some((store) => {
     if (!store || typeof store !== "object") return false;
-    return Object.values(store).some((value) => {
-      if (typeof value === "string") return value.trim() !== "";
-      return Boolean(value);
-    });
+    const url = typeof store.url === "string" ? store.url.trim() : "";
+    const isActive = store.is_active !== false;
+    return url !== "" && !["-", "#", "NA", "N/A"].includes(url.toUpperCase()) && isActive;
   });
 };
 
@@ -85,12 +84,20 @@ const AllProduct = () => {
     setPage(1);
   }, [sectionKey]);
 
-  const { products, totalItems, isLoading, error } = useAllProducts(page, limit, true, activeSection.queryOptions);
+  const {
+    products,
+    totalItems,
+    totalPages: totalPagesFromApi,
+    isLoading,
+    error,
+  } = useAllProducts(page, limit, true, activeSection.queryOptions);
+
   const filteredProducts = useMemo(() => {
     if (!activeSection.filterFn) return products;
     return products.filter(activeSection.filterFn);
   }, [products, activeSection]);
-  const totalPages = Math.ceil(totalItems / limit) || 1;
+
+  const totalPages = totalPagesFromApi || Math.ceil(totalItems / limit) || 1;
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8">
