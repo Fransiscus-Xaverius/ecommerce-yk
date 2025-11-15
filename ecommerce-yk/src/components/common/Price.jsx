@@ -19,14 +19,15 @@ export const Price = ({ original = 0, discount = 0, className = "", size = "md" 
 
   return (
     <div className={`flex flex-col ${className}`.trim()}>
-      {hasDiscount ? (
-        <>
-          <span className={`font-bold text-milky-blue ${sizeMap[size]}`}>{formatPrice(discount)}</span>
-          <span className={`text-xs text-gray-500 line-through sm:text-sm md:text-base`}>{formatPrice(original)}</span>
-        </>
-      ) : (
-        <span className={`font-bold text-milky-blue ${sizeMap[size]}`}>{formatPrice(original)}</span>
-      )}
+      <span className={`font-bold text-milky-blue ${sizeMap[size]}`}>
+        {formatPrice(hasDiscount ? discount : original)}
+      </span>
+      <span
+        className={`text-xs text-gray-500 sm:text-sm md:text-base ${hasDiscount ? "line-through" : "invisible"}`}
+        aria-hidden={!hasDiscount}
+      >
+        {formatPrice(original)}
+      </span>
     </div>
   );
 };

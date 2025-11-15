@@ -29,12 +29,6 @@ const AllProduct = () => {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8">
-      <div className="mb-6 flex flex-col items-start justify-between gap-2 sm:mb-8 sm:flex-row sm:items-center">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">All Products</h1>
-        </div>
-      </div>
-
       {isLoading ? (
         <LoadingSpinner label="Memuat produk..." />
       ) : error ? (
