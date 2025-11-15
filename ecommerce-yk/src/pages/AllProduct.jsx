@@ -18,7 +18,8 @@ import { PAGE_SIZE } from "../constants/pagination";
 const hasMarketplaceData = (marketplace) => {
   if (!marketplace || typeof marketplace !== "object") return false;
   return Object.values(marketplace).some((value) => {
-    if (typeof value === "string") return value.trim() !== "" && !["-", "#", "NA", "N/A"].includes(value.trim().toUpperCase());
+    if (typeof value === "string")
+      return value.trim() !== "" && !["-", "#", "NA", "N/A"].includes(value.trim().toUpperCase());
     if (Array.isArray(value)) return value.length > 0;
     if (value && typeof value === "object") return Object.values(value).some(Boolean);
     return Boolean(value);
