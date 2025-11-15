@@ -15,6 +15,27 @@ import { useWishlist } from "../hooks/useWishlist";
 // Constants
 import { PAGE_SIZE } from "../constants/pagination";
 
+const hasMarketplaceData = (marketplace) => {
+  if (!marketplace || typeof marketplace !== "object") return false;
+  return Object.values(marketplace).some((value) => {
+    if (typeof value === "string") return value.trim() !== "";
+    if (Array.isArray(value)) return value.length > 0;
+    if (value && typeof value === "object") return Object.values(value).some(Boolean);
+    return Boolean(value);
+  });
+};
+
+const hasOfflineData = (offline) => {
+  if (!Array.isArray(offline)) return false;
+  return offline.some((store) => {
+    if (!store || typeof store !== "object") return false;
+    return Object.values(store).some((value) => {
+      if (typeof value === "string") return value.trim() !== "";
+      return Boolean(value);
+    });
+  });
+};
+
 const SECTION_CONFIG = {
   all: {
     title: "Semua Produk",
@@ -25,11 +46,13 @@ const SECTION_CONFIG = {
     title: "Produk Online",
     description: "Produk yang tersedia di marketplace online",
     queryOptions: { online: true },
+    filterFn: (product) => hasMarketplaceData(product.marketplace),
   },
   offline: {
     title: "Produk Offline",
     description: "Produk yang bisa didapatkan di toko offline",
     queryOptions: { offline: true },
+    filterFn: (product) => hasOfflineData(product.offline),
   },
   new: {
     title: "Produk Terbaru",
@@ -63,6 +86,10 @@ const AllProduct = () => {
   }, [sectionKey]);
 
   const { products, totalItems, isLoading, error } = useAllProducts(page, limit, true, activeSection.queryOptions);
+  const filteredProducts = useMemo(() => {
+    if (!activeSection.filterFn) return products;
+    return products.filter(activeSection.filterFn);
+  }, [products, activeSection]);
   const totalPages = Math.ceil(totalItems / limit) || 1;
 
   return (
@@ -71,7 +98,7 @@ const AllProduct = () => {
         <LoadingSpinner label="Memuat produk..." />
       ) : error ? (
         <EmptyState title="Error memuat produk" description={error.message} />
-      ) : products.length === 0 ? (
+      ) : filteredProducts.length === 0 ? (
         <EmptyState title="Produk tidak ditemukan" description="Belum ada produk untuk ditampilkan." />
       ) : (
         <>
@@ -106,7 +133,7 @@ const AllProduct = () => {
           </div>
 
           <div className="grid grid-cols-2 place-items-center gap-2 xs:gap-3 sm:gap-4 md:grid-cols-3 md:gap-4 lg:grid-cols-4 lg:gap-5">
-            {products.map((product) => (
+            {filteredProducts.map((product) => (
               <div key={product.id} className="flex w-full justify-center">
                 <ProductCard
                   product={product}
