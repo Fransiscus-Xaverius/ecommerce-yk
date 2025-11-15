@@ -133,10 +133,10 @@ export default function HomePage() {
   }, []);
 
   const productSections = [
-    { title: "Hot", subtitle: "Produk dengan rating tertinggi", products: hotProducts },
-    { title: "New Arrivals", subtitle: "Produk terbaru yang baru masuk", products: newArrivals },
-    { title: "Offline", subtitle: "Tersedia di toko offline", products: offlineProducts },
-    { title: "Online", subtitle: "Tersedia di marketplace online", products: onlineProducts },
+    { title: "Hot", slug: "hot", subtitle: "Produk dengan rating tertinggi", products: hotProducts },
+    { title: "New Arrivals", slug: "new", subtitle: "Produk terbaru yang baru masuk", products: newArrivals },
+    { title: "Offline", slug: "offline", subtitle: "Tersedia di toko offline", products: offlineProducts },
+    { title: "Online", slug: "online", subtitle: "Tersedia di marketplace online", products: onlineProducts },
   ];
 
   return (

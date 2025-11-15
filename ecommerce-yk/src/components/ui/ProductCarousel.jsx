@@ -19,6 +19,8 @@ const ProductCarousel = ({ section, onAddToCart, onToggleWishlist, wishlist, sec
   const handleProductClick = (artikel) => {
     navigate(`/product/${artikel}`);
   };
+  const sectionSlug = section?.slug || section?.title?.toLowerCase().replace(/\s+/g, "-");
+  const seeMoreTarget = sectionSlug ? `/all-products?section=${sectionSlug}` : "/all-products";
   const carouselRef = useRef(null);
   const {
     handleMouseDown,
@@ -39,7 +41,7 @@ const ProductCarousel = ({ section, onAddToCart, onToggleWishlist, wishlist, sec
             <p className="text-sm text-gray-600 sm:text-base">{section.subtitle}</p>
           </div>
           <button
-            onClick={() => navigate(`/all-products`)}
+            onClick={() => navigate(seeMoreTarget)}
             className="text-sm font-bold text-milky-blue underline underline-offset-4 hover:text-milky-blue/80 sm:text-base md:text-lg lg:text-xl"
           >
             See more
