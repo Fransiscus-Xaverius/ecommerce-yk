@@ -70,8 +70,8 @@ const Header = () => {
     { label: "New Arrivals", href: "#" },
     { label: "Men", href: "#" },
     { label: "Women", href: "#" },
-    { label: "Sale", href: "#" },
-    { label: "Collections", href: "#" },
+    // { label: "Sale", href: "#" },
+    // { label: "Collections", href: "#" },
     { label: "About", href: "#" },
   ];
 
