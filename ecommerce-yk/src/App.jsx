@@ -12,6 +12,7 @@ import HomePage from "./pages/HomePage";
 import ProductDetail from "./pages/ProductDetail";
 import SearchResults from "./pages/SearchResults";
 import AllProduct from "./pages/AllProduct";
+import About from "./pages/About";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -41,6 +42,7 @@ const MainAppContent = () => {
         <Route path="/search" element={<SearchResults searchQuery={searchQuery} />} />
         <Route path="/products" element={<SearchResults />} />
         <Route path="/all-products" element={<AllProduct />} />
+        <Route path="/about" element={<About />} />
       </Routes>
 
       {/* Footer */}

@@ -67,13 +67,30 @@ const Header = () => {
   };
 
   const navigationItems = [
-    { label: "New Arrivals", href: "#" },
-    { label: "Men", href: "#" },
-    { label: "Women", href: "#" },
-    // { label: "Sale", href: "#" },
-    // { label: "Collections", href: "#" },
-    { label: "About", href: "#" },
+    { label: "Home", path: "/" },
+    // { label: "Sale", path: "/" },
+    // { label: "Collections", path: "/" },
+    { label: "Men", path: "/all-products?section=men" },
+    { label: "Women", path: "/all-products?section=women" },
+    { label: "All Products", path: "/all-products" },
+    { label: "New Arrivals", path: "/all-products?section=new" },
+    { label: "Online", path: "/all-products?section=online" },
+    { label: "Offline", path: "/all-products?section=offline" },
+    { label: "About", path: "/about" },
   ];
+
+  const isNavActive = (targetPath) => {
+    const [targetRoute, targetQuery] = targetPath.split("?");
+    if (targetQuery) {
+      return location.pathname === targetRoute && location.search === `?${targetQuery}`;
+    }
+    return location.pathname === targetRoute && location.search === "";
+  };
+
+  const handleNavigation = (path) => {
+    setIsMenuOpen(false);
+    navigate(path);
+  };
 
   return (
     <header className="sticky top-0 z-50 border-b border-light-gray bg-white shadow-lg">
@@ -184,12 +201,15 @@ const Header = () => {
           <ul className="flex justify-center space-x-8 pb-3">
             {navigationItems.map((item, index) => (
               <li key={index}>
-                <a
-                  className="font-medium text-gray-700 transition-colors duration-200 hover:text-milky-blue"
-                  href={item.href}
+                <button
+                  type="button"
+                  onClick={() => handleNavigation(item.path)}
+                  className={`whitespace-nowrap font-medium transition-colors duration-200 ${
+                    isNavActive(item.path) ? "text-sky-500" : "text-gray-700 hover:text-sky-500"
+                  }`}
                 >
                   {item.label}
-                </a>
+                </button>
               </li>
             ))}
           </ul>
@@ -206,12 +226,15 @@ const Header = () => {
           <ul className="space-y-2">
             {navigationItems.map((item, index) => (
               <li key={index}>
-                <a
-                  href={item.href}
-                  className="block py-3 text-gray-700 transition-colors duration-200 hover:text-milky-blue"
+                <button
+                  type="button"
+                  onClick={() => handleNavigation(item.path)}
+                  className={`block w-full whitespace-nowrap py-3 text-left font-medium text-gray-700 transition-colors duration-200 hover:text-sky-500 ${
+                    isNavActive(item.path) ? "text-sky-500" : ""
+                  }`}
                 >
                   {item.label}
-                </a>
+                </button>
               </li>
             ))}
           </ul>
