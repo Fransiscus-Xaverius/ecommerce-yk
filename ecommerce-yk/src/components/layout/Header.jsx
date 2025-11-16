@@ -73,9 +73,9 @@ const Header = () => {
     { label: "Men", path: "/all-products?section=men" },
     { label: "Women", path: "/all-products?section=women" },
     { label: "All Products", path: "/all-products" },
-    { label: "New Arrivals", path: "/all-products?section=new" },
     { label: "Online", path: "/all-products?section=online" },
     { label: "Offline", path: "/all-products?section=offline" },
+    { label: "New Arrivals", path: "/all-products?section=new" },
     { label: "About", path: "/about" },
   ];
 
