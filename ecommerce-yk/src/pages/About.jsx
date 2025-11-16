@@ -31,7 +31,8 @@ const experiencePillars = [
   {
     icon: <Leaf className="h-6 w-6 text-emerald-400" />,
     title: "Conscious Craft",
-    description: "Material recycled denim dan serat bambu untuk menjaga kenyamanan tropis tanpa meninggalkan jejak besar.",
+    description:
+      "Material recycled denim dan serat bambu untuk menjaga kenyamanan tropis tanpa meninggalkan jejak besar.",
   },
   {
     icon: <HeartHandshake className="h-6 w-6 text-rose-400" />,
@@ -70,7 +71,7 @@ const About = () => {
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-indigo-900 to-black" />
         <div className="absolute left-1/3 top-12 h-72 w-72 rounded-full bg-milky-blue/30 blur-[120px]" />
-        <div className="absolute right-16 bottom-0 h-64 w-64 rounded-full bg-rose-500/20 blur-[100px]" />
+        <div className="absolute bottom-0 right-16 h-64 w-64 rounded-full bg-rose-500/20 blur-[100px]" />
         <div className="relative mx-auto flex min-h-[75vh] max-w-6xl flex-col items-center justify-center px-6 py-20 text-center sm:px-8">
           <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/20 px-4 py-1 text-xs uppercase tracking-[0.4em] text-white/70">
             <Sparkles className="h-4 w-4" /> Coming Soon
@@ -116,14 +117,18 @@ const About = () => {
         </div>
         <div className="grid gap-6 lg:grid-cols-3">
           {sneakPeeks.map((item) => (
-            <div key={item.title} className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br p-6 shadow-2xl" style={{ backgroundImage: "linear-gradient(135deg, rgba(255,255,255,0.06), rgba(15,23,42,0.8))" }}>
+            <div
+              key={item.title}
+              className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br p-6 shadow-2xl"
+              style={{ backgroundImage: "linear-gradient(135deg, rgba(255,255,255,0.06), rgba(15,23,42,0.8))" }}
+            >
               <span className="text-xs uppercase tracking-[0.4em] text-white/60">{item.badge}</span>
               <h3 className="mt-4 text-2xl font-semibold">{item.title}</h3>
               <p className="mt-3 text-sm text-white/70">{item.description}</p>
               <div className="mt-6 inline-flex items-center rounded-full border border-white/20 px-4 py-2 text-xs uppercase tracking-[0.4em] text-white/60">
                 Crafted Preview
               </div>
-              <div className={`pointer-events-none absolute inset-0 opacity-60 bg-gradient-to-br ${item.accent}`} />
+              <div className={`pointer-events-none absolute inset-0 bg-gradient-to-br opacity-60 ${item.accent}`} />
             </div>
           ))}
         </div>
@@ -176,7 +181,9 @@ const About = () => {
       <section className="relative overflow-hidden rounded-t-[3rem] bg-gradient-to-br from-slate-900 via-indigo-800 to-black px-6 py-16 sm:px-8">
         <div className="mx-auto max-w-4xl text-center">
           <p className="text-xs uppercase tracking-[0.5em] text-white/50">Stay notified</p>
-          <h2 className="mt-4 text-3xl font-semibold sm:text-4xl">Daftar untuk mendapatkan akses awal, styling kit, dan hadiah eksklusif.</h2>
+          <h2 className="mt-4 text-3xl font-semibold sm:text-4xl">
+            Daftar untuk mendapatkan akses awal, styling kit, dan hadiah eksklusif.
+          </h2>
           <p className="mt-3 text-sm text-white/70 sm:text-base">
             Kami akan mengirimkan update singkat ketika koleksi siap tayang di homepage dan di flagship store pilihan.
           </p>
