@@ -6,7 +6,7 @@ import Price from "../common/Price";
  * @param {Object} product - Product data
  * @param {Function} onAddToCart - Add to cart handler
  */
-const ProductCard = ({ product, onAddToCart, onProductClick, isSingleCard }) => {
+const ProductCard = ({ product, onProductClick, isSingleCard }) => {
   return (
     <div
       className={`${
@@ -73,7 +73,7 @@ const ProductCard = ({ product, onAddToCart, onProductClick, isSingleCard }) => 
           </div>
 
           {/* Add to Cart Button */}
-          <button
+          {/* <button
             onClick={(e) => {
               e.stopPropagation();
               onAddToCart(product);
@@ -81,7 +81,7 @@ const ProductCard = ({ product, onAddToCart, onProductClick, isSingleCard }) => 
             className="mt-auto w-full rounded-full bg-milky-blue py-2.5 text-sm font-semibold text-white transition-colors hover:bg-milky-blue/90 sm:py-3 sm:text-base md:text-lg"
           >
             Add to Cart
-          </button>
+          </button> */}
         </div>
       </div>
     </div>
