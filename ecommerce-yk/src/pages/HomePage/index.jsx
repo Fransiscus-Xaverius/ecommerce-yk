@@ -19,6 +19,8 @@ export default function HomePage() {
   const [newArrivals, setNewArrivals] = useState([]);
   const [offlineProducts, setOfflineProducts] = useState([]);
   const [onlineProducts, setOnlineProducts] = useState([]);
+  const [menProducts, setMenProducts] = useState([]);
+  const [womenProducts, setWomenProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -114,11 +116,25 @@ export default function HomePage() {
         //   }
         // });
 
-        // Take only 10 products from each section
-        setOfflineProducts(offlineProducts);
-        setOnlineProducts(onlineProducts);
+        // Take samples for each section
+        setOfflineProducts(offlineProducts.slice(0, 10));
+        setOnlineProducts(onlineProducts.slice(0, 10));
 
-        // Debug logging
+        const menData = await fetchProductList({
+          limit: 12,
+          sortColumn: "tanggal_update",
+          sortDirection: "desc",
+          gender: "Pria",
+        });
+        const womenData = await fetchProductList({
+          limit: 12,
+          sortColumn: "tanggal_update",
+          sortDirection: "desc",
+          gender: "Wanita",
+        });
+
+        setMenProducts(menData);
+        setWomenProducts(womenData);
 
         setLoading(false);
       } catch (error) {
@@ -135,6 +151,8 @@ export default function HomePage() {
     { title: "New Arrivals", slug: "new", subtitle: "Produk terbaru yang baru masuk", products: newArrivals },
     { title: "Offline", slug: "offline", subtitle: "Tersedia di toko offline", products: offlineProducts },
     { title: "Online", slug: "online", subtitle: "Tersedia di marketplace online", products: onlineProducts },
+    { title: "Men", slug: "men", subtitle: "Pilihan gaya terbaik untuk pria", products: menProducts },
+    { title: "Women", slug: "women", subtitle: "Koleksi elegan untuk perempuan modern", products: womenProducts },
   ];
 
   return (

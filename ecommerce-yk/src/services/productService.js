@@ -37,6 +37,8 @@ export const fetchProductList = async ({
   query = "",
   online = false,
   offline = false,
+  gender,
+  filters = {},
   limit,
 } = {}) => {
   try {
@@ -44,6 +46,16 @@ export const fetchProductList = async ({
     if (query) url += `&q=${query}`;
     if (online) url += `&online`;
     if (offline) url += `&offline`;
+    const mergedFilters = { ...filters };
+    if (gender) {
+      mergedFilters.gender = gender;
+    }
+    Object.entries(mergedFilters).forEach(([key, value]) => {
+      if (value === undefined || value === null) return;
+      const normalized = typeof value === "string" ? value.trim() : String(value);
+      if (normalized === "") return;
+      url += `&${encodeURIComponent(key)}=${encodeURIComponent(normalized)}`;
+    });
     if (limit) url += `&limit=${limit}`;
 
     const response = await fetch(url);

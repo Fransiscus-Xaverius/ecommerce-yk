@@ -41,6 +41,16 @@ const SECTION_CONFIG = {
     description: "Menampilkan seluruh koleksi Yongki Komaladi",
     queryOptions: {},
   },
+  men: {
+    title: "Koleksi Men",
+    description: "Kurasi sneakers, loafers, dan sandal untuk gaya maskulin modern",
+    queryOptions: { filters: { gender: "Pria" } },
+  },
+  women: {
+    title: "Koleksi Women",
+    description: "Pilihan heels, flats, dan sneakers feminin untuk setiap agenda",
+    queryOptions: { filters: { gender: "Wanita" } },
+  },
   online: {
     title: "Produk Online",
     description: "Produk yang tersedia di marketplace online",
@@ -62,6 +72,8 @@ const SECTION_CONFIG = {
 
 const SECTION_TABS = [
   { key: "all", label: "Semua" },
+  { key: "men", label: "Men" },
+  { key: "women", label: "Women" },
   { key: "online", label: "Online" },
   { key: "offline", label: "Offline" },
   { key: "new", label: "New Arrivals" },

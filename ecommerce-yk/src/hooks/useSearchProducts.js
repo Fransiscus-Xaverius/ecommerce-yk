@@ -6,6 +6,15 @@ const appendFlag = (url, flag, shouldAppend) => {
   return `${url}&${flag}=true`;
 };
 
+const appendFilters = (url, filters = {}) => {
+  return Object.entries(filters).reduce((acc, [key, value]) => {
+    if (value === undefined || value === null) return acc;
+    const normalized = typeof value === "string" ? value.trim() : String(value);
+    if (normalized === "") return acc;
+    return `${acc}&${encodeURIComponent(key)}=${encodeURIComponent(normalized)}`;
+  }, url);
+};
+
 export default function useSearchProducts(query, page = 1, limit = 12, enable = true, options = {}) {
   const offset = (page - 1) * limit;
   const encoded = encodeURIComponent(query || "");
@@ -15,6 +24,7 @@ export default function useSearchProducts(query, page = 1, limit = 12, enable = 
   if (options.order) url += `&order=${options.order}`;
   url = appendFlag(url, "online", options.online);
   url = appendFlag(url, "offline", options.offline);
+  url = appendFilters(url, options.filters);
 
   const optionsKey = JSON.stringify(options || {});
 
