@@ -3,15 +3,15 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { ShoppingCart, Menu, X, Search, User, Heart } from "lucide-react";
 
 // Hooks
-import { useWishlist } from "../../hooks/useWishlist";
-import { useCart } from "../../hooks/useCart";
+// import { useWishlist } from "../../hooks/useWishlist";
+// import { useCart } from "../../hooks/useCart";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
-  const { wishlist } = useWishlist();
-  const { cartItems } = useCart();
-  const wishlistCount = wishlist ? wishlist.length : 0;
+  // const { wishlist } = useWishlist();
+  // const { cartItems } = useCart();
+  // const wishlistCount = wishlist ? wishlist.length : 0;
   const navigate = useNavigate();
   const location = useLocation();
   const previousPathname = useRef(location.pathname);
@@ -67,13 +67,30 @@ const Header = () => {
   };
 
   const navigationItems = [
-    { label: "New Arrivals", href: "#" },
-    { label: "Men", href: "#" },
-    { label: "Women", href: "#" },
-    { label: "Sale", href: "#" },
-    { label: "Collections", href: "#" },
-    { label: "About", href: "#" },
+    // { label: "Home", path: "/" },
+    // { label: "Sale", path: "/" },
+    // { label: "Collections", path: "/" },
+    { label: "Men", path: "/all-products?section=men" },
+    { label: "Women", path: "/all-products?section=women" },
+    // { label: "All Products", path: "/all-products" },
+    { label: "Online", path: "/all-products?section=online" },
+    { label: "Offline", path: "/all-products?section=offline" },
+    { label: "New Arrivals", path: "/all-products?section=new" },
+    { label: "About", path: "/about" },
   ];
+
+  const isNavActive = (targetPath) => {
+    const [targetRoute, targetQuery] = targetPath.split("?");
+    if (targetQuery) {
+      return location.pathname === targetRoute && location.search === `?${targetQuery}`;
+    }
+    return location.pathname === targetRoute && location.search === "";
+  };
+
+  const handleNavigation = (path) => {
+    setIsMenuOpen(false);
+    navigate(path);
+  };
 
   return (
     <header className="sticky top-0 z-50 border-b border-light-gray bg-white shadow-lg">
@@ -155,7 +172,7 @@ const Header = () => {
             >
               {isMobileSearchOpen ? <X size={20} /> : <Search size={20} />}
             </button>
-            <button className="hidden rounded-lg p-2 transition-colors duration-200 hover:bg-gray-100 md:block">
+            {/* <button className="hidden rounded-lg p-2 transition-colors duration-200 hover:bg-gray-100 md:block">
               <User size={20} />
             </button>
             <button className="relative hidden rounded-lg p-2 transition-colors duration-200 hover:bg-gray-100 md:block">
@@ -173,7 +190,7 @@ const Header = () => {
                   {cartItems}
                 </span>
               )}
-            </button>
+            </button> */}
           </div>
         </div>
       </div>
@@ -184,12 +201,15 @@ const Header = () => {
           <ul className="flex justify-center space-x-8 pb-3">
             {navigationItems.map((item, index) => (
               <li key={index}>
-                <a
-                  className="font-medium text-gray-700 transition-colors duration-200 hover:text-milky-blue"
-                  href={item.href}
+                <button
+                  type="button"
+                  onClick={() => handleNavigation(item.path)}
+                  className={`whitespace-nowrap font-medium transition-colors duration-200 ${
+                    isNavActive(item.path) ? "text-sky-500" : "text-gray-700 hover:text-sky-500"
+                  }`}
                 >
                   {item.label}
-                </a>
+                </button>
               </li>
             ))}
           </ul>
@@ -206,12 +226,15 @@ const Header = () => {
           <ul className="space-y-2">
             {navigationItems.map((item, index) => (
               <li key={index}>
-                <a
-                  href={item.href}
-                  className="block py-3 text-gray-700 transition-colors duration-200 hover:text-milky-blue"
+                <button
+                  type="button"
+                  onClick={() => handleNavigation(item.path)}
+                  className={`block w-full whitespace-nowrap py-3 text-left font-medium text-gray-700 transition-colors duration-200 hover:text-sky-500 ${
+                    isNavActive(item.path) ? "text-sky-500" : ""
+                  }`}
                 >
                   {item.label}
-                </a>
+                </button>
               </li>
             ))}
           </ul>

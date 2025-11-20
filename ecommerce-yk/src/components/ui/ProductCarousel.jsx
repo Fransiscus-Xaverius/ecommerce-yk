@@ -9,16 +9,16 @@ import { useCarouselDrag } from "../../hooks/useCarouselDrag";
  * Product Carousel Component with drag/swipe functionality
  * @param {Object} section - Section data with title, subtitle, and products
  * @param {Function} onAddToCart - Add to cart handler
- * @param {Function} onToggleWishlist - Wishlist toggle handler
- * @param {Array} wishlist - Array of wishlist product IDs
  * @param {number} sectionIndex - Section index for styling
  */
-const ProductCarousel = ({ section, onAddToCart, onToggleWishlist, wishlist, sectionIndex }) => {
+const ProductCarousel = ({ section, onAddToCart, sectionIndex }) => {
   const navigate = useNavigate();
 
   const handleProductClick = (artikel) => {
     navigate(`/product/${artikel}`);
   };
+  const sectionSlug = section?.slug || section?.title?.toLowerCase().replace(/\s+/g, "-");
+  const seeMoreTarget = sectionSlug ? `/all-products?section=${sectionSlug}` : "/all-products";
   const carouselRef = useRef(null);
   const {
     handleMouseDown,
@@ -39,7 +39,7 @@ const ProductCarousel = ({ section, onAddToCart, onToggleWishlist, wishlist, sec
             <p className="text-sm text-gray-600 sm:text-base">{section.subtitle}</p>
           </div>
           <button
-            onClick={() => navigate(`/all-products`)}
+            onClick={() => navigate(seeMoreTarget)}
             className="text-sm font-bold text-milky-blue underline underline-offset-4 hover:text-milky-blue/80 sm:text-base md:text-lg lg:text-xl"
           >
             See more
@@ -75,8 +75,6 @@ const ProductCarousel = ({ section, onAddToCart, onToggleWishlist, wishlist, sec
                 product={product}
                 onProductClick={handleProductClick}
                 onAddToCart={onAddToCart}
-                onToggleWishlist={onToggleWishlist}
-                isInWishlist={wishlist.includes(product.id)}
                 isSingleCard={true}
               />
             ))}

@@ -10,7 +10,6 @@ import ProductCard from "../components/ui/ProductCard";
 // Hooks
 import useSearchProducts from "../hooks/useSearchProducts";
 import { useCart } from "../hooks/useCart";
-import { useWishlist } from "../hooks/useWishlist";
 
 const SearchResults = () => {
   const location = useLocation();
@@ -18,7 +17,6 @@ const SearchResults = () => {
   const query = new URLSearchParams(location.search).get("q");
   const [page, setPage] = useState(1);
 
-  const { wishlist, toggleWishlist } = useWishlist();
   const { addToCart } = useCart();
 
   const { products, totalItems, isLoading, error } = useSearchProducts(query, page, 12, !!query);
@@ -65,8 +63,6 @@ const SearchResults = () => {
                 <ProductCard
                   product={product}
                   onAddToCart={addToCart}
-                  onToggleWishlist={toggleWishlist}
-                  isInWishlist={wishlist.includes(product.id)}
                   onProductClick={(artikel) => navigate(`/product/${artikel}`)}
                 />
               </div>

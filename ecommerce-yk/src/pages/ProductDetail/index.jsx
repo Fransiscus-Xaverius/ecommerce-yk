@@ -308,7 +308,7 @@ export default function ProductDetail() {
             {/* Right Side - Product Details */}
             <div className="bg-white p-4 md:p-6 lg:p-8">
               {/* Breadcrumb */}
-              <nav className="mb-3 text-xs md:mb-4 md:text-sm">
+              {/* <nav className="mb-3 text-xs md:mb-4 md:text-sm">
                 <ol className="flex items-center space-x-1 text-gray-500 md:space-x-2">
                   <li>
                     <button className="transition-colors hover:text-gray-700">Beranda</button>
@@ -320,7 +320,7 @@ export default function ProductDetail() {
                   <li className="text-gray-300">/</li>
                   <li className="font-medium text-gray-900">Sneakers</li>
                 </ol>
-              </nav>
+              </nav> */}
 
               {/* Product Title */}
               <h1 className="mb-2 text-xl font-bold text-gray-900 md:text-2xl lg:text-3xl">{product.nama}</h1>

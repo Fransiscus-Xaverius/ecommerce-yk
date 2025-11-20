@@ -2,25 +2,25 @@ import { useState, useEffect } from "react";
 
 // Section Components
 import HeroSection from "../../components/sections/HeroSection";
-import FeaturesSection from "../../components/sections/FeaturesSection";
+// import FeaturesSection from "../../components/sections/FeaturesSection";
 import Newsletter from "../../components/sections/Newsletter";
 
 // UI Components
 import ProductCarousel from "../../components/ui/ProductCarousel";
 
 // Hooks
-import { useWishlist } from "../../hooks/useWishlist";
 import { useCart } from "../../hooks/useCart";
 import { fetchProductList } from "../../services/productService.js";
 
 export default function HomePage() {
-  const { wishlist, toggleWishlist } = useWishlist();
   const { addToCart } = useCart();
 
   const [hotProducts, setHotProducts] = useState([]);
   const [newArrivals, setNewArrivals] = useState([]);
   const [offlineProducts, setOfflineProducts] = useState([]);
   const [onlineProducts, setOnlineProducts] = useState([]);
+  const [menProducts, setMenProducts] = useState([]);
+  const [womenProducts, setWomenProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -116,11 +116,25 @@ export default function HomePage() {
         //   }
         // });
 
-        // Take only 10 products from each section
-        setOfflineProducts(offlineProducts);
-        setOnlineProducts(onlineProducts);
+        // Take samples for each section
+        setOfflineProducts(offlineProducts.slice(0, 10));
+        setOnlineProducts(onlineProducts.slice(0, 10));
 
-        // Debug logging
+        const menData = await fetchProductList({
+          limit: 12,
+          sortColumn: "tanggal_update",
+          sortDirection: "desc",
+          gender: "Pria",
+        });
+        const womenData = await fetchProductList({
+          limit: 12,
+          sortColumn: "tanggal_update",
+          sortDirection: "desc",
+          gender: "Wanita",
+        });
+
+        setMenProducts(menData);
+        setWomenProducts(womenData);
 
         setLoading(false);
       } catch (error) {
@@ -133,10 +147,12 @@ export default function HomePage() {
   }, []);
 
   const productSections = [
-    { title: "Hot", subtitle: "Produk dengan rating tertinggi", products: hotProducts },
-    { title: "New Arrivals", subtitle: "Produk terbaru yang baru masuk", products: newArrivals },
-    { title: "Offline", subtitle: "Tersedia di toko offline", products: offlineProducts },
-    { title: "Online", subtitle: "Tersedia di marketplace online", products: onlineProducts },
+    { title: "Hot", slug: "hot", subtitle: "Produk dengan rating tertinggi", products: hotProducts },
+    { title: "New Arrivals", slug: "new", subtitle: "Produk terbaru yang baru masuk", products: newArrivals },
+    { title: "Offline", slug: "offline", subtitle: "Tersedia di toko offline", products: offlineProducts },
+    { title: "Online", slug: "online", subtitle: "Tersedia di marketplace online", products: onlineProducts },
+    { title: "Men", slug: "men", subtitle: "Pilihan gaya terbaik untuk pria", products: menProducts },
+    { title: "Women", slug: "women", subtitle: "Koleksi elegan untuk perempuan modern", products: womenProducts },
   ];
 
   return (
@@ -145,7 +161,7 @@ export default function HomePage() {
       <HeroSection />
 
       {/* Features Section */}
-      <FeaturesSection />
+      {/* <FeaturesSection /> */}
 
       {/* Product Sections */}
       {loading ? (
@@ -156,14 +172,7 @@ export default function HomePage() {
         productSections
           .filter((section) => section.title !== "Hot") // Hide HOT section
           .map((section, sectionIndex) => (
-            <ProductCarousel
-              key={sectionIndex}
-              section={section}
-              sectionIndex={sectionIndex}
-              onAddToCart={addToCart}
-              onToggleWishlist={toggleWishlist}
-              wishlist={wishlist}
-            />
+            <ProductCarousel key={sectionIndex} section={section} sectionIndex={sectionIndex} onAddToCart={addToCart} />
           ))
       )}
 
