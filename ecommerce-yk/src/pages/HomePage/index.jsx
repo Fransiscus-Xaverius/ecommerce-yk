@@ -84,7 +84,7 @@ export default function HomePage() {
           limit: 12,
           sortColumn: "tanggal_update",
           sortDirection: "desc",
-          gender: "Anak",
+          gender: "Kids",
         });
 
         setMenProducts(menData);
