@@ -51,6 +51,11 @@ const SECTION_CONFIG = {
     description: "Pilihan heels, flats, dan sneakers feminin untuk setiap agenda",
     queryOptions: { filters: { gender: "Wanita" } },
   },
+  kids: {
+    title: "Koleksi Kids",
+    description: "Pilihan sneakers, loafers, dan sandal untuk gaya kids modern",
+    queryOptions: { filters: { gender: "Kids" } },
+  },
   online: {
     title: "Produk Online",
     description: "Produk yang tersedia di marketplace online",
@@ -74,6 +79,7 @@ const SECTION_TABS = [
   { key: "all", label: "Semua" },
   { key: "men", label: "Men" },
   { key: "women", label: "Women" },
+  { key: "kids", label: "Kids" },
   { key: "online", label: "Online" },
   { key: "offline", label: "Offline" },
   { key: "new", label: "New Arrivals" },
