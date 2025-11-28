@@ -19,6 +19,7 @@ export default function HomePage() {
   const [newArrivals, setNewArrivals] = useState([]);
   const [menProducts, setMenProducts] = useState([]);
   const [womenProducts, setWomenProducts] = useState([]);
+  const [kidsProducts, setKidsProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -79,9 +80,16 @@ export default function HomePage() {
           sortDirection: "desc",
           gender: "Wanita",
         });
+        const kidsData = await fetchProductList({
+          limit: 12,
+          sortColumn: "tanggal_update",
+          sortDirection: "desc",
+          gender: "Anak",
+        });
 
         setMenProducts(menData);
         setWomenProducts(womenData);
+        setKidsProducts(kidsData);
 
         setLoading(false);
       } catch (error) {
@@ -98,6 +106,7 @@ export default function HomePage() {
     { title: "New Arrivals", slug: "new", subtitle: "Produk terbaru yang baru masuk", products: newArrivals },
     { title: "Men", slug: "men", subtitle: "Pilihan gaya terbaik untuk pria", products: menProducts },
     { title: "Women", slug: "women", subtitle: "Koleksi elegan untuk perempuan modern", products: womenProducts },
+    { title: "Kids", slug: "kids", subtitle: "Koleksi ceria untuk si kecil", products: kidsProducts },
   ];
 
   return (
