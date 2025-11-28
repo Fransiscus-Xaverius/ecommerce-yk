@@ -16,15 +16,15 @@ import useProductDetail from "../../hooks/useProductDetail";
  */
 export default function ProductDetail() {
   // const { addToCart } = useCart();
-  const { id: productArticle } = useParams();
+  const { id: productId } = useParams();
   const navigate = useNavigate();
 
   // Scroll to top when component mounts
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [productArticle]);
+  }, [productId]);
 
-  const { product, isLoading: loading, error } = useProductDetail(productArticle, !!productArticle);
+  const { product, isLoading: loading, error } = useProductDetail(productId, !!productId);
 
   const [selectedColor, setSelectedColor] = useState("");
   const [selectedSize, setSelectedSize] = useState("");

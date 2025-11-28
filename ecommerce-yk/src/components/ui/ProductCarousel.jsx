@@ -14,8 +14,8 @@ import { useCarouselDrag } from "../../hooks/useCarouselDrag";
 const ProductCarousel = ({ section, onAddToCart, sectionIndex }) => {
   const navigate = useNavigate();
 
-  const handleProductClick = (artikel) => {
-    navigate(`/product/${artikel}`);
+  const handleProductClick = (productId) => {
+    navigate(`/product/${productId}`);
   };
   const sectionSlug = section?.slug || section?.title?.toLowerCase().replace(/\s+/g, "-");
   const seeMoreTarget = sectionSlug ? `/all-products?section=${sectionSlug}` : "/all-products";

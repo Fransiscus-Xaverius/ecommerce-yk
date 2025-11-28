@@ -162,7 +162,7 @@ const AllProduct = () => {
                 <ProductCard
                   product={product}
                   onAddToCart={addToCart}
-                  onProductClick={(artikel) => navigate(`/product/${artikel}`)}
+                  onProductClick={(productId) => navigate(`/product/${productId}`)}
                   isSingleCard
                 />
               </div>
