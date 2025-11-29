@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
 import useApiRequest from "../../hooks/useApiRequest";
 import { useHeroSlider } from "../../hooks/useHeroSlider";
@@ -41,6 +42,7 @@ const HeroSection = () => {
       subtitle: banner.subtitle,
       description: banner.description,
       cta: banner.cta_text,
+      cta_link: banner.cta_link,
       image: sanitizeImageUrl(banner.image_url),
     }));
     console.log(mappedSlides);
@@ -118,14 +120,16 @@ const HeroSection = () => {
                         {slide.description}
                       </p>
                       <button className="btn btn-light btn-md btn-lg-lg rounded-pill fw-bold hover-scale animate_animated animatefadeInUp animate_delay-3s px-sm-4 px-lg-5 py-sm-2 py-lg-3 px-3 py-2">
-                        <div className="flex items-center justify-center">
-                          <span style={{ fontSize: "clamp(0.8rem, 2vw, 1rem)" }}>{slide.cta}</span>
-                          <ArrowRight
-                            className="ms-2"
-                            size={16}
-                            style={{ width: "clamp(16px, 3vw, 20px)", height: "clamp(16px, 3vw, 20px)" }}
-                          />
-                        </div>
+                        <Link to={slide.cta_link} target="_blank">
+                          <div className="flex items-center justify-center">
+                            <span style={{ fontSize: "clamp(0.8rem, 2vw, 1rem)" }}>{slide.cta}</span>
+                            <ArrowRight
+                              className="ms-2"
+                              size={16}
+                              style={{ width: "clamp(16px, 3vw, 20px)", height: "clamp(16px, 3vw, 20px)" }}
+                            />
+                          </div>
+                        </Link>
                       </button>
                     </div>
                   </div>

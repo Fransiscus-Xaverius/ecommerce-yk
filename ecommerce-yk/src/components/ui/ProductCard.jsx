@@ -15,7 +15,7 @@ const ProductCard = ({ product, onProductClick, isSingleCard }) => {
     >
       <div
         className="relative flex h-full cursor-pointer flex-col overflow-hidden rounded-lg bg-white shadow-sm transition-transform hover:scale-[1.02]"
-        onClick={() => onProductClick(product.artikel)}
+        onClick={() => onProductClick(product.id)}
       >
         {/* Badges */}
         <div className="absolute left-2 top-2 z-10 flex flex-col gap-1 sm:left-3 sm:top-3">

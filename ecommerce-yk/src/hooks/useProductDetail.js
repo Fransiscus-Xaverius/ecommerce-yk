@@ -1,11 +1,11 @@
 import useApiRequest from "./useApiRequest.jsx";
 import { transformProductData } from "../services/productTransformer.js";
 
-export default function useProductDetail(artikel, enable = true) {
+export default function useProductDetail(productId, enable = true) {
   const { response, isLoading, error, refetch } = useApiRequest({
-    url: `/api/products/${artikel}`,
-    queryKey: ["productDetail", artikel],
-    enableQuery: enable && !!artikel,
+    url: `/api/products/${productId}`,
+    queryKey: ["productDetail", productId],
+    enableQuery: enable && !!productId,
   });
 
   let product = null;

@@ -1,8 +1,8 @@
 import { transformProductData } from "./productTransformer";
 
-export const fetchProductByArtikel = async (artikel) => {
+export const fetchProductById = async (productId) => {
   try {
-    const response = await fetch(`/api/products/${artikel}`);
+    const response = await fetch(`/api/products/${productId}`);
     if (!response.ok) {
       if (response.status === 404) return null;
       throw new Error(`HTTP ${response.status}`);
@@ -78,4 +78,4 @@ export const fetchProductList = async ({
   }
 };
 
-export default fetchProductByArtikel;
+export default fetchProductById;

@@ -17,10 +17,9 @@ export default function HomePage() {
 
   const [hotProducts, setHotProducts] = useState([]);
   const [newArrivals, setNewArrivals] = useState([]);
-  const [offlineProducts, setOfflineProducts] = useState([]);
-  const [onlineProducts, setOnlineProducts] = useState([]);
   const [menProducts, setMenProducts] = useState([]);
   const [womenProducts, setWomenProducts] = useState([]);
+  const [kidsProducts, setKidsProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -69,57 +68,6 @@ export default function HomePage() {
 
         setNewArrivals(sortedNewest);
 
-        // Fetch all products to categorize into Offline and Online sections
-        // const allProductsData = await fetchProductList({});
-
-        // Categorize products based on offline and marketplace fields
-        const offlineProducts = await fetchProductList({
-          limit: 50,
-          sortColumn: "tanggal_terima",
-          sortDirection: "desc",
-          offline: true,
-        });
-        const onlineProducts = await fetchProductList({
-          limit: 50,
-          sortColumn: "tanggal_terima",
-          sortDirection: "desc",
-          online: true,
-        });
-
-        // allProductsData.forEach((product) => {
-        //   // Check if offline field is NULL/empty (considering backend transformation)
-        //   const hasOfflineData = product.offline && Array.isArray(product.offline) && product.offline.length > 0;
-
-        //   // Check if marketplace field has valid data
-        //   const hasMarketplaceData =
-        //     product.marketplace &&
-        //     typeof product.marketplace === "object" &&
-        //     Object.keys(product.marketplace).length > 0 &&
-        //     Object.values(product.marketplace).some(
-        //       (value) => value !== null && value !== undefined && value !== "" && value.trim() !== ""
-        //     );
-
-        //   // If offline field is NULL/empty, add to online section
-        //   if (!hasOfflineData) {
-        //     onlineProducts.push(product);
-        //   }
-
-        //   // If marketplace field is NULL/empty, add to offline section
-        //   if (!hasMarketplaceData) {
-        //     offlineProducts.push(product);
-        //   }
-
-        //   // If both fields have data, add to both sections
-        //   if (hasOfflineData && hasMarketplaceData) {
-        //     offlineProducts.push(product);
-        //     onlineProducts.push(product);
-        //   }
-        // });
-
-        // Take samples for each section
-        setOfflineProducts(offlineProducts.slice(0, 10));
-        setOnlineProducts(onlineProducts.slice(0, 10));
-
         const menData = await fetchProductList({
           limit: 12,
           sortColumn: "tanggal_update",
@@ -132,9 +80,16 @@ export default function HomePage() {
           sortDirection: "desc",
           gender: "Wanita",
         });
+        const kidsData = await fetchProductList({
+          limit: 12,
+          sortColumn: "tanggal_update",
+          sortDirection: "desc",
+          gender: "Kids",
+        });
 
         setMenProducts(menData);
         setWomenProducts(womenData);
+        setKidsProducts(kidsData);
 
         setLoading(false);
       } catch (error) {
@@ -149,10 +104,9 @@ export default function HomePage() {
   const productSections = [
     { title: "Hot", slug: "hot", subtitle: "Produk dengan rating tertinggi", products: hotProducts },
     { title: "New Arrivals", slug: "new", subtitle: "Produk terbaru yang baru masuk", products: newArrivals },
-    { title: "Offline", slug: "offline", subtitle: "Tersedia di toko offline", products: offlineProducts },
-    { title: "Online", slug: "online", subtitle: "Tersedia di marketplace online", products: onlineProducts },
     { title: "Men", slug: "men", subtitle: "Pilihan gaya terbaik untuk pria", products: menProducts },
     { title: "Women", slug: "women", subtitle: "Koleksi elegan untuk perempuan modern", products: womenProducts },
+    { title: "Kids", slug: "kids", subtitle: "Koleksi ceria untuk si kecil", products: kidsProducts },
   ];
 
   return (
