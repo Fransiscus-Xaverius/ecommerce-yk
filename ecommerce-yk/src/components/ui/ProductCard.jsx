@@ -50,7 +50,7 @@ const ProductCard = ({ product, onProductClick, isSingleCard }) => {
                 : `https://via.placeholder.com/280x224/e3e3e3/666?text=${encodeURIComponent(product.nama)}`
             }
             alt={product.nama}
-            className="h-full w-full object-cover"
+            className="h-full w-full object-contain"
             onError={(e) => {
               e.target.style.display = "none";
               e.target.nextSibling.style.display = "block";
