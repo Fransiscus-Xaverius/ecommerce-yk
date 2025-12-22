@@ -10,7 +10,7 @@ import { loadScopedCSS, sanitizeImageUrl } from "../../utils/helpers";
 const HeroSection = () => {
   const [heroSlides, setHeroSlides] = useState([]);
 
-  const { currentSlide, setCurrentSlide } = useHeroSlider(heroSlides);
+  const { currentSlide, goToSlide, nextSlide, prevSlide } = useHeroSlider(heroSlides);
 
   const {
     response: bannerResponse,
@@ -45,9 +45,18 @@ const HeroSection = () => {
       cta_link: banner.cta_link,
       image: sanitizeImageUrl(banner.image_url),
     }));
-    console.log(mappedSlides);
     setHeroSlides(mappedSlides);
   }, [bannerResponse]);
+
+  // Preload banner images so slide changes feel instant
+  useEffect(() => {
+    if (heroSlides.length === 0) return;
+    heroSlides.forEach((slide) => {
+      if (!slide?.image) return;
+      const img = new Image();
+      img.src = slide.image;
+    });
+  }, [heroSlides]);
 
   if (loadingBanners) {
     return <div>Loading banners...</div>; // Or a more sophisticated loading spinner
@@ -59,21 +68,37 @@ const HeroSection = () => {
 
   return (
     <section className="position-relative hero-section-scoped">
-      <div id="heroCarousel" className="carousel slide carousel-fade" data-bs-ride="carousel">
+      <div id="heroCarousel" className="carousel slide carousel-fade">
         <div className="carousel-indicators">
           {heroSlides.map((_, index) => (
             <button
               key={index}
               type="button"
               className={index === currentSlide ? "active" : ""}
-              onClick={() => setCurrentSlide(index)}
+              aria-label={`Go to slide ${index + 1}`}
+              onPointerDown={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                goToSlide(index);
+              }}
+              onKeyDown={(e) => {
+                if (e.key !== "Enter" && e.key !== " ") return;
+                e.preventDefault();
+                e.stopPropagation();
+                goToSlide(index);
+              }}
             ></button>
           ))}
         </div>
 
         <div className="carousel-inner">
           {heroSlides.map((slide, index) => (
-            <div key={slide.id} className={`carousel-item ${index === currentSlide ? "active" : ""} hero-responsive`}>
+            <div
+              key={slide.id}
+              className={`carousel-item ${index === currentSlide ? "active" : ""} hero-responsive`}
+              aria-hidden={index !== currentSlide}
+              style={{ display: index === currentSlide ? "block" : "none" }}
+            >
               <div
                 className="d-flex align-items-center justify-content-center h-100 position-relative text-white"
                 style={{
@@ -142,18 +167,40 @@ const HeroSection = () => {
         <button
           className="carousel-control-prev"
           type="button"
-          onClick={() =>
-            heroSlides.length > 0 && setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length)
-          }
+          aria-label="Previous slide"
+          style={{ zIndex: 10, pointerEvents: "auto" }}
+          onPointerDown={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            prevSlide();
+          }}
+          onKeyDown={(e) => {
+            if (e.key !== "Enter" && e.key !== " ") return;
+            e.preventDefault();
+            e.stopPropagation();
+            prevSlide();
+          }}
         >
-          <span className="carousel-control-prev-icon"></span>
+          <span className="carousel-control-prev-icon" style={{ pointerEvents: "none" }}></span>
         </button>
         <button
           className="carousel-control-next"
           type="button"
-          onClick={() => heroSlides.length > 0 && setCurrentSlide((prev) => (prev + 1) % heroSlides.length)}
+          aria-label="Next slide"
+          style={{ zIndex: 10, pointerEvents: "auto" }}
+          onPointerDown={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            nextSlide();
+          }}
+          onKeyDown={(e) => {
+            if (e.key !== "Enter" && e.key !== " ") return;
+            e.preventDefault();
+            e.stopPropagation();
+            nextSlide();
+          }}
         >
-          <span className="carousel-control-next-icon"></span>
+          <span className="carousel-control-next-icon" style={{ pointerEvents: "none" }}></span>
         </button>
       </div>
     </section>
