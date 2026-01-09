@@ -113,7 +113,7 @@ const HeroSection = () => {
                   className="position-absolute w-100 h-100"
                   style={{
                     background: `url(${slide.image})`,
-                    backgroundSize: "cover",
+                    backgroundSize: "100% 100%",
                     backgroundPosition: "center",
                     backgroundRepeat: "no-repeat",
                     mask: "radial-gradient(circle at center, black 0%, rgba(0,0,0,0.8) 100%)",
