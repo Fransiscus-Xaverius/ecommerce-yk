@@ -2,32 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Responsive Hero Section */
+/* Responsive Hero Section - Uses aspect-ratio to match ~16:9 banner images */
 @layer components {
   .hero-responsive {
-    height: 50vh;
-    min-height: 300px;
-  }
-
-  @media (min-width: 640px) {
-    .hero-responsive {
-      height: 60vh;
-      min-height: 400px;
-    }
-  }
-
-  @media (min-width: 768px) {
-    .hero-responsive {
-      height: 65vh;
-      min-height: 450px;
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .hero-responsive {
-      height: 70vh;
-      min-height: 500px;
-    }
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    position: relative;
   }
 }
 
