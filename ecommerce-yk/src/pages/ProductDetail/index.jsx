@@ -297,7 +297,7 @@ export default function ProductDetail() {
               <div className="mt-6 hidden border-t border-gray-200 pt-6 xl:block">
                 <h3 className="mb-4 text-lg font-bold text-gray-900">Deskripsi Produk</h3>
                 <div className="space-y-3">
-                  <p className="leading-relaxed text-gray-600">
+                  <p className="whitespace-pre-line break-words leading-relaxed text-gray-600">
                     {product.description ||
                       "Sepatu sneakers premium dengan desain modern dan kualitas terbaik. Terbuat dari bahan berkualitas tinggi yang memberikan kenyamanan maksimal untuk aktivitas sehari-hari."}
                   </p>
@@ -427,7 +427,7 @@ export default function ProductDetail() {
                 </button>
                 {showDescription && (
                   <div className="mt-4 space-y-3">
-                    <p className="leading-relaxed text-gray-600">
+                    <p className="whitespace-pre-line break-words leading-relaxed text-gray-600">
                       {product.description ||
                         "Sepatu sneakers premium dengan desain modern dan kualitas terbaik. Terbuat dari bahan berkualitas tinggi yang memberikan kenyamanan maksimal untuk aktivitas sehari-hari."}
                     </p>
